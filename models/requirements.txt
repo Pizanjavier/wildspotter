@@ -1,0 +1,5 @@
+requests>=2.31
+Pillow>=10.0
+numpy>=1.24
+tensorflow>=2.15
+tensorflowjs>=4.0

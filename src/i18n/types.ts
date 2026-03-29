@@ -1,0 +1,227 @@
+export type TranslationKeys = {
+  tabs: {
+    map: string;
+    spots: string;
+    guide: string;
+    config: string;
+  };
+  map: {
+    scanButton: string;
+    scanning: string;
+    selectArea: string;
+    useViewport: string;
+    searchPlaceholder: string;
+    searchLocation: string;
+    recentScans: string;
+    emptyTitle: string;
+    emptyHint: string;
+    errorTitle: string;
+    retryButton: string;
+    spotsFound: string;
+    cached: string;
+    zoomWarningTitle: string;
+    zoomWarningHint: string;
+    filtersChip: string;
+    scanDisabledZoom: string;
+  };
+  spots: {
+    savedTitle: string;
+    count: string;
+    countSingular: string;
+    emptyTitle: string;
+    emptyBody: string;
+    unnamedSpot: string;
+    pendingLegal: string;
+    publicLand: string;
+    slope: string;
+    slopeUnknown: string;
+  };
+  spotDetail: {
+    notFound: string;
+    loading: string;
+    surface: string;
+    slopeLabel: string;
+    elevation: string;
+    inspect: string;
+    navigate: string;
+    actionHelp: string;
+    openInMaps: string;
+    save: string;
+    saved: string;
+    saveSpot: string;
+    unsaveSpot: string;
+    scoreMatch: string;
+    legalStatus: string;
+    contextAnalysis: string;
+    scoreBreakdown: string;
+    terrainWeight: string;
+    aiWeight: string;
+    contextWeight: string;
+    aiAnalysis: string;
+    aiDescription: string;
+    aiSurface: string;
+    aiAccess: string;
+    aiSpace: string;
+    aiVans: string;
+    aiClear: string;
+    back: string;
+  };
+  legal: {
+    title: string;
+    description: string;
+    infoText: string;
+    statusHeader: string;
+    publicForestry: string;
+    outsideProtected: string;
+    outsideCoastal: string;
+    sourcesTitle: string;
+    sourcesDescription: string;
+  };
+  config: {
+    title: string;
+    cachedData: string;
+    cacheSize: string;
+    areasCached: string;
+    cacheSummary: string;
+    clearCache: string;
+    clearHint: string;
+    clearing: string;
+    clearConfirmTitle: string;
+    clearConfirmMessage: string;
+    clearConfirmCancel: string;
+    clearConfirmAction: string;
+    preferences: string;
+    maxSlope: string;
+    maxSlopeHint: string;
+    minScore: string;
+    minScoreHint: string;
+    hideRestricted: string;
+    hideRestrictedHint: string;
+    offlineMode: string;
+    offlineModeHint: string;
+    about: string;
+    version: string;
+    tagline: string;
+    aboutDescription: string;
+    dataSources: string;
+    language: string;
+    settingsTitle: string;
+    theme: string;
+  };
+  ai: {
+    pending: string;
+    verified: string;
+    flagged: string;
+    vansDetected: string;
+  };
+  pipeline: {
+    radar: string;
+    topographer: string;
+    legal: string;
+    ai: string;
+  };
+  scanning: {
+    title: string;
+    fetchingFromServer: string;
+    searchingSpots: string;
+    analyzingTerrain: string;
+    checkingRestrictions: string;
+    validatingSatellite: string;
+    finalizing: string;
+  };
+  onboarding: {
+    discoverTitle: string;
+    discoverBody: string;
+    howItWorksTitle: string;
+    step1Title: string;
+    step1Body: string;
+    step2Title: string;
+    step2Body: string;
+    step3Title: string;
+    step3Body: string;
+    step4Title: string;
+    step4Body: string;
+    step5Title: string;
+    step5Body: string;
+    getStartedTitle: string;
+    getStartedSubtitle: string;
+    bullet1: string;
+    bullet2: string;
+    bullet3: string;
+    nextButton: string;
+    getStartedButton: string;
+    letsGo: string;
+    skipLink: string;
+  };
+  splash: {
+    tagline: string;
+  };
+  emptySpots: {
+    title: string;
+    body: string;
+    goToMap: string;
+  };
+  scanProgress: {
+    title: string;
+    subtitle: string;
+  };
+  noResults: {
+    title: string;
+    body: string;
+    scanAgain: string;
+  };
+  networkError: {
+    title: string;
+    body: string;
+    retry: string;
+    offlineHint: string;
+  };
+  appearance: {
+    title: string;
+    light: string;
+    dark: string;
+  };
+  location: {
+    myLocation: string;
+    permissionDenied: string;
+    permissionDeniedHint: string;
+    locating: string;
+  };
+  guide: {
+    title: string;
+    subtitle: string;
+    radarTitle: string;
+    radarBody: string;
+    terrainTitle: string;
+    terrainBody: string;
+    satelliteTitle: string;
+    satelliteBody: string;
+    satelliteFactors: string;
+    satelliteSurface: string;
+    satelliteAccess: string;
+    satelliteSpace: string;
+    satelliteVans: string;
+    satelliteClear: string;
+    contextTitle: string;
+    contextBody: string;
+    contextRoadNoise: string;
+    contextUrbanDensity: string;
+    contextScenicValue: string;
+    contextPrivacy: string;
+    contextIndustrial: string;
+    contextRailway: string;
+    contextVanCommunity: string;
+    legalSourcesTitle: string;
+    legalSourcesBody: string;
+    scoringTitle: string;
+    scoringBody: string;
+    scoringFormula: string;
+    scoringGreen: string;
+    scoringTeal: string;
+    scoringAmber: string;
+  };
+};
+
+export type Locale = 'es' | 'en';
+
+export type TranslationDictionary = TranslationKeys;

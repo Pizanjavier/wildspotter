@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WildSpotter — Label Reviewer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0A0F1C; color: #e2e8f0; font-family: 'Inter', system-ui, sans-serif; padding: 20px; }
+  h1 { font-size: 18px; color: #22D3EE; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #64748b; margin-bottom: 20px; }
+  .stats { display: flex; gap: 16px; margin-bottom: 20px; font-family: monospace; font-size: 13px; }
+  .stat { background: #1E293B; padding: 8px 14px; border-radius: 6px; }
+  .stat b { color: #22D3EE; }
+  .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-btn { background: #1E293B; border: 1px solid #334155; color: #94a3b8; padding: 6px 14px;
+    border-radius: 6px; cursor: pointer; font-size: 12px; font-family: monospace; }
+  .filter-btn.active { border-color: #22D3EE; color: #22D3EE; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .card { background: #1E293B; border-radius: 8px; overflow: hidden; border: 2px solid transparent; transition: border-color 0.2s; }
+  .card:hover { border-color: #334155; }
+  .card img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+  .card-body { padding: 10px; }
+  .card-name { font-size: 11px; font-family: monospace; color: #94a3b8; word-break: break-all; margin-bottom: 6px; }
+  .card-meta { font-size: 11px; font-family: monospace; color: #64748b; margin-bottom: 8px; }
+  .card-meta span { margin-right: 8px; }
+  .label-row { display: flex; gap: 6px; }
+  .label-btn { flex: 1; padding: 6px; border: 1px solid #334155; border-radius: 4px; cursor: pointer;
+    font-size: 11px; font-family: monospace; text-align: center; transition: all 0.15s; background: transparent; color: #94a3b8; }
+  .label-btn.good { border-color: #4ADE80; color: #4ADE80; }
+  .label-btn.good.selected { background: #4ADE80; color: #0A0F1C; }
+  .label-btn.bad { border-color: #f87171; color: #f87171; }
+  .label-btn.bad.selected { background: #f87171; color: #0A0F1C; }
+  .confidence-low { outline: 2px dashed #FBBF24; outline-offset: -2px; }
+  .export-btn { margin-top: 20px; background: #22D3EE; color: #0A0F1C; border: none; padding: 10px 24px;
+    border-radius: 6px; cursor: pointer; font-family: monospace; font-size: 13px; font-weight: 600; }
+  .export-btn:hover { background: #06b6d4; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<h1>WILDSPOTTER LABEL REVIEWER</h1>
+<p class="subtitle">Review auto-labeled satellite tiles. Click GOOD/BAD to correct labels. Low-confidence items are highlighted with amber border. Export corrected labels when done.</p>
+
+<div class="stats" id="stats"></div>
+<div class="filters">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="low">Low Confidence</button>
+  <button class="filter-btn" data-filter="ground_suitable">Suitable</button>
+  <button class="filter-btn" data-filter="ground_unsuitable">Unsuitable</button>
+  <button class="filter-btn" data-filter="corrected">Corrected</button>
+</div>
+<div class="grid" id="grid"></div>
+<button class="export-btn" onclick="exportLabels()">EXPORT CORRECTED LABELS (CSV)</button>
+
+<script>
+let data = [];
+let activeFilter = 'all';
+
+async function loadCSV() {
+  try {
+    const resp = await fetch('labels.csv');
+    const text = await resp.text();
+    const lines = text.trim().split('\n');
+    const headers = lines[0].split(',');
+    data = lines.slice(1).map((line, idx) => {
+      const vals = line.split(',');
+      const obj = {};
+      headers.forEach((h, i) => obj[h.trim()] = vals[i]?.trim());
+      obj._idx = idx;
+      obj._corrected = false;
+      obj._currentLabel = obj.label;
+      return obj;
+    });
+    render();
+  } catch (e) {
+    document.getElementById('grid').innerHTML =
+      '<p style="color:#f87171;padding:20px;">Could not load labels.csv. Run autolabeler.py first, then serve this folder:<br><code style="color:#22D3EE;">python -m http.server 8888</code></p>';
+  }
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  const filtered = data.filter(d => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'low') return d.confidence === 'low';
+    if (activeFilter === 'corrected') return d._corrected;
+    return d._currentLabel === activeFilter;
+  });
+
+  const stats = document.getElementById('stats');
+  const suitable = data.filter(d => d._currentLabel === 'ground_suitable').length;
+  const unsuitable = data.length - suitable;
+  const corrected = data.filter(d => d._corrected).length;
+  stats.innerHTML = `
+    <div class="stat">Total: <b>${data.length}</b></div>
+    <div class="stat">Suitable: <b>${suitable}</b></div>
+    <div class="stat">Unsuitable: <b>${unsuitable}</b></div>
+    <div class="stat">Corrected: <b>${corrected}</b></div>
+    <div class="stat">Showing: <b>${filtered.length}</b></div>
+  `;
+
+  grid.innerHTML = filtered.map(d => {
+    const isGood = d._currentLabel === 'ground_suitable';
+    const imgPath = d.source_path;
+    return `
+      <div class="card ${d.confidence === 'low' && !d._corrected ? 'confidence-low' : ''}">
+        <img src="${imgPath}" loading="lazy" alt="${d.filename}" onerror="this.style.background='#334155'">
+        <div class="card-body">
+          <div class="card-name">${d.filename}</div>
+          <div class="card-meta">
+            <span>B:${d.brown_ratio}</span>
+            <span>G:${d.green_ratio}</span>
+            <span>Gr:${d.grey_ratio}</span>
+            <span>Bl:${d.blue_ratio}</span>
+          </div>
+          <div class="label-row">
+            <button class="label-btn good ${isGood ? 'selected' : ''}" onclick="setLabel(${d._idx}, 'ground_suitable')">GOOD</button>
+            <button class="label-btn bad ${!isGood ? 'selected' : ''}" onclick="setLabel(${d._idx}, 'ground_unsuitable')">BAD</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function setLabel(idx, label) {
+  const item = data[idx];
+  if (item._currentLabel !== label) {
+    item._corrected = true;
+    item._currentLabel = label;
+  }
+  render();
+}
+
+function exportLabels() {
+  const headers = 'filename,label,corrected,brown_ratio,green_ratio,grey_ratio,blue_ratio\n';
+  const rows = data.map(d =>
+    `${d.filename},${d._currentLabel},${d._corrected},${d.brown_ratio},${d.green_ratio},${d.grey_ratio},${d.blue_ratio}`
+  ).join('\n');
+  const blob = new Blob([headers + rows], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'labels_corrected.csv';
+  a.click();
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+loadCSV();
+</script>
+</body>
+</html>

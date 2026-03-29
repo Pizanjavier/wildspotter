@@ -1,0 +1,78 @@
+{
+  "name": "WildSpotter Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 20
+            }
+          ]
+        }
+      },
+      "id": "66cb81c4-cc6e-40dc-938c-59f1ce1acbb5",
+      "name": "Every 20 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [80, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://worker:8001/run/parallel",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{ \"terrain_batch\": 500, \"terrain_limit\": 500, \"legal_batch\": 100, \"ai_batch\": 100, \"scoring_batch\": 500 }",
+        "options": {
+          "timeout": 1800000
+        }
+      },
+      "id": "ae529995-2db0-4a48-9efc-98ed848c60c1",
+      "name": "Parallel (Terrain+Legal+AI+Score)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [400, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://worker:8001/progress",
+        "options": {}
+      },
+      "id": "052f4889-197b-4a69-abdf-caeac3e0c34e",
+      "name": "Progress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 300]
+    }
+  ],
+  "connections": {
+    "Every 20 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Parallel (Terrain+Legal+AI+Score)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parallel (Terrain+Legal+AI+Score)": {
+      "main": [
+        [
+          {
+            "node": "Progress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionTimeout": 3600,
+    "executionOrder": "v1"
+  }
+}
