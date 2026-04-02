@@ -11,9 +11,9 @@ Complete documentation for developers who need to understand, operate, and exten
  |                              EXTERNAL DATA SOURCES                                 |
  |                                                                                    |
  |  +------------------+  +------------------+  +---------------+  +---------------+  |
- |  | AWS Terrarium    |  | MITECO WMS       |  | Catastro WMS  |  | IGN PNOA      |  |
+ |  | AWS Terrarium    |  | MITECO Shapefiles|  | Catastro REST |  | IGN PNOA      |  |
  |  | Elevation Tiles  |  | Natura 2000      |  | Land Registry |  | Satellite     |  |
- |  | (z15 PNG)        |  | Parks, Coastal   |  |               |  | (z17 JPEG)    |  |
+ |  | (z15 PNG)        |  | Parks, Coastal   |  | API           |  | (z17 JPEG)    |  |
  |  +--------+---------+  +--------+---------+  +-------+-------+  +-------+-------+  |
  +-----------|----------------------|----------------------|----------------|----------+
              |                      |                      |                |
@@ -27,7 +27,7 @@ Complete documentation for developers who need to understand, operate, and exten
  |  |                                                                      |          |
  |  |  +------------+  +----------+  +--------------+  +-----------+       |          |
  |  |  | terrain.py |  | legal.py |  | ai_inference |  | scoring   |       |          |
- |  |  | Slope calc |  | WMS chks |  | Keras/ONNX   |  | Composite |       |          |
+ |  |  | Slope calc |  | PostGIS  |  | Keras/ONNX   |  | Composite |       |          |
  |  |  +------+-----+  +----+-----+  +------+-------+  +-----+-----+       |          |
  |  |         |              |               |                |             |          |
  |  |         +------- SQL --+------- SQL ---+------ SQL -----+             |          |
@@ -174,7 +174,7 @@ The `init.sql` script runs automatically on first boot, creating the PostGIS ext
 Python dependencies (`requirements.txt`):
 
 - `psycopg2-binary` -- PostgreSQL driver
-- `requests` -- HTTP client for WMS and tile downloads
+- `requests` -- HTTP client for Catastro REST API and tile downloads
 - `Pillow` -- image processing
 - `numpy` -- numerical computation (terrain, heuristics)
 - `flask` -- HTTP API for n8n integration
@@ -281,15 +281,23 @@ INSERT INTO sync_state (last_sequence, last_sync_at) VALUES (0, NULL);
 
 ```json
 {
-  "natura2000":    { "inside": false, "zone_name": null },
-  "national_park": { "inside": false, "park_name": null },
-  "coastal_law":   { "inside": false, "distance_m": null },
-  "cadastre":      { "classification": "public_forestry", "private": false },
+  "natura2000":    { "inside": false },
+  "national_park": { "inside": false },
+  "coastal_law":   { "inside": false },
+  "cadastre":      { "classification": "rustic", "private": false, "ref": "33008A04800101" },
   "blocked": false
 }
 ```
 
 `blocked = true` if ANY of: Natura 2000 inside, National Park inside, Coastal Law inside, or Cadastre private. Informational only -- no spots are deleted.
+
+> **Legal GIS tables** (created by ogr2ogr during MITECO shapefile import):
+> - `natura2000` (SRID 3042, 1,636 polygons) — Red Natura 2000
+> - `national_parks` (SRID 25830, 1,788 polygons) — Espacios Naturales Protegidos
+> - `dpmt` (SRID 25830, MULTILINESTRING) — Deslinde DPMT boundary
+> - `servidumbre_proteccion` (SRID 25830) — 100m coastal protection easement
+> - `terrenos_incluidos_dpmt` (SRID 25830) — Additional public domain terrains
+> - `nucleos_excluidos_dpmt` (SRID 25830) — Urban exemption zones (subtracted from costas checks)
 
 ### 3.4. Pipeline State Machine
 
@@ -416,7 +424,43 @@ WHERE id = $1
 
 **Response (404):** `{ "error": "Spot not found" }`
 
-### 4.4. `GET /satellite/:filename` -- Satellite Image Server
+### 4.4. `GET /legal/tiles/:z/:x/:y.pbf` -- Legal Zone Vector Tiles
+
+Serves pre-generated Mapbox Vector Tiles (MVT) containing legal restriction zone polygons for the map overlay. Tiles are static `.pbf` files read from disk — no PostGIS queries at runtime.
+
+```
+  App ──GET /legal/tiles/8/126/96.pbf──> Fastify
+                                            |
+                                            v
+                                      +-----------+
+                                      | /data/    |
+                                      | legal-    |
+                                      | tiles/    |
+                                      +-----+-----+
+                                            |
+  App <──application/x-protobuf (Cache: 1d)─+
+```
+
+**Source layer:** `legal_zones` (with `layer_type` property: `natura2000`, `national_park`, `coastal_servidumbre`, `coastal_terrenos`)
+
+**Tile generation:** `workers/generate_legal_tiles.py` pre-generates tiles at z4–z10 (~1,783 tiles checked, ~1,038 non-empty, ~64 MB total). The script:
+1. Creates a materialized view `legal_zones_3857` from 5 legal tables (natura2000, national_parks, servidumbre_proteccion, terrenos_incluidos_dpmt, dpmt with 20m buffer)
+2. Clips all geometries to Spain's OSM administrative boundary (removes marine zones)
+3. Pre-transforms to EPSG:3857 and subdivides polygons with `ST_Subdivide(geom, 256)` for fast spatial lookups
+4. Iterates over Spain's bounding box and writes non-empty tiles to `data/legal-tiles/{z}/{x}/{y}.pbf`
+
+**Note:** The `dpmt` table contains MULTILINESTRING geometries (the DPMT boundary line). Since `legal.py` flags spots within 20m of this line (`ST_DWithin(geom, point, 20)`), the tile generator buffers it to a polygon (`ST_Buffer(geom, 20)`) so the overlay matches the per-spot check.
+
+**Why static tiles:** On-the-fly MVT generation with `ST_AsMVT` was too CPU-intensive — each tile triggered `ST_Transform` + `ST_Intersects` on ~150K+ subdivided polygons. MapLibre requests dozens of tiles simultaneously when panning, saturating the DB connection pool. Legal boundaries change ~once/year when MITECO publishes new shapefiles, so static tiles are the optimal approach. Regenerate with:
+```bash
+docker-compose exec worker python generate_legal_tiles.py
+```
+
+**Response headers:** `Content-Type: application/x-protobuf`, `Cache-Control: public, max-age=86400`
+
+Returns empty buffer (0 bytes) if the tile file doesn't exist (no legal zones in that area).
+
+### 4.5. `GET /satellite/:filename` -- Satellite Image Server
 
 ```
   App ──GET /satellite/123456.jpg──> Fastify
@@ -772,18 +816,19 @@ WHERE id = %s
   | terrain_done |  -- SELECT -->   | legal.py        |  -- UPDATE -> | legal_done |
   | spots        |                  |                 |               +------------+
   +--------------+                  | For each spot:  |
-                                    |   4 WMS checks  |
+                                    | 3 PostGIS +     |
+                                    | 1 REST API      |
                                     +--------+--------+
                                              |
                             +----------------+----------------+----------------+
                             |                |                |                |
                             v                v                v                v
                      +-----------+    +-----------+    +-----------+    +-----------+
-                     | MITECO    |    | MITECO    |    | MITECO    |    | Catastro  |
-                     | Natura    |    | Parks     |    | Costas    |    | Land      |
-                     | 2000      |    | (ENP)     |    | (DPMT)    |    | Registry  |
+                     | PostGIS   |    | PostGIS   |    | PostGIS   |    | Catastro  |
+                     | Natura    |    | Parks     |    | Costas    |    | REST API  |
+                     | 2000      |    | (ENP)     |    | (DPMT/SP) |    | Registry  |
                      +-----------+    +-----------+    +-----------+    +-----------+
-                     1s delay         1s delay         1s delay         1s delay
+                      ~1ms local       ~1ms local       ~1ms local      ~300ms HTTP
 ```
 
 **Fetch Query:**
@@ -792,7 +837,7 @@ SELECT id, osm_id, ST_Y(geom) AS lat, ST_X(geom) AS lon
 FROM spots
 WHERE status = 'terrain_done'
 ORDER BY created_at
-LIMIT %s                        -- batch_size (default 200)
+LIMIT %s                        -- batch_size (default 50)
 ```
 
 **Update Query (per spot):**
@@ -804,24 +849,28 @@ SET legal_status = %s,          -- JSONB with all 4 check results + blocked flag
 WHERE id = %s
 ```
 
-#### WMS Checks Detail
+#### Legal Checks Detail
 
-All checks use `GetFeatureInfo` on a 101x101 pixel bbox (~222m x 222m) centered on spot coordinates. Center pixel (50, 50) queried.
+**Local PostGIS checks** (Natura 2000, National Parks, Coastal Law) use `ST_Intersects` against imported MITECO shapefiles. A single CTE-based SQL query runs all three checks in ~1ms per spot. The DPMT layer (a MULTILINESTRING) uses `ST_DWithin(20m)` instead of `ST_Intersects`. Núcleos Excluidos (urban exemption zones) are subtracted from coastal law matches.
 
-| # | Check | WMS URL | Layer | Output |
-|---|-------|---------|-------|--------|
-| 1 | Natura 2000 | `wms.mapama.gob.es/.../RedNatura/wms.aspx` | `Red_Natura` | `{inside, zone_name}` |
-| 2 | National Parks | `wms.mapama.gob.es/.../ENP/wms.aspx` | `ENP` | `{inside, park_name}` |
-| 3 | Coastal Law | `wms.mapama.gob.es/.../DPMTLinea/wms.aspx` | `Linea_de_Costa` | `{inside, distance_m}` |
-| 4 | Cadastre | `ovc.catastro.meh.es/.../ServidorWMS.aspx` | `Catastro` / `CP.CadastralParcel` | `{classification, private}` |
+**Catastro REST API** (`Consulta_RCCOOR`) returns XML with the cadastral reference and land description. Classifications: `rustic` (rural parcels), `urban` (private, flagged), `registered` (generic), `no_parcel` (no cadastral data for coordinates).
+
+| # | Check | Method | Source | Output |
+|---|-------|--------|--------|--------|
+| 1 | Natura 2000 | PostGIS `ST_Intersects` | `natura2000` table (SRID 3042, 1,636 polygons) | `{inside}` |
+| 2 | National Parks | PostGIS `ST_Intersects` | `national_parks` table (SRID 25830, 1,788 polygons) | `{inside}` |
+| 3 | Coastal Law | PostGIS `ST_DWithin`/`ST_Intersects` | `dpmt` + `servidumbre_proteccion` + `terrenos_incluidos_dpmt` − `nucleos_excluidos_dpmt` (SRID 25830) | `{inside}` |
+| 4 | Cadastre | REST API | `ovc.catastro.meh.es/.../Consulta_RCCOOR` | `{classification, private, ref}` |
 
 ```
   blocked = natura2000.inside OR national_park.inside OR coastal_law.inside OR cadastre.private
 ```
 
-Cadastre classification values: `public_forestry`, `private`, `rustic`, `unknown`. Marked `private: true` if usage contains `residencial` or `industrial`.
+Cadastre classification values: `rustic`, `urban`, `registered`, `no_parcel`. Marked `private: true` only for urban parcels (streets, buildings).
 
-Rate limit: 1.0s per WMS request (4 checks/spot = ~4s/spot).
+> **Why local PostGIS instead of WMS?** The original WMS-based approach had three critical bugs: (1) wrong layer names (`Red_Natura` instead of `PS.ProtectedSite`), (2) MITECO servers return ESRI XML instead of JSON causing silent parse failures, (3) the Coastal Law endpoint was dead. All checks silently returned "clear" for every spot. Local PostGIS eliminates network dependencies, runs 1000x faster (~1ms vs ~1s), and works offline.
+
+> Fuente: «© Ministerio para la Transición Ecológica y el Reto Demográfico»
 
 ### 6.3a. AI Vision Labeler (`ai_vision_labeler.py`) — NEW
 
@@ -1017,17 +1066,17 @@ The workflow makes a single HTTP call to the worker's `/run/parallel` endpoint, 
 ### 7.2. Per-Cycle Throughput
 
 ```
-  Every 20 minutes (concurrent execution):
+  Every 12 minutes (concurrent execution):
   =========================================
   These run IN PARALLEL (3 threads):
     Terrain:  ~500 spots   (~2-3 min, tile cache helps)      [FAST]
-    Legal:    ~100 spots   (~7-8 min, 1s per WMS request)    [BOTTLENECK]
-    AI:       ~100 spots   (~2-3 min, 0.5s download + model) [MODERATE]
+    Legal:    ~1000 spots  (~6 min, 0.37s/spot: 1ms PostGIS + 300ms Catastro REST) [FAST]
+    AI:       ~1000 spots  (~2-3 min, 0.5s download + model) [MODERATE]
 
-  Total wall-clock time: ~8 min (limited by Legal, the slowest)
+  Total wall-clock time: ~6 min (limited by Legal, but now 10x faster than old WMS)
 
   Then sequentially:
-    Scoring:  ~500 spots   (DB only, <10s)                   [FAST]
+    Scoring:  ~1000 spots  (DB only, <10s)                   [FAST]
 ```
 
 Compared to the old sequential approach (~13 min for the same work), parallel execution saves ~5 min per cycle.
@@ -1115,13 +1164,12 @@ docker-compose logs -f api
   | Parameter             | Where            | Default | Effect                             |
   +-----------------------+------------------+---------+------------------------------------+
   | Terrain batch_size    | n8n / curl       | 500     | More spots/cycle. LRU cache helps. |
-  | Legal batch_size      | n8n / curl       | 100     | Bound by 1s WMS delay (~4s/spot).  |
-  | AI batch_size         | n8n / curl       | 100     | Bound by 0.5s download + inference.|
-  | Scoring batch_size    | n8n / curl       | 500     | Fast (DB only). Can go to 1000+.   |
+  | Legal batch_size      | n8n / curl       | 1000    | Fast: ~0.37s/spot (PostGIS+REST).  |
+  | AI batch_size         | n8n / curl       | 1000    | Bound by 0.5s download + inference.|
+  | Scoring batch_size    | n8n / curl       | 1000    | Fast (DB only). Can go higher.     |
   | DOWNLOAD_DELAY_SECONDS| ai_inference.py  | 0.5     | Reduce for speed. Respect PNOA.    |
-  | WMS_DELAY_SECONDS     | legal.py         | 1.0     | Reduce at risk of rate-limiting.   |
   | Terrain LRU cache     | terrain.py       | 512     | Increase for large clustered batch.|
-  | n8n schedule interval | n8n workflow      | 20 min  | Reduce for faster processing.      |
+  | n8n schedule interval | n8n workflow      | 12 min  | Reduce for faster processing.      |
   +-----------------------+------------------+---------+------------------------------------+
 ```
 

@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
@@ -22,18 +23,32 @@ const TAB_LABELS: Record<string, () => string> = {
   config: () => t('tabs.config'),
 };
 
+const TAB_CONTENT_HEIGHT = 46;
+const TAB_TOP_PADDING = 12;
+const TAB_BASE_BOTTOM_PADDING = 8;
+
 export const TabBar = ({
   state,
   descriptors,
   navigation,
 }: BottomTabBarProps) => {
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
+
+  // When the device has a bottom inset (home indicator / nav bar), add it.
+  // Otherwise fall back to a comfortable default.
+  const bottomPadding = insets.bottom > 0
+    ? insets.bottom + TAB_BASE_BOTTOM_PADDING
+    : 21;
 
   return (
     <View
       style={[
         styles.container,
-        { backgroundColor: colors.BACKGROUND },
+        {
+          backgroundColor: colors.BACKGROUND,
+          paddingBottom: bottomPadding,
+        },
       ]}
     >
       <View style={styles.tabRow}>
@@ -110,13 +125,11 @@ export const TabBar = ({
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
-    paddingTop: 12,
-    paddingBottom: 21,
+    paddingTop: TAB_TOP_PADDING,
     paddingHorizontal: 21,
   },
   tabRow: {
-    flex: 1,
+    height: TAB_CONTENT_HEIGHT,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

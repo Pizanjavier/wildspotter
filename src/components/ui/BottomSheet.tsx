@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { SPACING } from '@/constants/theme';
@@ -7,7 +7,6 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
   useBottomSheetGesture,
-  SCREEN_HEIGHT,
   DRAG_ZONE_HEIGHT,
 } from '@/hooks/useBottomSheetGesture';
 import { t } from '@/i18n';
@@ -24,6 +23,7 @@ export const BottomSheet = ({
   children,
 }: BottomSheetProps) => {
   const colors = useThemeColors();
+  const { height: screenHeight } = useWindowDimensions();
   const { panGesture, sheetStyle, handleOpacity, contentHeight } =
     useBottomSheetGesture(spotsCount);
 
@@ -41,6 +41,7 @@ export const BottomSheet = ({
         styles.container,
         sheetStyle,
         {
+          height: screenHeight,
           backgroundColor: colors.BACKGROUND,
           borderTopColor: colors.BORDER,
         },
@@ -88,7 +89,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: SCREEN_HEIGHT,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     shadowColor: '#000',

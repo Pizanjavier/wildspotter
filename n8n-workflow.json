@@ -7,13 +7,13 @@
           "interval": [
             {
               "field": "minutes",
-              "minutesInterval": 20
+              "minutesInterval": 12
             }
           ]
         }
       },
       "id": "66cb81c4-cc6e-40dc-938c-59f1ce1acbb5",
-      "name": "Every 20 Minutes",
+      "name": "Every 12 Minutes",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [80, 300]
@@ -24,13 +24,13 @@
         "url": "http://worker:8001/run/parallel",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{ \"terrain_batch\": 500, \"terrain_limit\": 500, \"legal_batch\": 100, \"ai_batch\": 100, \"scoring_batch\": 500 }",
+        "jsonBody": "{ \"terrain_batch\": 500, \"terrain_limit\": 500, \"legal_batch\": 1000, \"ai_batch\": 1000, \"context_batch\": 1000, \"amenities_batch\": 1000, \"scoring_batch\": 1000 }",
         "options": {
           "timeout": 1800000
         }
       },
       "id": "ae529995-2db0-4a48-9efc-98ed848c60c1",
-      "name": "Parallel (Terrain+Legal+AI+Score)",
+      "name": "Parallel (Terrain+Legal+AI+Context+Amenities+Score)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [400, 300]
@@ -48,18 +48,18 @@
     }
   ],
   "connections": {
-    "Every 20 Minutes": {
+    "Every 12 Minutes": {
       "main": [
         [
           {
-            "node": "Parallel (Terrain+Legal+AI+Score)",
+            "node": "Parallel (Terrain+Legal+AI+Context+Amenities+Score)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Parallel (Terrain+Legal+AI+Score)": {
+    "Parallel (Terrain+Legal+AI+Context+Amenities+Score)": {
       "main": [
         [
           {

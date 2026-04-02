@@ -5,6 +5,7 @@ import { CONFIG } from './config.js';
 import { healthRoutes } from './routes/health.js';
 import { spotsRoutes } from './routes/spots.js';
 import { satelliteRoutes } from './routes/satellite.js';
+import { legalTilesRoutes } from './routes/legal-tiles.js';
 
 const { Pool } = pg;
 
@@ -31,6 +32,7 @@ const start = async (): Promise<void> => {
   await app.register(healthRoutes);
   await app.register(spotsRoutes(pool));
   await app.register(satelliteRoutes);
+  await app.register(legalTilesRoutes);
 
   try {
     await app.listen({ port: CONFIG.PORT, host: CONFIG.HOST });

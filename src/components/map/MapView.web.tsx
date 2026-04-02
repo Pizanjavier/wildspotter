@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { COLORS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
+import { API_BASE_URL } from '@/constants/config';
 import { useMapStore } from '@/stores/map-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { getMapStyle, TERRAIN_DEM_SOURCE_ID } from '@/components/map/map-style';
@@ -29,6 +30,10 @@ const USER_LOCATION_DOT_LAYER_ID = 'user-location-dot';
 const SPOTS_SOURCE_ID = 'spots-source';
 const SPOTS_LAYER_ID = 'spots-layer';
 const SPOTS_GLOW_LAYER_ID = 'spots-glow-layer';
+
+const LEGAL_ZONES_SOURCE_ID = 'legal-zones';
+const LEGAL_ZONES_FILL_LAYER_ID = 'legal-zones-fill';
+const LEGAL_ZONES_LINE_LAYER_ID = 'legal-zones-line';
 
 type MapViewProps = {
   onMapReady?: () => void;
@@ -68,6 +73,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
   const { center, zoom, updateBounds, setCenter, setZoom, flyToTarget, clearFlyTo } = useMapStore();
   const userLocation = useMapStore((s) => s.userLocation);
   const theme = useSettingsStore((s) => s.theme);
+  const showLegalZones = useSettingsStore((s) => s.showLegalZones);
 
   const syncBounds = useCallback(
     (map: import('maplibre-gl').Map) => {
@@ -91,6 +97,19 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
     const map = mapRef.current as import('maplibre-gl').Map;
     map.setStyle(getMapStyle(theme));
   }, [theme]);
+
+  // Toggle legal zone layers visibility
+  useEffect(() => {
+    if (!mapLoadedRef.current || !mapRef.current) return;
+    const map = mapRef.current as import('maplibre-gl').Map;
+    const visibility = showLegalZones ? 'visible' : 'none';
+    try {
+      map.setLayoutProperty(LEGAL_ZONES_FILL_LAYER_ID, 'visibility', visibility);
+      map.setLayoutProperty(LEGAL_ZONES_LINE_LAYER_ID, 'visibility', visibility);
+    } catch {
+      // Layers may not exist yet if map hasn't fully loaded
+    }
+  }, [showLegalZones]);
 
   // Update spots layer when spots change
   useEffect(() => {
@@ -187,6 +206,43 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           map.addSource(SPOTS_SOURCE_ID, {
             type: 'geojson',
             data: spotsToGeoJSON(spots),
+          });
+
+          // Legal restriction zones overlay (vector tiles)
+          map.addSource(LEGAL_ZONES_SOURCE_ID, {
+            type: 'vector',
+            tiles: [`${API_BASE_URL}/legal/tiles/{z}/{x}/{y}.pbf`],
+            minzoom: 4,
+            maxzoom: 10,
+          });
+
+          map.addLayer({
+            id: LEGAL_ZONES_FILL_LAYER_ID,
+            type: 'fill',
+            source: LEGAL_ZONES_SOURCE_ID,
+            'source-layer': 'legal_zones',
+            paint: {
+              'fill-color': '#EF4444',
+              'fill-opacity': 0.15,
+            },
+            layout: {
+              visibility: showLegalZones ? 'visible' : 'none',
+            },
+          });
+
+          map.addLayer({
+            id: LEGAL_ZONES_LINE_LAYER_ID,
+            type: 'line',
+            source: LEGAL_ZONES_SOURCE_ID,
+            'source-layer': 'legal_zones',
+            paint: {
+              'line-color': '#EF4444',
+              'line-opacity': 0.5,
+              'line-width': 1,
+            },
+            layout: {
+              visibility: showLegalZones ? 'visible' : 'none',
+            },
           });
 
           // Data-driven color: green (80+), cyan (60-79), amber (<60)

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SPACING } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
@@ -17,6 +18,8 @@ import { SearchSuggestions } from '@/components/map/SearchSuggestions';
 import { t } from '@/i18n';
 
 const DEBOUNCE_MS = 500;
+export const SEARCH_BAR_HEIGHT = 50;
+const SEARCH_BAR_TOP_OFFSET = 8;
 
 type SearchBarProps = {
   onSelect?: (result: GeocodingResult) => void;
@@ -24,6 +27,7 @@ type SearchBarProps = {
 
 export const SearchBar = ({ onSelect }: SearchBarProps) => {
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeocodingResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,8 +98,10 @@ export const SearchBar = ({ onSelect }: SearchBarProps) => {
     inputRef.current?.focus();
   }, []);
 
+  const topOffset = Platform.OS === 'web' ? 16 : insets.top + SEARCH_BAR_TOP_OFFSET;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { top: topOffset }]}>
       <View style={[styles.bar, { backgroundColor: colors.CARD }]}>
         <Ionicons
           name="search"
@@ -141,10 +147,9 @@ export const SearchBar = ({ onSelect }: SearchBarProps) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: Platform.OS === 'web' ? 16 : 52,
     left: SPACING.MD,
     right: SPACING.MD,
-    zIndex: 10,
+    zIndex: 20,
   },
   bar: {
     flexDirection: 'row',

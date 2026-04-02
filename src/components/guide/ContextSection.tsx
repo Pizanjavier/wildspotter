@@ -16,8 +16,9 @@ const FACTORS: FactorConfig[] = [
   { icon: 'leaf-outline', textKey: 'guide.contextScenicValue' },
   { icon: 'eye-off-outline', textKey: 'guide.contextPrivacy' },
   { icon: 'construct-outline', textKey: 'guide.contextIndustrial' },
-  { icon: 'train-outline', textKey: 'guide.contextRailway' },
   { icon: 'people-outline', textKey: 'guide.contextVanCommunity' },
+  { icon: 'water-outline', textKey: 'guide.contextDrinkingWater' },
+  { icon: 'paw-outline', textKey: 'guide.contextDogFriendly' },
 ];
 
 export const ContextSection = () => {

@@ -96,7 +96,8 @@ def get_progress() -> dict[str, Any]:
                     COUNT(*) FILTER (WHERE terrain_score IS NOT NULL) AS terrain,
                     COUNT(*) FILTER (WHERE legal_status IS NOT NULL) AS legal,
                     COUNT(*) FILTER (WHERE ai_score IS NOT NULL) AS ai,
-                    COUNT(*) FILTER (WHERE context_score IS NOT NULL) AS context
+                    COUNT(*) FILTER (WHERE context_score IS NOT NULL) AS context,
+                    COUNT(*) FILTER (WHERE context_details->'dog_friendly' IS NOT NULL) AS amenities
                 FROM spots
             """)
             stage_row = cur.fetchone()
@@ -105,6 +106,7 @@ def get_progress() -> dict[str, Any]:
                 "legal_done": stage_row[1],
                 "ai_done": stage_row[2],
                 "context_done": stage_row[3],
+                "amenities_done": stage_row[4],
                 "completed": completed
             }
 
@@ -212,6 +214,13 @@ def run_pipeline_pass(
         results["context"] = 0
 
     try:
+        import amenities_scoring
+        results["amenities"] = amenities_scoring.process_batch(batch_size=scoring_batch)
+    except Exception as e:
+        logger.error("Amenities scoring failed: %s", e)
+        results["amenities"] = 0
+
+    try:
         import scoring
         results["scoring"] = scoring.process_batch(batch_size=scoring_batch)
     except Exception as e:
@@ -226,6 +235,8 @@ def run_parallel_pass(
     terrain_limit: int = 500,
     legal_batch: int = 100,
     ai_batch: int = 100,
+    context_batch: int = 500,
+    amenities_batch: int = 500,
     scoring_batch: int = 500,
 ) -> dict[str, Any]:
     """Run terrain, legal, and AI in parallel threads, then scoring."""
@@ -269,10 +280,18 @@ def run_parallel_pass(
     # Context scoring runs after the parallel stage
     try:
         import context_scoring
-        results["context"] = context_scoring.process_batch(batch_size=100)
+        results["context"] = context_scoring.process_batch(batch_size=context_batch)
     except Exception as e:
         logger.error("Context scoring failed: %s", e)
         results["context"] = 0
+
+    # Amenities scoring
+    try:
+        import amenities_scoring
+        results["amenities"] = amenities_scoring.process_batch(batch_size=amenities_batch)
+    except Exception as e:
+        logger.error("Amenities scoring failed: %s", e)
+        results["amenities"] = 0
 
     # Final scoring runs last
     try:
@@ -343,7 +362,8 @@ h1{color:#22D3EE;font-size:24px;margin-bottom:24px;letter-spacing:2px}
 <div style="font-size:16px; text-align:center; font-weight:bold; margin-bottom:8px; color:#4ADE80" id="pctText">0% Fully Completed</div>
 <div class="bar-bg">
   <div id="bar-completed" style="background:#4ADE80;width:0%;transition:width 1s;" title="Completed"></div>
-  <div id="bar-context" style="background:#B794F4;width:0%;transition:width 1s;" title="Context Done (Wait: Scoring)"></div>
+  <div id="bar-amenities" style="background:#EC4899;width:0%;transition:width 1s;" title="Amenities Done (Wait: Scoring)"></div>
+  <div id="bar-context" style="background:#B794F4;width:0%;transition:width 1s;" title="Context Done (Wait: Amenities)"></div>
   <div id="bar-ai" style="background:#63B3ED;width:0%;transition:width 1s;" title="AI Done (Wait: Context)"></div>
   <div id="bar-legal" style="background:#F6E05E;width:0%;transition:width 1s;" title="Legal Done (Wait: AI)"></div>
   <div id="bar-terrain" style="background:#FBD38D;width:0%;transition:width 1s;" title="Terrain Done (Wait: Legal)"></div>
@@ -352,7 +372,8 @@ h1{color:#22D3EE;font-size:24px;margin-bottom:24px;letter-spacing:2px}
 </div>
 <div style="display:flex; justify-content:center; gap:16px; font-size:10px; color:#94A3B8; margin-bottom:16px; flex-wrap:wrap; text-transform:uppercase; letter-spacing:1px;">
   <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:#4ADE80;"></span>Completed</span>
-  <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:#B794F4;"></span>Wait: Scoring</span>
+  <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:#EC4899;"></span>Wait: Scoring</span>
+  <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:#B794F4;"></span>Wait: Amenities</span>
   <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:#63B3ED;"></span>Wait: Context</span>
   <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:#F6E05E;"></span>Wait: AI</span>
   <span style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:2px;background:#FBD38D;"></span>Wait: Legal</span>
@@ -386,11 +407,11 @@ h1{color:#22D3EE;font-size:24px;margin-bottom:24px;letter-spacing:2px}
 <div class="ticker" id="activity-log">Awaiting data...</div>
 <div class="footer">Auto-refreshes every 30s &mdash; <span id="updated"></span></div>
 <script>
-const order = ['pending','terrain_done','legal_done','ai_done','context_done','error'];
-const labels = {pending:'Wait: Terrain',terrain_done:'Wait: Legal',legal_done:'Wait: AI',ai_done:'Wait: Context',context_done:'Wait: Scoring',error:'Errors'};
-const colors = {pending:'#94A3B8',terrain_done:'#FBD38D',legal_done:'#F6E05E',ai_done:'#63B3ED',context_done:'#B794F4',error:'#EF4444'};
-const dones_order = ['terrain_done', 'legal_done', 'ai_done', 'context_done', 'completed'];
-const dones_labels = {terrain_done:'Terrain Done', legal_done:'Legal Done', ai_done:'AI Done', context_done:'Context Done', completed:'Overall Completed'};
+const order = ['pending','terrain_done','legal_done','ai_done','context_done','amenities_done','error'];
+const labels = {pending:'Wait: Terrain',terrain_done:'Wait: Legal',legal_done:'Wait: AI',ai_done:'Wait: Context',context_done:'Wait: Amenities',amenities_done:'Wait: Scoring',error:'Errors'};
+const colors = {pending:'#94A3B8',terrain_done:'#FBD38D',legal_done:'#F6E05E',ai_done:'#63B3ED',context_done:'#B794F4',amenities_done:'#EC4899',error:'#EF4444'};
+const dones_order = ['terrain_done', 'legal_done', 'ai_done', 'context_done', 'amenities_done', 'completed'];
+const dones_labels = {terrain_done:'Terrain Done', legal_done:'Legal Done', ai_done:'AI Done', context_done:'Context Done', amenities_done:'Amenities Done', completed:'Overall Completed'};
 let prev_pipeline = null;
 let prev_dones = null;
 
@@ -444,7 +465,8 @@ async function refresh(){
     setBar('bar-terrain', d.pipeline['terrain_done'], 'Wait: Legal');
     setBar('bar-legal', d.pipeline['legal_done'], 'Wait: AI');
     setBar('bar-ai', d.pipeline['ai_done'], 'Wait: Context');
-    setBar('bar-context', d.pipeline['context_done'], 'Wait: Scoring');
+    setBar('bar-context', d.pipeline['context_done'], 'Wait: Amenities');
+    setBar('bar-amenities', d.pipeline['amenities_done'], 'Wait: Scoring');
     setBar('bar-completed', d.completed, 'Completed');
     setBar('bar-error', d.pipeline['error'], 'Error');
     setBar('bar-pending', d.pipeline['pending'], 'Unstarted (Pending)');
@@ -607,6 +629,20 @@ def run_context_endpoint() -> Any:
     return jsonify({"processed": count, "status": get_status()})
 
 
+@app.route("/run/amenities", methods=["POST"])
+def run_amenities_endpoint() -> Any:
+    """Run an amenities scoring batch."""
+    data = request.get_json(silent=True) or {}
+    batch_size = data.get("batch_size", 500)
+    try:
+        import amenities_scoring
+        count = amenities_scoring.process_batch(batch_size=batch_size)
+    except Exception as e:
+        logger.error("Amenities scoring failed: %s", e)
+        return jsonify({"error": str(e)}), 500
+    return jsonify({"processed": count, "status": get_status()})
+
+
 @app.route("/run/scoring", methods=["POST"])
 def run_scoring_endpoint() -> Any:
     """Run a scoring batch."""
@@ -659,6 +695,8 @@ def run_parallel_endpoint() -> Any:
         terrain_limit=data.get("terrain_limit", 500),
         legal_batch=data.get("legal_batch", 100),
         ai_batch=data.get("ai_batch", 100),
+        context_batch=data.get("context_batch", 500),
+        amenities_batch=data.get("amenities_batch", 500),
         scoring_batch=data.get("scoring_batch", 500),
     )
     return jsonify({"results": results, "status": get_status()})
@@ -805,10 +843,11 @@ def reset_stage_endpoint() -> Any:
     from_stage = data.get("from")
 
     stage_map = {
-        "terrain_done": ("pending", ["terrain_done", "legal_done", "ai_done", "context_done", "completed"]),
-        "legal_done": ("terrain_done", ["legal_done", "ai_done", "context_done", "completed"]),
-        "ai_done": ("legal_done", ["ai_done", "context_done", "completed"]),
-        "context_done": ("ai_done", ["context_done", "completed"]),
+        "terrain_done": ("pending", ["terrain_done", "legal_done", "ai_done", "context_done", "amenities_done", "completed"]),
+        "legal_done": ("terrain_done", ["legal_done", "ai_done", "context_done", "amenities_done", "completed"]),
+        "ai_done": ("legal_done", ["ai_done", "context_done", "amenities_done", "completed"]),
+        "context_done": ("ai_done", ["context_done", "amenities_done", "completed"]),
+        "amenities_done": ("context_done", ["amenities_done", "completed"]),
     }
 
     if from_stage not in stage_map:
@@ -849,6 +888,12 @@ def reset_stage_endpoint() -> Any:
                     UPDATE spots
                     SET context_score = NULL, context_details = NULL,
                         composite_score = NULL, status = %s, updated_at = NOW()
+                    WHERE status IN ({placeholders})
+                """, [target_status] + affected)
+            elif target_status == "context_done":
+                cur.execute(f"""
+                    UPDATE spots
+                    SET composite_score = NULL, status = %s, updated_at = NOW()
                     WHERE status IN ({placeholders})
                 """, [target_status] + affected)
             count = cur.rowcount

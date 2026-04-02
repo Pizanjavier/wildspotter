@@ -38,13 +38,15 @@ The Radar identifies candidate spots from OpenStreetMap data stored in a local P
 
 ### 2.4. The "Legal Judge" (Restriction Cross-Referencing)
 
-- **Environmental Protection Check:** Cross-references spots against official environmental boundaries:
-  - Red Natura 2000 zones
-  - National Parks and Natural Parks
-  - Coastal Law zones (Ley de Costas)
-- **Cadastre / Public Land Check:** Determines if land is strictly private (fenced) or public utility forestry.
-- **Visual Warnings:** Spots inside protected polygons are clearly marked with warnings. No spots are rejected — legal data is stored and the user can toggle "Hide restricted areas" in preferences to filter them out at query time.
-- **Data Sources:** WMS services from MITECO, Sede Electrónica del Catastro, and IGN.
+- **Environmental Protection Check:** Cross-references spots against official environmental boundaries using **local PostGIS spatial queries** against imported MITECO shapefiles:
+  - Red Natura 2000 zones (1,636 polygons, SRID 3042)
+  - National Parks and Natural Parks (1,788 polygons, SRID 25830)
+  - Coastal Law zones — Ley de Costas: DPMT boundary line (20m buffer), Servidumbre de Protección, and Terrenos Incluidos; minus Núcleos Excluidos (urban exemptions) (SRID 25830)
+- **Cadastre / Public Land Check:** Queries the Catastro REST API (`Consulta_RCCOOR`) to determine land classification (rustic, urban, registered, no_parcel). Urban parcels are flagged as private.
+- **Visual Warnings:** Spots inside protected polygons are clearly marked with warnings in the detail view (red X icons per check). No spots are rejected — legal data is stored and the user can toggle "Hide restricted areas" in preferences to filter them out at query time.
+- **Map Overlay:** Users can toggle "Show legal zones on map" in Config to display all restriction areas as a semi-transparent red overlay (`#EF4444`, 15% opacity fill, 50% opacity border) on the MapLibre map. The overlay uses pre-generated Mapbox Vector Tiles (MVT) served as static `.pbf` files from `data/legal-tiles/`. Tiles are generated at z4–z10 by a Python script (`workers/generate_legal_tiles.py`) that creates a PostGIS materialized view with coastline-clipped, pre-transformed (EPSG:3857), and `ST_Subdivide`d geometries, then iterates over Spain's bounding box. The DPMT boundary line is included as a 20m buffer polygon to match the per-spot legal check. Marine-only zones are excluded by clipping against Spain's OSM administrative boundary. Tiles are ~74 MB total on disk and served with zero PostGIS cost at runtime.
+- **Data Sources:** MITECO shapefiles imported into PostGIS for Natura 2000, National Parks, and Coastal Law (offline, ~1ms per query). Catastro uses a live REST API (~300ms per query). Previous WMS-based approach was replaced due to unreliable endpoints, wrong layer names, and XML-only responses that caused silent failures.
+- **Attribution:** Fuente: «© Ministerio para la Transición Ecológica y el Reto Demográfico»
 
 ### 2.5. The "Satellite Eye" (AI Visual Validation)
 
@@ -60,6 +62,10 @@ The Radar identifies candidate spots from OpenStreetMap data stored in a local P
 
 After AI inference, each spot is evaluated against its surrounding geographic context using PostGIS spatial queries against the imported OSM data. This stage produces a `context_score` (0-100) and a `context_details` JSONB breakdown. No external API calls are needed — all data comes from the local PostGIS database.
 
+### 2.7. The "Amenities Analyst" (Amenities Scoring)
+
+After context scoring, each spot evaluates nearby practical amenities like drinking water and dog-friendly locations using local PostGIS queries. This adds bonus points directly to the `context_score` and logs the findings in the `context_details`. No spots are rejected.
+
 #### Context Sub-Scores
 
 | Factor | Query Strategy | Score Effect | Rationale |
@@ -72,9 +78,16 @@ After AI inference, each spot is evaluated against its surrounding geographic co
 | **Railway noise** | Distance to `railway=rail` | <150m = -15, 150-500m = -5 | Train noise at night. |
 | **Van community signal** | Count nearby `tourism=caravan_site` or `amenity=parking` with camping tags within 5km | Present = +10 | Indicates area tolerance for overnight vans. |
 
-The base context score starts at 50 (neutral) and is adjusted by the sum of all sub-score bonuses/penalties, clamped to 0-100.
+#### Amenities Sub-Scores
 
-### 2.7. Success Probability Score
+| Factor | Query Strategy | Score Effect | Rationale |
+|--------|---------------|-------------|-----------|
+| **Drinking Water** | Distance to `amenity=drinking_water` within 1km | <500m = +10, 500m-1km = +5 | Easy access to water is highly valued for vanlife. |
+| **Dog Friendly** | Distance to dog-friendly places (e.g., beaches with `dog=yes`) within 2km | <1km = +10, 1km-2km = +5 | Traveling with pets is common; nearby dog-friendly areas are a major plus. |
+
+The base context score starts at 50 (neutral) and is adjusted by the sum of all context and amenities sub-score bonuses/penalties, clamped to 0-100.
+
+### 2.8. Success Probability Score
 
 Every spot that completes the full pipeline (including context analysis) receives a composite score (0-100):
 
@@ -89,7 +102,7 @@ Every spot that completes the full pipeline (including context analysis) receive
   - Cyan (`#22D3EE`): 60-79 (medium confidence)
   - Amber (`#FBBF24`): <60 (low/warning)
 
-### 2.8. The Google Maps Bridge (Manual Validation & Navigation)
+### 2.9. The Google Maps Bridge (Manual Validation & Navigation)
 
 - **Spot Dashboard:** Displays the score alongside metrics: surface type, slope %, elevation, legal status checklist.
 - **Deep Linking:**
@@ -115,7 +128,7 @@ All heavy processing (geographic filtering, terrain analysis, legal cross-refere
 | **Backend API** | Fastify (TypeScript) | Serves processed spot data as JSON to the mobile app |
 | **Database** | PostgreSQL + PostGIS | Hosts Spain OSM data, terrain/legal/AI results, spatial indexing |
 | **Orchestration** | n8n | Scheduled data ingestion (Geofabrik diffs) and processing pipelines |
-| **Processing Worker** | Python | Terrain-RGB analysis, WMS legal checks, AI model inference |
+| **Processing Worker** | Python | Terrain-RGB analysis, PostGIS legal checks, Catastro REST API, AI model inference |
 
 > **Hybrid rationale:** The API is TypeScript (shared language with the React Native frontend, shared types, single toolchain). Processing workers remain Python because the GIS/AI ecosystem (GDAL, ONNX Runtime, numpy, rasterio) has no viable Node.js equivalent.
 
@@ -137,7 +150,7 @@ All heavy processing (geographic filtering, terrain analysis, legal cross-refere
 |------|--------|-----------------|
 | **Spot Geometry (OSM)** | Geofabrik `spain-latest.osm.pbf` + daily `.osc` diffs | Imported into PostGIS via `osm2pgsql` (backend) |
 | **Elevation** | Terrain-RGB tiles (AWS Open Data / IGN Spain) | Processing Worker (backend) |
-| **Legal & Cadastre** | WMS: MITECO, Catastro, IGN | Processing Worker (backend) |
+| **Legal & Cadastre** | MITECO shapefiles (PostGIS local) + Catastro REST API | Processing Worker (backend) |
 | **Satellite Imagery** | IGN Spain PNOA orthophotos (primary), Bing Maps Static API (fallback) | Processing Worker (backend), cached to disk |
 
 ### 3.6. Artificial Intelligence & Processing
@@ -171,7 +184,7 @@ All heavy processing (geographic filtering, terrain analysis, legal cross-refere
 | `context_details` | JSONB | Breakdown of context sub-scores |
 | `composite_score` | FLOAT | Weighted final score (0-100) |
 | `satellite_image_path` | VARCHAR | Cached satellite tile path |
-| `status` | VARCHAR | `pending`, `terrain_done`, `legal_done`, `ai_done`, `context_done`, `completed` |
+| `status` | VARCHAR | `pending`, `terrain_done`, `legal_done`, `ai_done`, `context_done`, `amenities_done`, `completed` |
 | `created_at` | TIMESTAMPTZ | Ingestion timestamp |
 | `updated_at` | TIMESTAMPTZ | Last processed timestamp |
 
@@ -179,13 +192,15 @@ All heavy processing (geographic filtering, terrain analysis, legal cross-refere
 
 ```json
 {
-  "natura2000": { "inside": false, "zone_name": null },
-  "national_park": { "inside": false, "park_name": null },
-  "coastal_law": { "inside": false, "distance_m": null },
-  "cadastre": { "classification": "public_forestry", "private": false },
+  "natura2000": { "inside": false },
+  "national_park": { "inside": false },
+  "coastal_law": { "inside": false },
+  "cadastre": { "classification": "rustic", "private": false, "ref": "33008A04800101" },
   "blocked": false
 }
 ```
+
+> **Legal data architecture:** Natura 2000, National Parks, and Coastal Law checks use local PostGIS `ST_Intersects` queries against imported MITECO shapefiles (~1ms/spot). Cadastre uses the Catastro REST API `Consulta_RCCOOR` (~300ms/spot). This hybrid approach replaced the original WMS-based system which suffered from wrong layer names, XML-only responses, and a dead Coastal Law endpoint — all causing silent failures where every spot passed as "legal clear".
 
 ### 4.3. Context Details Structure
 
@@ -197,7 +212,9 @@ All heavy processing (geographic filtering, terrain analysis, legal cross-refere
   "privacy": { "score": 15, "is_dead_end": true, "nearest_place": "village", "place_distance_m": 2100 },
   "industrial": { "score": 0, "nearby": false },
   "railway": { "score": 0, "distance_m": null },
-  "van_community": { "score": 10, "caravan_sites_5km": 1 }
+  "van_community": { "score": 10, "caravan_sites_5km": 1 },
+  "drinking_water": { "score": 10, "distance_m": 150 },
+  "dog_friendly": { "score": 5, "distance_m": 1200 }
 }
 ```
 
@@ -221,13 +238,13 @@ Mockups are in `design/wildspotter-mockup-v2.pen` (editable) and exported as PNG
 ### 5.2. Screen Flow
 
 #### Map View (`design/map-view.png`)
-Full-screen dark vector map with floating search bar, "SCAN THIS AREA" radar button, and a draggable bottom sheet showing result previews. Pill-style tab bar (Map / Spots / Legal / Config).
+Full-screen dark vector map with floating search bar, "SCAN THIS AREA" radar button, and a draggable bottom sheet showing result previews. Optional red overlay showing legal restriction zones (Natura 2000, National Parks, Coastal Law) toggled from Config. Pill-style tab bar (Map / Spots / Legal / Config).
 
 #### Scan Results (`design/scan-results.png`)
-Expanded bottom sheet listing all discovered spots with score badges. Pipeline filter indicators at the top show the funnel: Radar → Topographer → Legal → AI.
+Expanded bottom sheet listing all discovered spots with score badges. Pipeline filter indicators at the top show the funnel: Radar → Topographer → Legal → AI → Context → Amenities.
 
 #### Spot Detail (`design/spot-detail.png`)
 Satellite preview with AI/van-detection badges. Metrics cards (surface, slope, elevation), legal status checklist with green checkmarks, and dual action buttons: Inspect (Google Maps satellite) and Navigate (turn-by-turn).
 
 #### Config (`design/wildspotter-mockup-v2.pen` → Config frame)
-Settings screen with Preferences section (max slope threshold input, hide restricted areas toggle, offline mode toggle) and About section (version, tagline). Filter preferences are applied at query time — they do not reject or delete data, only control what the API returns.
+Settings screen with Preferences section (max slope threshold input, hide restricted areas toggle, show legal zones on map toggle, offline mode toggle) and About section (version, tagline). Filter preferences are applied at query time — they do not reject or delete data, only control what the API returns.

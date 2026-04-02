@@ -3,7 +3,7 @@
 Combines terrain_score (20%), ai_score (25%), and context_score (55%)
 into a final composite_score and marks spots as completed.
 
-Pipeline stage: context_done → completed
+Pipeline stage: amenities_done → completed
 
 Usage:
     python scoring.py --batch-size 50
@@ -34,7 +34,7 @@ def compute_composite_score(
 
 
 def process_batch(batch_size: int = 50) -> int:
-    """Fetch and score a batch of context_done spots. Returns count processed."""
+    """Fetch and score a batch of amenities_done spots. Returns count processed."""
     conn = get_db_connection()
     processed = 0
 
@@ -44,7 +44,7 @@ def process_batch(batch_size: int = 50) -> int:
                 """
                 SELECT id, osm_id, terrain_score, ai_score, context_score
                 FROM spots
-                WHERE status = 'context_done'
+                WHERE status = 'amenities_done'
                   AND terrain_score IS NOT NULL
                   AND ai_score IS NOT NULL
                   AND context_score IS NOT NULL
@@ -56,7 +56,7 @@ def process_batch(batch_size: int = 50) -> int:
             rows: List[Tuple[str, int, float, float, float]] = cur.fetchall()
 
         if not rows:
-            logger.info("No context_done spots ready for final scoring")
+            logger.info("No amenities_done spots ready for final scoring")
             return 0
 
         logger.info("Scoring %d spots", len(rows))

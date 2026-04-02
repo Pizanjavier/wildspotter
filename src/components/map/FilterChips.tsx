@@ -1,19 +1,29 @@
 import { View, Text, Pressable, ScrollView, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSettingsStore } from '@/stores/settings-store';
+import { SEARCH_BAR_HEIGHT } from '@/components/map/SearchBar';
 import { t } from '@/i18n';
+
+const CHIPS_GAP = 8;
 
 export const FilterChips = () => {
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const slopeThreshold = useSettingsStore((s) => s.slopeThreshold);
   const minScore = useSettingsStore((s) => s.minScore);
 
+  // Position below SearchBar: insets.top + searchBarTopOffset(8) + searchBarHeight + gap
+  const topOffset = Platform.OS === 'web'
+    ? 74
+    : insets.top + 8 + SEARCH_BAR_HEIGHT + CHIPS_GAP;
+
   return (
-    <View style={styles.chipsContainer}>
+    <View style={[styles.chipsContainer, { top: topOffset }]}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -60,7 +70,6 @@ export const FilterChips = () => {
 const styles = StyleSheet.create({
   chipsContainer: {
     position: 'absolute',
-    top: Platform.OS === 'web' ? 74 : 110,
     left: 0,
     right: 0,
     zIndex: 10,

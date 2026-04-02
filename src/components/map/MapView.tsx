@@ -5,12 +5,16 @@ import {
   MapView as MLMapView,
   Camera,
   ShapeSource,
+  VectorSource,
   CircleLayer,
   SymbolLayer,
+  FillLayer,
+  LineLayer,
   type CameraRef,
   type RegionPayload,
 } from '@maplibre/maplibre-react-native';
 import { COLORS } from '@/constants/theme';
+import { API_BASE_URL } from '@/constants/config';
 import { useMapStore } from '@/stores/map-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { getMapStyle } from '@/components/map/map-style';
@@ -19,6 +23,12 @@ import type { SpotSummary } from '@/services/api/types';
 const SPOTS_SOURCE_ID = 'spots-source';
 const SPOTS_LAYER_ID = 'spots-layer';
 const SPOTS_GLOW_LAYER_ID = 'spots-glow-layer';
+
+const LEGAL_ZONES_SOURCE_ID = 'legal-zones';
+const LEGAL_ZONES_FILL_LAYER_ID = 'legal-zones-fill';
+const LEGAL_ZONES_LINE_LAYER_ID = 'legal-zones-line';
+
+const LEGAL_TILE_URL = `${API_BASE_URL}/legal/tiles/{z}/{x}/{y}.pbf`;
 
 type MapViewProps = {
   onMapReady?: () => void;
@@ -79,6 +89,7 @@ const DOT_STYLE = {
 export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
   const cameraRef = useRef<CameraRef>(null);
   const theme = useSettingsStore((s) => s.theme);
+  const showLegalZones = useSettingsStore((s) => s.showLegalZones);
   const {
     center,
     zoom,
@@ -171,6 +182,35 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             zoomLevel: zoom,
           }}
         />
+
+        {showLegalZones && (
+          <VectorSource
+            id={LEGAL_ZONES_SOURCE_ID}
+            tileUrlTemplates={[LEGAL_TILE_URL]}
+            minZoomLevel={4}
+            maxZoomLevel={10}
+          >
+            <FillLayer
+              id={LEGAL_ZONES_FILL_LAYER_ID}
+              sourceLayerID="legal_zones"
+              style={{
+                fillColor: '#EF4444',
+                fillOpacity: 0.15,
+              }}
+              belowLayerID={SPOTS_GLOW_LAYER_ID}
+            />
+            <LineLayer
+              id={LEGAL_ZONES_LINE_LAYER_ID}
+              sourceLayerID="legal_zones"
+              style={{
+                lineColor: '#EF4444',
+                lineOpacity: 0.5,
+                lineWidth: 1,
+              }}
+              belowLayerID={SPOTS_GLOW_LAYER_ID}
+            />
+          </VectorSource>
+        )}
 
         <ShapeSource id={SPOTS_SOURCE_ID} shape={spotsGeoJSON} onPress={handleSpotPress} hitbox={{ width: 24, height: 24 }}>
           <CircleLayer

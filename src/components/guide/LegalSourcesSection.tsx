@@ -16,26 +16,26 @@ const SOURCES: SourceConfig[] = [
   {
     icon: 'leaf-outline',
     label: 'Red Natura 2000',
-    description: 'EU network of protected natural areas (LIC/ZEC and ZEPA zones). Data from MITECO.',
-    endpoint: 'wms.mapama.gob.es/sig/Biodiversidad',
+    description: 'EU network of protected natural areas (LIC/ZEC and ZEPA zones). Local PostGIS data from MITECO shapefiles.',
+    endpoint: 'PostGIS · natura2000 (1,636 polygons)',
   },
   {
     icon: 'earth-outline',
     label: 'National Parks',
-    description: 'Parques Nacionales — boundaries and peripheral protection zones. Served by OAPN.',
-    endpoint: 'sigred.oapn.es/geoserverOAPN',
+    description: 'Parques Nacionales and Espacios Naturales Protegidos — boundaries and peripheral protection zones.',
+    endpoint: 'PostGIS · national_parks (1,788 polygons)',
   },
   {
     icon: 'water-outline',
     label: 'Coastal Law (DPMT)',
-    description: 'Dominio Publico Maritimo Terrestre — public maritime-terrestrial domain.',
-    endpoint: 'wms.mapama.gob.es/sig/Costas/DPMT',
+    description: 'Dominio Público Marítimo Terrestre — DPMT boundary, Servidumbre de Protección, and Terrenos Incluidos (minus Núcleos Excluidos).',
+    endpoint: 'PostGIS · dpmt + servidumbre_proteccion',
   },
   {
     icon: 'document-text-outline',
     label: 'Cadastre (Land Parcels)',
-    description: 'Sede Electronica del Catastro — INSPIRE cadastral parcel layer.',
-    endpoint: 'ovc.catastro.meh.es/Cartografia',
+    description: 'Sede Electrónica del Catastro — land classification via REST API (rustic, urban, registered).',
+    endpoint: 'ovc.catastro.meh.es · Consulta_RCCOOR',
   },
 ];
 
@@ -48,24 +48,27 @@ export const LegalSourcesSection = () => {
         {t('guide.legalSourcesBody')}
       </Text>
       {SOURCES.map((src) => (
-        <View
-          key={src.label}
-          style={[styles.card, { backgroundColor: colors.CARD_ELEVATED ?? colors.BACKGROUND }]}
-        >
-          <View style={styles.cardHeader}>
-            <Ionicons name={src.icon} size={16} color={colors.ACCENT} />
-            <Text style={[styles.cardLabel, { color: colors.TEXT_PRIMARY }]}>
-              {src.label}
+          <View
+            key={src.label}
+            style={[styles.card, { backgroundColor: colors.CARD_ELEVATED ?? colors.BACKGROUND }]}
+          >
+            <View style={styles.cardHeader}>
+              <Ionicons name={src.icon} size={16} color={colors.ACCENT} />
+              <Text style={[styles.cardLabel, { color: colors.TEXT_PRIMARY }]}>
+                {src.label}
+              </Text>
+            </View>
+            <Text style={[styles.cardDesc, { color: colors.TEXT_SECONDARY }]}>
+              {src.description}
+            </Text>
+            <Text style={[styles.cardEndpoint, { color: colors.TEXT_MUTED }]}>
+              {src.endpoint}
             </Text>
           </View>
-          <Text style={[styles.cardDesc, { color: colors.TEXT_SECONDARY }]}>
-            {src.description}
-          </Text>
-          <Text style={[styles.cardEndpoint, { color: colors.TEXT_MUTED }]}>
-            {src.endpoint}
-          </Text>
-        </View>
-      ))}
+        ))}
+        <Text style={[styles.attribution, { color: colors.TEXT_MUTED }]}>
+          {t('guide.legalAttribution')}
+        </Text>
     </View>
   );
 };
@@ -103,5 +106,12 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILIES.DATA,
     fontSize: 10,
     paddingLeft: SPACING.XS + 16,
+  },
+  attribution: {
+    fontFamily: FONT_FAMILIES.DATA,
+    fontSize: 10,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    paddingTop: SPACING.SM,
   },
 });

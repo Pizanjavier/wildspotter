@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { DRAG_ZONE_HEIGHT, COLLAPSED_PEEK } from '@/hooks/useBottomSheetGesture';
 import { t } from '@/i18n';
 
 type ScanButtonProps = {
@@ -11,6 +12,9 @@ type ScanButtonProps = {
   isScanning?: boolean;
   disabled?: boolean;
 };
+
+/** Gap between the scan button and the collapsed sheet header */
+const SCAN_BUTTON_MARGIN = 20;
 
 export const ScanButton = ({
   onPress,
@@ -55,8 +59,12 @@ export const ScanButton = ({
       : t('map.scanButton');
   const iconName = isScanning ? 'pulse-outline' : 'radio-outline';
 
+  // Position above the collapsed bottom sheet
+  const collapsedSheetHeight = DRAG_ZONE_HEIGHT + COLLAPSED_PEEK;
+  const bottomOffset = collapsedSheetHeight + SCAN_BUTTON_MARGIN;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { bottom: bottomOffset }]}>
       <Animated.View style={[styles.wrapper, { opacity: pulseAnim }]}>
         <Pressable
           style={[
@@ -95,7 +103,6 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     alignSelf: 'center',
-    bottom: 260,
     zIndex: 10,
     alignItems: 'center',
   },

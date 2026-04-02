@@ -17,7 +17,7 @@ type FactorConfig = {
   key: keyof ContextDetails;
   label: string;
   icon: keyof typeof Ionicons.glyphMap;
-  getDetail: (sub: ContextDetails[keyof ContextDetails]) => string;
+  getDetail: (sub: NonNullable<ContextDetails[keyof ContextDetails]>) => string;
 };
 
 const FACTORS: FactorConfig[] = [
@@ -79,6 +79,18 @@ const FACTORS: FactorConfig[] = [
       const count = s.caravan_sites_5km ?? 0;
       return count > 0 ? `${count} site within 5km` : 'No sites nearby';
     },
+  },
+  {
+    key: 'drinking_water',
+    label: 'Drinking water',
+    icon: 'water-outline',
+    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : 'None nearby',
+  },
+  {
+    key: 'dog_friendly',
+    label: 'Dog friendly',
+    icon: 'paw-outline',
+    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : 'None nearby',
   },
 ];
 

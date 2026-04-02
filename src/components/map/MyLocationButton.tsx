@@ -3,6 +3,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useUserLocation } from '@/hooks/useUserLocation';
+import { DRAG_ZONE_HEIGHT, COLLAPSED_PEEK } from '@/hooks/useBottomSheetGesture';
+
+/** Total gap: scanButtonMargin(20) + scanButtonHeight(48) + extra gap(12) */
+const BUTTON_ABOVE_SCAN = 20 + 48 + 12;
 
 export const MyLocationButton = () => {
   const colors = useThemeColors();
@@ -22,6 +26,9 @@ export const MyLocationButton = () => {
 
   const iconColor = isDenied ? colors.TEXT_MUTED : colors.ACCENT;
 
+  const collapsedSheetHeight = DRAG_ZONE_HEIGHT + COLLAPSED_PEEK;
+  const bottomOffset = collapsedSheetHeight + BUTTON_ABOVE_SCAN;
+
   const webShadow = Platform.OS === 'web'
     ? { boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)' }
     : { shadowColor: '#000000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 };
@@ -33,6 +40,7 @@ export const MyLocationButton = () => {
         {
           backgroundColor: colors.CARD,
           borderColor: colors.BORDER,
+          bottom: bottomOffset,
         },
         webShadow,
       ]}
@@ -55,7 +63,6 @@ export const MyLocationButton = () => {
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    bottom: 320,
     right: SPACING.MD,
     zIndex: 10,
     width: 48,

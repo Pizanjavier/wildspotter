@@ -40,15 +40,11 @@ const buildItems = (legalStatus: LegalStatus | null): LegalCheckItem[] => {
 
   return [
     {
-      label: legalStatus.natura2000?.zone_name
-        ? `Natura 2000 — ${legalStatus.natura2000.zone_name}`
-        : `Natura 2000 — ${legalStatus.natura2000?.inside ? 'Inside' : 'Not inside'}`,
+      label: `Natura 2000 — ${legalStatus.natura2000?.inside ? 'Inside' : 'Not inside'}`,
       status: legalStatus.natura2000?.inside ? 'fail' : 'pass',
     },
     {
-      label: legalStatus.national_park?.park_name
-        ? `National Parks — ${legalStatus.national_park.park_name}`
-        : `National Parks — ${legalStatus.national_park?.inside ? 'Inside' : 'Not inside'}`,
+      label: `National Parks — ${legalStatus.national_park?.inside ? 'Inside' : 'Not inside'}`,
       status: legalStatus.national_park?.inside ? 'fail' : 'pass',
     },
     {

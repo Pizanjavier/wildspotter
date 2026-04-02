@@ -97,6 +97,8 @@ export type TranslationKeys = {
     minScoreHint: string;
     hideRestricted: string;
     hideRestrictedHint: string;
+    showLegalZones: string;
+    showLegalZonesHint: string;
     offlineMode: string;
     offlineModeHint: string;
     about: string;
@@ -211,8 +213,11 @@ export type TranslationKeys = {
     contextIndustrial: string;
     contextRailway: string;
     contextVanCommunity: string;
+    contextDrinkingWater: string;
+    contextDogFriendly: string;
     legalSourcesTitle: string;
     legalSourcesBody: string;
+    legalAttribution: string;
     scoringTitle: string;
     scoringBody: string;
     scoringFormula: string;

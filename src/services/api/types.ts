@@ -4,12 +4,10 @@ export type SpotCoordinates = {
 };
 
 export type LegalCheck = {
-  inside: boolean;
-  zone_name?: string | null;
-  park_name?: string | null;
-  distance_m?: number | null;
+  inside?: boolean;
   classification?: string | null;
   private?: boolean;
+  ref?: string | null;
 };
 
 export type LegalStatus = {
@@ -56,6 +54,8 @@ export type ContextDetails = {
   industrial: ContextSubScore;
   railway: ContextSubScore;
   van_community: ContextSubScore;
+  drinking_water?: ContextSubScore;
+  dog_friendly?: ContextSubScore;
 };
 
 export type AiDetails = {

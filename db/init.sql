@@ -51,3 +51,28 @@ CREATE INDEX idx_spots_legal ON spots USING GIN (legal_status);
 
 -- Insert initial sync_state row (no syncs performed yet)
 INSERT INTO sync_state (last_sequence, last_sync_at) VALUES (0, NULL);
+
+-- Legal GIS tables (populated via ogr2ogr from MITECO shapefiles in data/miteco/)
+-- These tables are created by ogr2ogr during data import, but we define
+-- spatial indexes here so they exist after any fresh import.
+-- Source: «© Ministerio para la Transición Ecológica y el Reto Demográfico»
+
+-- Natura 2000 (SRID 3042) — imported from PS.RNATURA2000_P_2024.gml
+-- Table: natura2000 (geometry column: "geometry")
+-- CREATE TABLE natura2000 ... created by ogr2ogr
+
+-- National Parks / ENP (SRID 25830) — imported from enp2024_p.shp
+-- Table: national_parks (geometry column: "geom")
+
+-- Coastal Law tables (SRID 25830) — imported from MITECO Costas shapefiles
+-- Tables: dpmt (MULTILINESTRING), servidumbre_proteccion, terrenos_incluidos_dpmt,
+--         nucleos_excluidos_dpmt (urban exemption zones)
+
+-- Spatial indexes for legal GIS tables (idempotent, safe to re-run)
+-- These are critical for sub-millisecond ST_Intersects performance
+CREATE INDEX IF NOT EXISTS idx_natura2000_geom ON natura2000 USING GIST (geometry);
+CREATE INDEX IF NOT EXISTS idx_national_parks_geom ON national_parks USING GIST (geom);
+CREATE INDEX IF NOT EXISTS idx_dpmt_geom ON dpmt USING GIST (geom);
+CREATE INDEX IF NOT EXISTS idx_servidumbre_proteccion_geom ON servidumbre_proteccion USING GIST (geom);
+CREATE INDEX IF NOT EXISTS idx_nucleos_excluidos_geom ON nucleos_excluidos_dpmt USING GIST (geom);
+CREATE INDEX IF NOT EXISTS idx_terrenos_incluidos_geom ON terrenos_incluidos_dpmt USING GIST (geom);
