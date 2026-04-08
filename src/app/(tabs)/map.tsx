@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { SPACING } from "@/constants/theme";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { MapView } from "@/components/map/MapView";
 import { SearchBar } from "@/components/map/SearchBar";
@@ -21,8 +20,7 @@ import { useScanStore } from "@/stores/scan-store";
 import { useSettingsStore } from "@/stores/settings-store";
 import type { GeocodingResult } from "@/services/geocoding";
 
-const MIN_SCAN_ZOOM = 0;
-// const MIN_SCAN_ZOOM = 9;
+const MIN_SCAN_ZOOM = 9;
 
 export const MapScreen = () => {
 	const colors = useThemeColors();
@@ -33,6 +31,7 @@ export const MapScreen = () => {
 		spots,
 		regionName,
 		error,
+		fromCache,
 		startScan,
 		refreshScan,
 	} = useScanStore();
@@ -43,6 +42,7 @@ export const MapScreen = () => {
 
 	const isTooZoomedOut = zoom < MIN_SCAN_ZOOM;
 	const [showNoResults, setShowNoResults] = useState(false);
+	const [showZoomWarning, setShowZoomWarning] = useState(false);
 
 	const prevScanState = useRef(scanState);
 	useEffect(() => {
@@ -78,12 +78,23 @@ export const MapScreen = () => {
 	};
 
 	const handleScan = () => {
+		if (isTooZoomedOut) {
+			setShowZoomWarning(true);
+			return;
+		}
 		if (!bounds) {
 			console.warn("[MapScreen] No bounds available for scan");
 			return;
 		}
+		setShowZoomWarning(false);
 		startScan(bounds);
 	};
+
+	useEffect(() => {
+		if (!showZoomWarning) return;
+		const timer = setTimeout(() => setShowZoomWarning(false), 4000);
+		return () => clearTimeout(timer);
+	}, [showZoomWarning]);
 
 	const isScanning = scanState === "scanning";
 	const isError = scanState === "error";
@@ -107,15 +118,15 @@ export const MapScreen = () => {
 			<SearchBar onSelect={handleSearchSelect} />
 			<FilterChips />
 			<MyLocationButton />
-			{isTooZoomedOut && <ZoomWarning />}
+			{showZoomWarning && <ZoomWarning />}
 			<ScanButton
 				onPress={handleScan}
 				isScanning={isScanning}
-				disabled={isTooZoomedOut}
 			/>
 			<BottomSheet
 				spotsCount={spots.length}
 				regionName={regionName}
+				fromCache={fromCache}
 			>
 				{renderContent()}
 			</BottomSheet>

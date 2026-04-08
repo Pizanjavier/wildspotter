@@ -1,0 +1,24 @@
+name = "wildspotter-landing"
+compatibility_date = "2024-11-20"
+pages_build_output_dir = "dist"
+
+# D1 binding — create with:
+#   wrangler d1 create wildspotter-waitlist
+# then paste the database_id below.
+[[d1_databases]]
+binding = "DB"
+database_name = "wildspotter-waitlist"
+database_id = "55b70167-88ac-482f-b07a-54f28251cab4"
+
+[vars]
+SITE_URL = "https://wildspotter.app"
+APP_URL = "https://wildspotter.app"
+RESEND_FROM = "WildSpotter <hola@wildspotter.app>"
+
+# Secrets (set with `wrangler pages secret put <NAME>`):
+#   RESEND_API_KEY       — Resend (placeholder until domain verified, see DEPLOY.md)
+#   TURNSTILE_SECRET     — Cloudflare Turnstile (test: 1x0000000000000000000000000000000AA)
+
+# ---------------------------------------------------------------------------
+# The cleanup Worker is deployed separately (not a Pages Function).
+# See workers/wrangler.cleanup.toml and DEPLOY.md.

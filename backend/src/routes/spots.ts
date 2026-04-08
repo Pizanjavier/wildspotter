@@ -103,8 +103,13 @@ export const spotsRoutes = (pool: Pool) => {
           },
         },
       },
-    }, async (request) => {
+    }, async (request, reply) => {
       const { min_lat, min_lon, max_lat, max_lon, min_score, max_slope, hide_restricted } = request.query;
+      if (min_lat >= max_lat || min_lon >= max_lon) {
+        return reply.code(400).send({
+          error: 'Invalid bbox: min_lat must be < max_lat and min_lon must be < max_lon',
+        });
+      }
       const bbox = { min_lat, min_lon, max_lat, max_lon };
       return findSpotsByBbox(pool, bbox, min_score ?? 0, max_slope, hide_restricted);
     });

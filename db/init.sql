@@ -49,6 +49,17 @@ CREATE INDEX idx_spots_composite ON spots (composite_score DESC);
 CREATE INDEX idx_spots_osm_tags ON spots USING GIN (osm_tags);
 CREATE INDEX idx_spots_legal ON spots USING GIN (legal_status);
 
+-- Spot reports table: user-submitted reports for inaccurate spots
+CREATE TABLE IF NOT EXISTS spot_reports (
+    id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    spot_id     UUID NOT NULL REFERENCES spots(id),
+    category    VARCHAR NOT NULL,
+    comment     TEXT,
+    created_at  TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_spot_reports_spot_id ON spot_reports(spot_id);
+
 -- Insert initial sync_state row (no syncs performed yet)
 INSERT INTO sync_state (last_sequence, last_sync_at) VALUES (0, NULL);
 

@@ -33,6 +33,30 @@ const buildUrl = (
   return url.toString();
 };
 
+export const post = async <T>(
+  path: string,
+  body: Record<string, unknown>,
+): Promise<T> => {
+  const url = buildUrl(path);
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new ApiError(response.status, text);
+  }
+
+  const data: T = await response.json();
+  return data;
+};
+
 export const get = async <T>(
   path: string,
   params?: Record<string, string | number | boolean | undefined>,

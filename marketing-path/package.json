@@ -33,5 +33,8 @@
   },
   "sideEffects": [
     "*.css"
-  ]
+  ],
+  "overrides": {
+    "loader-utils": "^3.3.1"
+  }
 }

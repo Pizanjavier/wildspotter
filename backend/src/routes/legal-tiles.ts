@@ -11,7 +11,7 @@ const tileParamsSchema = {
   type: 'object',
   required: ['z', 'x', 'y'],
   properties: {
-    z: { type: 'integer', minimum: 0, maximum: 22 },
+    z: { type: 'integer' },
     x: { type: 'integer', minimum: 0 },
     y: { type: 'integer', minimum: 0 },
   },
@@ -24,6 +24,10 @@ export const legalTilesRoutes = async (app: FastifyInstance): Promise<void> => {
     },
   }, async (request, reply) => {
     const { z, x, y } = request.params;
+
+    if (z < 0 || z > 22) {
+      return reply.code(404).send({ error: 'Tile zoom out of range' });
+    }
 
     const mvt = await fetchLegalTile(z, x, y);
 

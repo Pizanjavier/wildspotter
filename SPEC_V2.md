@@ -50,12 +50,9 @@ The Radar identifies candidate spots from OpenStreetMap data stored in a local P
 
 ### 2.5. The "Satellite Eye" (AI Visual Validation)
 
-- **Selective Analysis:** Triggered for all spots that complete the Terrain and Legal stages. Since no spots are rejected, all candidates receive AI analysis.
-- **Object Detection:** A custom-trained lightweight model detects:
-  - Open mineral ground / clearings suitable for parking.
-  - Absence of dense tree canopy blocking vehicle access.
-  - Parked vans/campers — a strong positive signal of community usage.
-- **Training Strategy:** Build a labeled dataset of satellite tiles from known good/bad spots, rather than relying on generic pre-trained classifiers.
+- **Primary Classifier (MobileNetV2):** All spots that complete Terrain and Legal stages receive AI analysis via a lightweight MobileNetV2 binary classifier (`workers/ai_inference.py`). The model runs as ONNX when an exported `.onnx` file is available, otherwise falls back to Keras, and finally to a deterministic heuristic fallback when no model is loaded. Output is a single suitability probability mapped to `ai_score` (0-100). This is the pipeline-critical stage that transitions spots from `legal_done` to `ai_done`.
+- **Secondary Enrichment (Claude Vision):** A separate enrichment pass (`workers/ai_vision_labeler.py`) runs on its own n8n schedule (~every 12 minutes, batches of 20) using Anthropic's `claude-haiku-4-5-20251001` model. It reads the same cached PNOA tile and produces five sub-scores — ground surface, canopy density, van presence, access quality, and openness — stored alongside the primary score. This pass is independent of the main pipeline and does not gate spot completion.
+- **Training Strategy:** Build a labeled dataset of satellite tiles from known good/bad spots to improve the MobileNetV2 classifier over time, rather than relying on generic pre-trained classifiers.
 - **Data Sources:** IGN Spain PNOA orthophotos (primary, 25cm/pixel resolution across Spain, free, no API key), Bing Maps Static API (fallback).
 
 ### 2.6. The "Context Analyst" (Spatial Context Scoring)

@@ -6,6 +6,7 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { DRAG_ZONE_HEIGHT, COLLAPSED_PEEK } from '@/hooks/useBottomSheetGesture';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
 
 type ScanButtonProps = {
   onPress?: () => void;
@@ -49,6 +50,7 @@ export const ScanButton = ({
 
   const handlePress = () => {
     if (isScanning || disabled) return;
+    trackEvent('area_scanned');
     onPress?.();
   };
 

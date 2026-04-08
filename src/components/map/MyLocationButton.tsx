@@ -5,8 +5,8 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { DRAG_ZONE_HEIGHT, COLLAPSED_PEEK } from '@/hooks/useBottomSheetGesture';
 
-/** Total gap: scanButtonMargin(20) + scanButtonHeight(48) + extra gap(12) */
-const BUTTON_ABOVE_SCAN = 20 + 48 + 12;
+/** Match ScanButton vertical position: SCAN_BUTTON_MARGIN(20) */
+const SCAN_BUTTON_MARGIN = 20;
 
 export const MyLocationButton = () => {
   const colors = useThemeColors();
@@ -27,7 +27,8 @@ export const MyLocationButton = () => {
   const iconColor = isDenied ? colors.TEXT_MUTED : colors.ACCENT;
 
   const collapsedSheetHeight = DRAG_ZONE_HEIGHT + COLLAPSED_PEEK;
-  const bottomOffset = collapsedSheetHeight + BUTTON_ABOVE_SCAN;
+  // Align vertically with ScanButton (same bottom offset)
+  const bottomOffset = collapsedSheetHeight + SCAN_BUTTON_MARGIN;
 
   const webShadow = Platform.OS === 'web'
     ? { boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)' }

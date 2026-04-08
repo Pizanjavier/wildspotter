@@ -5,6 +5,7 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { openNavigate, openInspect } from '@/services/navigation';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
 
 type ActionButtonsProps = {
   lat: number;
@@ -14,11 +15,21 @@ type ActionButtonsProps = {
 export const ActionButtons = ({ lat, lon }: ActionButtonsProps) => {
   const colors = useThemeColors();
 
+  const roundCoord = (value: number) => Math.round(value * 100) / 100;
+
   const handleInspect = () => {
+    trackEvent('spot_inspected', {
+      lat: roundCoord(lat),
+      lon: roundCoord(lon),
+    });
     openInspect(lat, lon);
   };
 
   const handleNavigate = () => {
+    trackEvent('spot_navigated', {
+      lat: roundCoord(lat),
+      lon: roundCoord(lon),
+    });
     openNavigate(lat, lon);
   };
 

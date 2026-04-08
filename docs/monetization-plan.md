@@ -42,30 +42,33 @@ All heavy processing (terrain, legal, AI, context scoring) runs once during the 
 
 ## Pricing Tiers
 
+> **Positioning rationale:** WildSpotter's marketing campaign (see `marketing-path/marketing-strategy.md`) hammers legal data and fear-of-fines as the #1 differentiator. Gating legal info would break the promise on first app open and destroy trust. Legal data, full scores, and context details are therefore **fully free**. The paid tier is built around the actual vanlife pain points: **offline access** (the road is off-grid) and **satellite previews** (visual validation before driving hours to a spot).
+
 ### Free — "Scout"
 
 - Unlimited map browsing with spot markers (color-coded by score)
-- 3 full spot detail views per day
-- Composite score number only (no breakdown)
-- Legal status summary (restricted yes/no, no zone details)
-- No offline mode
-- Small non-intrusive upgrade banner
-
-### Paid — "Explorer" (3.99/mo or 29.99/yr)
-
 - Unlimited spot detail views
-- Full score breakdown (terrain / AI / context sub-scores)
-- Full legal details (zone name, distance, land classification)
-- Satellite preview images
-- Offline cache (save areas for off-grid use)
-- Context details (road noise, scenic value, privacy, urban density)
-- No ads
+- Full composite score + breakdown (terrain / AI / context sub-scores)
+- **Full legal details** — zone name, distance, land classification (Natura 2000, Parques, Ley de Costas, Catastro)
+- Full context details (road noise, scenic value, privacy, urban density)
+- Google Maps deep links (Inspect / Navigate)
+- Subtle "Early Access" badge
 
-### One-Time — "Lifetime Explorer" (49.99)
+### Paid — "Explorer" (4.99/mo or 34.99/yr)
 
-- Everything in Explorer, permanently
-- Targets the subscription-averse vanlife audience
-- Breaks even vs. monthly after ~13 months per user
+- **Offline cache** — save regions for off-grid use (the killer feature)
+- **Satellite previews** — high-res PNOA orthophoto tile for every spot
+- Advanced filters (max slope, min score, hide restricted, surface type combos)
+- Priority support
+- No ads, ever
+
+### Early-Bird Annual — "Pioneer" (24.99/yr, first 500 users)
+
+- Everything in Explorer
+- Locked-in price **forever** (never increases on renewal)
+- Available only to users who joined during Early Access (via waitlist)
+- Creates launch urgency, builds the paid base fast, no permanent free-rider liability
+- **Lifetime tier deliberately removed at launch** — revisit in year 2 once churn data exists
 
 ## Feature Gating
 
@@ -74,35 +77,34 @@ All gating is API-side. No client-side DRM needed.
 | Feature | Scout (Free) | Explorer (Paid) |
 |---------|-------------|----------------|
 | Map + markers | Yes | Yes |
-| Score (number) | Yes | Yes |
-| Score breakdown | No | Yes |
-| Legal summary (yes/no) | Yes | Yes |
-| Legal details (zones) | No | Yes |
-| Satellite preview | No | Yes |
-| Context details | No | Yes |
-| Offline cache | No | Yes |
-| Spot views/day | 3 | Unlimited |
+| Spot views | Unlimited | Unlimited |
+| Full score + breakdown | Yes | Yes |
+| Legal details (all zones) | Yes | Yes |
+| Context details | Yes | Yes |
 | Google Maps links | Yes | Yes |
+| **Satellite preview image** | No | Yes |
+| **Offline area cache** | No | Yes |
+| **Advanced filters** | No | Yes |
 
-Implementation: free tier API responses omit `context_details`, detailed `legal_status`, and `satellite_image_path` fields. Rate-limit full spot views to 3/day by device ID.
+Implementation: free tier API responses omit `satellite_image_path`. Offline cache endpoints (`/offline/download-region`) require an authenticated paid entitlement. Advanced filter query params are rejected for free tier with a 402 upgrade prompt. Entitlements resolved via RevenueCat webhook → `user_entitlements` table.
 
 ## Revenue Projections (Conservative)
 
-| Timeline | Free Users | Paid Monthly | Paid Yearly | Lifetime | Monthly Revenue |
-|----------|-----------|-------------|-------------|----------|----------------|
-| 6 months | 500 | 20 | 30 | 15 | ~155 |
-| 1 year | 2,000 | 50 | 100 | 50 | ~400 |
-| 2 years | 5,000 | 100 | 300 | 150 | ~850 |
+| Timeline | Free Users | Pioneer (€24.99/yr) | Explorer Monthly | Explorer Yearly | Monthly Revenue |
+|----------|-----------|---------------------|------------------|-----------------|----------------|
+| 6 months | 500 | 40 | 15 | 20 | ~210 |
+| 1 year | 2,000 | 100 | 40 | 80 | ~490 |
+| 2 years | 5,000 | 200 (locked) | 90 | 250 | ~1,050 |
 
-**Break-even point: ~7 paying users covers the base server cost.**
+**Break-even point: ~6 paying users covers the base server cost.**
 
 ## Pricing Rationale
 
-- **3.99/mo** is impulse-buy territory — below a coffee, well under Park4night premium (9.99/yr for less functionality)
-- **29.99/yr** offers a ~37% discount vs. monthly, incentivizing annual commitment
-- **49.99 lifetime** captures gear-minded vanlifers who budget for equipment, not subscriptions
-- **Legal data partially free** (yes/no) because gating safety info would erode trust
-- **Offline cache as killer paid feature** — vanlifers are often off-grid, this is the #1 reason to pay
+- **€4.99/mo, €34.99/yr** — higher than v1's €3.99 because the marketing campaign positions WildSpotter as a serious radar tool with proprietary AI + legal data. Under-pricing would undermine the authority the video campaign builds. Still well below Gaia GPS (€40/yr) or onX Offroad (€30/yr), which is the real comparison set — not Park4night.
+- **€24.99/yr Pioneer tier** — only for Early Access waitlist users, locked forever. Creates urgency, rewards trust, and builds the paid base rapidly. Capped at 500 slots to preserve scarcity.
+- **Lifetime tier removed at launch** — lifetime tiers create permanent server-cost liabilities for data products with ongoing refresh cycles (OSM diffs, PNOA updates, AI re-inference). Revisit in year 2 if churn data justifies it.
+- **Legal data is FREE** — the marketing campaign hammers "cross-checked with 4 official sources" as the core trust signal. Gating it would break the video promise and tank conversion.
+- **Offline cache + satellite previews are the paid killer features** — vanlifers are off-grid most of the time (offline is essential) and want to visually validate a spot before driving hours (satellite previews are high-perceived-value, low-marginal-cost to serve).
 
 ## Payment Infrastructure (TBD)
 

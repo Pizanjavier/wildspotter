@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -21,9 +21,11 @@ import { MetricsRow } from '@/components/spots/MetricsRow';
 import { AiAnalysis } from '@/components/spots/AiAnalysis';
 import { ContextAnalysis } from '@/components/spots/ContextAnalysis';
 import { ScoreBreakdown } from '@/components/spots/ScoreBreakdown';
+import { ReportModal } from '@/components/spots/ReportModal';
 import { getSpotDetail, ApiError, buildSatelliteUrl } from '@/services/api';
 import type { SpotDetail } from '@/services/api/types';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
 
 const capitalize = (s: string): string =>
   s.charAt(0).toUpperCase() + s.slice(1);
@@ -36,31 +38,54 @@ export const SpotDetailScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [reportVisible, setReportVisible] = useState(false);
   const isSaved = useSpotsStore((s) => s.isSaved(id ?? ''));
   const addSpot = useSpotsStore((s) => s.addSpot);
   const removeSpot = useSpotsStore((s) => s.removeSpot);
+  const openReport = useCallback(() => setReportVisible(true), []);
+  const closeReport = useCallback(() => setReportVisible(false), []);
+
+  const inFlightIdRef = useRef<string | null>(null);
+  const activeIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
+    activeIdRef.current = id;
+    if (inFlightIdRef.current === id) return;
+    trackEvent('spot_viewed', { spot_id: id });
+    inFlightIdRef.current = id;
     const fetchDetail = async () => {
       setLoading(true);
       setError(null);
       try {
         const detail = await getSpotDetail(id);
+        if (activeIdRef.current !== id) return;
         setSpot(detail);
       } catch (err: unknown) {
-        const message =
-          err instanceof ApiError
-            ? err.message
-            : err instanceof Error
-              ? err.message
-              : 'Failed to load spot';
-        setError(message);
+        if (activeIdRef.current !== id) return;
+        if (
+          err instanceof ApiError &&
+          (err.status === 400 || err.status === 404)
+        ) {
+          setError(t('spotDetail.notFound'));
+        } else {
+          const message =
+            err instanceof Error ? err.message : 'Failed to load spot';
+          setError(message);
+        }
       } finally {
-        setLoading(false);
+        if (inFlightIdRef.current === id) {
+          inFlightIdRef.current = null;
+        }
+        if (activeIdRef.current === id) {
+          setLoading(false);
+        }
       }
     };
     void fetchDetail();
+    return () => {
+      activeIdRef.current = null;
+    };
   }, [id]);
 
   const handleToggleSave = () => {
@@ -176,7 +201,20 @@ export const SpotDetailScreen = () => {
           lat={spot.coordinates.lat}
           lon={spot.coordinates.lon}
         />
+
+        <Pressable style={styles.reportLink} onPress={openReport}>
+          <Ionicons name="flag-outline" size={16} color={colors.TEXT_MUTED} />
+          <Text style={[styles.reportText, { color: colors.TEXT_MUTED }]}>
+            {t('spotDetail.report')}
+          </Text>
+        </Pressable>
       </ScrollView>
+
+      <ReportModal
+        visible={reportVisible}
+        spotId={id ?? ''}
+        onClose={closeReport}
+      />
     </View>
   );
 };
@@ -216,5 +254,16 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: FONT_FAMILIES.BODY,
     fontSize: 14,
+  },
+  reportLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: SPACING.SM,
+  },
+  reportText: {
+    fontFamily: FONT_FAMILIES.BODY,
+    fontSize: 13,
   },
 });

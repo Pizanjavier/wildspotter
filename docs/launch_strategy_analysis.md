@@ -1,6 +1,8 @@
 # WildSpotter — Launch Strategy Analysis
 
 > Should you launch before or after implementing monetization?
+>
+> **Update (2026-04-07):** Plan revised to include a waitlist landing page (Phase 2.5 of `launch-plan.md`) as the connective tissue between the TikTok/Reels campaign and the app launch. All video CTAs point to the waitlist, not the App Store, to absorb review delays and build a mailing list for the monetization launch. Pricing raised to €4.99/mo / €34.99/yr with a capped Pioneer tier at €24.99/yr (first 500 waitlist signups, locked forever). Lifetime tier removed. See `docs/landing-spec.md`.
 
 ## TL;DR: Launch FREE first. Don't implement monetization yet.
 

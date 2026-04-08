@@ -57,7 +57,10 @@ export const CacheSection = () => {
     );
   };
 
-  const summary = `${scanCount} cached areas \u00b7 ${formatBytes(cacheBytes)}`;
+  const summary = t('config.cacheSummary', {
+    count: scanCount,
+    size: formatBytes(cacheBytes),
+  });
 
   return (
     <View style={styles.section}>

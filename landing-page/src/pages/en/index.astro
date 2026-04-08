@@ -1,0 +1,26 @@
+---
+import Base from '@/layouts/Base.astro';
+import Nav from '@/components/Nav.astro';
+import Hero from '@/components/Hero.astro';
+import Problem from '@/components/Problem.astro';
+import Pipeline from '@/components/Pipeline.astro';
+import LegalTrust from '@/components/LegalTrust.astro';
+import Offer from '@/components/Offer.astro';
+import SecondCTA from '@/components/SecondCTA.astro';
+import Footer from '@/components/Footer.astro';
+import { getDict } from '@/i18n';
+
+const t = getDict('en');
+---
+<Base title="WildSpotter — Find spots nobody has shared" description="A radar for vanlifers. Processes official data to find wild overnight parkings in Spain that are not on Park4night." locale="en">
+  <Nav locale="en" />
+  <main>
+    <Hero t={t} locale="en" />
+    <Problem t={t} />
+    <Pipeline t={t} />
+    <LegalTrust t={t} />
+    <Offer t={t} />
+    <SecondCTA t={t} locale="en" />
+  </main>
+  <Footer t={t} />
+</Base>

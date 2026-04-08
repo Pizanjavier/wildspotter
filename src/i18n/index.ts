@@ -8,20 +8,28 @@ const DICTIONARIES: Record<Locale, TranslationDictionary> = {
   en,
 };
 
-const DEFAULT_LOCALE: Locale = 'es';
+const DEFAULT_LOCALE: Locale = 'en';
 
-const detectLocale = (): Locale => {
+const readRawLocale = (): string | null => {
   try {
     const locales = getLocales();
-    if (locales.length > 0) {
-      const langCode = locales[0].languageCode;
-      if (langCode && langCode in DICTIONARIES) {
-        return langCode as Locale;
-      }
-    }
+    const code = locales?.[0]?.languageCode;
+    if (code) return code;
   } catch {
-    // Fall back to default if expo-localization is unavailable
+    // expo-localization unavailable
   }
+  if (
+    typeof navigator !== 'undefined' &&
+    typeof navigator.language === 'string'
+  ) {
+    return navigator.language;
+  }
+  return null;
+};
+
+const detectLocale = (): Locale => {
+  const raw = readRawLocale();
+  if (raw && raw.toLowerCase().startsWith('es')) return 'es';
   return DEFAULT_LOCALE;
 };
 

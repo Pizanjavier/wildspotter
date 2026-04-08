@@ -1,6 +1,10 @@
 # WildSpotter — Estrategia de Video Vertical (TikTok + Instagram Reels)
 
 > Target: vanlifers y overlanders en Espana. Formato: 9:16, 1080x1920, 15-30s.
+>
+> **Destino de todos los CTAs: `wildspotter.app` (waitlist landing page)** — NO al App Store directamente. La landing captura emails para el lanzamiento del tier Pioneer (€24.99/yr, primeros 500 signups, locked forever). Ver `../docs/landing-spec.md` y `../docs/launch-plan.md` Phase 2.5.
+>
+> **Presupuesto de variaciones:** Por cada video producido, renderizar 2-3 variaciones del hook de los primeros 3 segundos (texto distinto, footage inicial distinto). El algoritmo de TikTok recompensa variacion. Asumir que 3 de 4 videos van a flopear — iterar sobre hooks, no sobre el cuerpo.
 
 ---
 
@@ -48,7 +52,7 @@ WildSpotter no es otra app de spots compartidos. Es un **radar** que descubre si
 
 | Segundo | Visual | Footage de fondo | Audio/Texto |
 |---------|--------|-----------------|-------------|
-| 0-4.3 | HOOK: Texto "El parking de Otras apps" + "Sin hueco. Anocheciendo." | `ai_Campervan_Gathering_in_Golden_Hour.mp4` — aerial de furgos en claro costero (35% dim) | Musica cinematica |
+| 0-4.3 | HOOK: Texto "El parking de Otras apps" + "Sin hueco. Anocheciendo." | `ai_Van_trying_to_park_full_parking.mp4` — aerial de furgos en claro costero (35% dim) | Musica cinematica |
 | 4.3-9.5 | Card mock "Playa Los Genoveses" con 4.8★ y 200 reviews. "Y no cabe ni un coche." | Mismo clip campervan gathering, zoom mas cerrado (75% dim) — continuidad visual | Musica + shake |
 | 9.5-15.3 | Texto: "¿Y si los mejores spots no tuvieran reviews?" con linea amber | `drone_mountains.mp4` — montanas al amanecer (55% dim) — pivote a esperanza | Silencio + glow |
 | 15.3-22.6 | Phone frame con WildSpotter: scan, radar, resultados, scores 91/84/78 | `road_trip_sunset.mp4` — conduccion al atardecer (85% dim) detras del phone | SFX: radar ping |
@@ -123,7 +127,7 @@ WildSpotter no es otra app de spots compartidos. Es un **radar** que descubre si
 | 9.7-14 | "Y no estan en ninguna app de reviews." | `road_trip_sunset.mp4` dimmed (82%) — atmosfera moody | Silencio + beat |
 | 14-20.2 | Phone demo: scan, radar rings, resultados 92/85/78 | `rv_mountain_road.mp4` (85% dim) — driving sutil | SFX: radar ping |
 | 20.2-26.7 | Pipeline 5 capas + score 92 en circulo verde | `coffee_camping.mp4` (90% dim) — datos son el foco | Musica crece |
-| 26.7-30 | Split ARRIBA/ABAJO: crowded vs solo. "Elige." Logo + CTA | ARRIBA: `ai_Campervan_Gathering_in_Golden_Hour.mp4`, ABAJO: `van_in_spot_calm.mp4` | Drop final |
+| 26.7-30 | Split ARRIBA/ABAJO: crowded vs solo. "Elige." Logo + CTA | ARRIBA: `ai_Van_trying_to_park_full_parking.mp4`, ABAJO: `van_in_spot_calm.mp4` | Drop final |
 
 **Copy para el post (Castellano):**
 
@@ -350,7 +354,8 @@ Todo el audio (musica + SFX) se embebe directamente en el render de Remotion. Lo
 | Metrica | Target |
 |---------|--------|
 | Seguidores nuevos | 2.000-5.000 |
-| Waitlist signups | 500+ |
+| Waitlist signups (wildspotter.app) | 500+ (llena el tier Pioneer) |
+| Conversion rate video → landing → email | >3% |
 | Video >10K views | Al menos 2 |
 | Video >100K views | Al menos 1 (viral) |
 
@@ -387,7 +392,7 @@ Cada segundo de video debe tener footage real de fondo. Mezclar "escenas con vid
 | `Aerial_Spanish_Mediterranean_coast.mp4` | 59.8s | 1080p | Aerial costa mediterranea |
 | `police_writing_ticket.mp4` | 13.3s | 4K | Policia escribiendo multa |
 | `van_in_spot_calm_couple_dog_night.mp4` | 11.6s | 1080p | Pareja + perro + furgo, noche |
-| `ai_Campervan_Gathering_in_Golden_Hour.mp4` | 8s | 720p | Aerial: VW vans apinadas en claro costero (Veo AI) |
+| `ai_Van_trying_to_park_full_parking.mp4` | 8s | 720p | Aerial: VW vans apinadas en claro costero (Veo AI) |
 | `ai_Spanish_Beach_VW_Van_Golden_Hour.mp4` | 8s | 720p | VW van en playa espanola (Veo AI) |
 | `ai_Spanish_Countryside_Van_Video.mp4` | 8s | 720p | Van en campo espanol (Veo AI) |
 | `ai_Campervan_Sunset_Time_Lapse_Video.mp4` | 8s | 720p | Time-lapse atardecer campervan (Veo AI) |
@@ -413,7 +418,7 @@ Cada video debe contar una historia emocional solo con las imagenes de fondo, an
 
 ```
 PROBLEMA (footage estresante/agobiante)
-  → ai_Campervan_Gathering_in_Golden_Hour.mp4, police_car.mp4
+  → ai_Van_trying_to_park_full_parking.mp4, police_car.mp4
   
 PIVOTE (naturaleza, esperanza)
   → drone_mountains.mp4, drone_forest.mp4
@@ -433,7 +438,7 @@ RECOMPENSA (furgo sola en la naturaleza)
 2. ~~**Producir en Remotion**~~ ✅ 4 composiciones renderizables
 3. ~~**Descargar footage adicional**~~ ✅ Todos los clips necesarios descargados o generados con Veo AI
 4. ~~**Rework con video footage**~~ ✅ Los 4 videos tienen footage continuo en todas las escenas
-5. ~~**AI video generation**~~ ✅ `ai_Campervan_Gathering_in_Golden_Hour.mp4` generado con Veo — reemplaza el aerial de parking generico
+5. ~~**AI video generation**~~ ✅ `ai_Van_trying_to_park_full_parking.mp4` generado con Veo — reemplaza el aerial de parking generico
 6. **Grabar capturas reales de la app** — Screen recordings del scan, resultados, config para escenas demo
 7. **Render final y publicar** — Semana 1 arranca con los videos listos
 

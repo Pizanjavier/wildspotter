@@ -119,7 +119,7 @@ export const Scene2Stars: React.FC = () => {
 				}}
 			>
 				<Video
-					src={staticFile("videos/ai_Campervan_Gathering_in_Golden_Hour.mp4")}
+					src={staticFile("videos/ai_Van_trying_to_park_full_parking.mp4")}
 					muted
 					style={{
 						width: "100%",

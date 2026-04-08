@@ -1,0 +1,102 @@
+import type { Dict } from './es';
+
+export const en: Dict = {
+  locale: 'en',
+  nav: { skip: 'Skip to content' },
+  hero: {
+    headline: 'The best wild spots are on no app.',
+    subtitle: 'A radar that cross-checks official data to find untouched corners of Spain. No reviews. No crowds. No surprises.',
+    emailPlaceholder: 'you@email.com',
+    cta: 'Notify me at launch',
+    promise: 'The app will be free for everyone. The first 500 signups also lock the Pioneer premium price: €24.99/yr, forever.',
+    counterLabel: 'Pioneer seats',
+    microcopy: 'No spam. Double opt-in. Unsubscribe any time.',
+    thanks: 'Done. Check your inbox to confirm.',
+    errorGeneric: 'Something broke. Try again.',
+    errorEmail: 'Invalid email.',
+    errorDup: "You're already in.",
+  },
+  problem: {
+    title: 'The "secret" spot is dead.',
+    stats: [
+      { big: '27 %', label: 'of Spain sits inside Natura 2000. And there are more protected zones no other app warns you about.' },
+      { big: 'Up to €600', label: 'fine for parking overnight in the wrong place. No warning, no excuse.' },
+      { big: '4', label: 'official sources cross-checked on every spot: MITECO, IGN, Catastro and OpenStreetMap.' },
+    ],
+  },
+  pipeline: {
+    title: 'Six filters. One spot.',
+    stages: [
+      { n: '01', k: 'Radar', d: 'Dead-end tracks, dirt parkings and drivable clearings from OpenStreetMap.' },
+      { n: '02', k: 'Terrain', d: 'Slope and elevation computed from 30 m topographic tiles.' },
+      { n: '03', k: 'Legal', d: 'Natura 2000, National Parks, Coastal Law and Cadastre — checked one by one.' },
+      { n: '04', k: 'Satellite', d: 'PNOA imagery read by visual AI. Ground, canopy and visible vans.' },
+      { n: '05', k: 'Context', d: 'Road noise, privacy, views and distance to towns.' },
+      { n: '06', k: 'Score', d: 'A final 0–100 grade. You decide the threshold.' },
+    ],
+  },
+  legal: {
+    title: 'Official data. Zero opinions.',
+    sub: 'We do not read reviews. We cross-check the same sources the Spanish government uses.',
+    sources: ['MITECO', 'IGN', 'Catastro', 'OpenStreetMap'],
+    attribution: 'Source: © Ministerio para la Transición Ecológica y el Reto Demográfico.',
+  },
+  offer: {
+    eyebrow: 'Launch pricing',
+    title: 'The app is free. Pioneer locks the premium price forever.',
+    sub: 'Scout is free — map, scores and the full legal layer. Explorer adds offline and satellite previews. Pioneer is the same Explorer, price locked for life, for the first 500 on the waitlist.',
+    scout: {
+      label: 'Scout',
+      price: '0',
+      per: '€ forever',
+      note: 'The whole app, free. No ads.',
+      features: [
+        'Radar and map across Spain',
+        'Full per-spot score',
+        'Legal details: Natura 2000, parks, coast, cadastre',
+        'Open in Google Maps / navigate',
+      ],
+    },
+    explorer: {
+      label: 'Explorer',
+      price: '34.99',
+      per: '€ / yr',
+      note: 'The standard price at public launch.',
+      features: [
+        'Everything in Scout',
+        'Save regions for offline use',
+        'Satellite preview per spot',
+        'Advanced filters (slope, surface)',
+      ],
+    },
+    pioneer: {
+      label: 'Pioneer',
+      badge: 'First 500',
+      price: '24.99',
+      per: '€ / yr',
+      note: 'Same Explorer. Price locked for life. Only for those who leave their email before launch.',
+      features: [
+        'Everything in Explorer',
+        'Lifetime price, never goes up',
+        'Pioneer badge on your profile',
+        'Priority access on launch day',
+      ],
+      tagline: 'You save €10 every year. Forever.',
+    },
+  },
+  cta2: {
+    title: 'The radar turns on very soon.',
+    sub: 'Leave your email. The app will be free; the first 500 also lock the Pioneer price.',
+  },
+  footer: {
+    tag: 'WILDSPOTTER',
+    sub: 'A radar for van dwellers. Built in Spain with care.',
+    links: [
+      { label: 'Privacy', href: '/en/privacy' },
+      { label: 'Contact', href: 'mailto:hola@wildspotter.app' },
+      { label: 'Instagram', href: 'https://instagram.com/wildspotter' },
+      { label: 'TikTok', href: 'https://tiktok.com/@wildspotter' },
+    ],
+    copyright: '© 2026 WildSpotter',
+  },
+};

@@ -98,7 +98,7 @@ const OnboardingScreen = () => {
   ];
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
+    <View style={[styles.container, { backgroundColor: colors.BACKGROUND, width, height }]}>
       <FlatList
         ref={flatListRef}
         data={pages}
@@ -106,6 +106,7 @@ const OnboardingScreen = () => {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
+        style={{ width, height }}
         onMomentumScrollEnd={(e) => {
           const page = Math.round(e.nativeEvent.contentOffset.x / width);
           setCurrentPage(page);
@@ -116,7 +117,7 @@ const OnboardingScreen = () => {
           index,
         })}
         renderItem={({ item }) => (
-          <View style={{ width, height }}>{item}</View>
+          <View style={{ width, height, flexShrink: 0, flexGrow: 0 }}>{item}</View>
         )}
         keyExtractor={(_, i) => String(i)}
       />

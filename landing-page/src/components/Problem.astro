@@ -1,0 +1,26 @@
+---
+import type { Dict } from '@/i18n/es';
+interface Props { t: Dict }
+const { t } = Astro.props;
+---
+<section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
+  <div class="absolute inset-0" style="background: radial-gradient(ellipse 1400px 700px at 20% 0%, #2A1F15 0%, #0F0D0B 60%);"></div>
+
+  <div class="relative max-w-[1280px] mx-auto">
+    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">El problema</p>
+    <h2 class="reveal font-sans font-black text-[40px] sm:text-[56px] md:text-[84px] leading-[1.02] tracking-[-0.03em] display-cream mb-20 md:mb-28 max-w-[960px]">
+      {t.problem.title}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+      {t.problem.stats.map((s, i) => (
+        <article class="reveal relative flex flex-col" data-delay={String(i + 1)}>
+          <div class="amber-rule mb-6"></div>
+          <div class="font-sans font-black text-[56px] md:text-[80px] leading-[0.95] text-[#D97706] tracking-[-0.04em] mb-5">
+            {s.big}
+          </div>
+          <p class="font-sans text-[16px] md:text-[17px] leading-[1.6] text-[#E8D9BF] max-w-[340px]">{s.label}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

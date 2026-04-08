@@ -1,0 +1,36 @@
+---
+import type { Locale } from '@/i18n';
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<nav id="ws-nav" class="fixed top-0 inset-x-0 z-40 h-16 px-5 md:px-10 flex items-center justify-between border-b border-transparent transition-colors duration-300">
+  <a href={locale === 'es' ? '/' : '/en/'} class="flex items-center gap-3 group">
+    <img src="/logo.png" alt="WildSpotter" width="32" height="32" class="h-8 w-8 object-contain" />
+    <span class="font-sans font-black text-[14px] tracking-[0.02em] text-[#F5EBD8] group-hover:text-[#D97706] transition-colors">WILDSPOTTER</span>
+  </a>
+  <div class="flex items-center gap-4 font-sans text-[13px]">
+    <a
+      href="/"
+      class={`transition-colors ${locale === 'es' ? 'text-[#F5EBD8] border-b border-[#D97706] pb-0.5' : 'text-[#B7A089] hover:text-[#F5EBD8]'}`}
+      onclick="if(window.location.pathname!=='/'){sessionStorage.setItem('ws_scroll',String(window.scrollY))}"
+    >ES</a>
+    <span class="text-[#B7A089]/40">·</span>
+    <a
+      href="/en/"
+      class={`transition-colors ${locale === 'en' ? 'text-[#F5EBD8] border-b border-[#D97706] pb-0.5' : 'text-[#B7A089] hover:text-[#F5EBD8]'}`}
+      onclick="if(window.location.pathname==='/'){sessionStorage.setItem('ws_scroll',String(window.scrollY))}"
+    >EN</a>
+  </div>
+</nav>
+<script is:inline>
+  (function () {
+    const nav = document.getElementById('ws-nav');
+    if (!nav) return;
+    const onScroll = () => {
+      if (window.scrollY > 80) nav.classList.add('nav-scrolled');
+      else nav.classList.remove('nav-scrolled');
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>

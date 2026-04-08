@@ -1,6 +1,8 @@
 export { getSpots, getSpotDetail } from '@/services/api/spots';
 export type { SpotFilters } from '@/services/api/spots';
-export { get, ApiError, buildSatelliteUrl } from '@/services/api/client';
+export { get, post, ApiError, buildSatelliteUrl } from '@/services/api/client';
+export { reportSpot } from '@/services/api/reports';
+export type { ReportCategory } from '@/services/api/reports';
 export type {
   SpotCoordinates,
   LegalCheck,

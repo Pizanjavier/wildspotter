@@ -114,34 +114,40 @@ At €25/mo, with no paying users, the project can run indefinitely at minimal c
 ### Phase 2 — Observability, Feedback & In-App Features 📊💬
 > **Goal:** Integrate crash reporting, analytics, and user feedback mechanisms into the app *before* building store binaries. These are app-side code changes that don't require a live production server.
 
-- [ ] **Crash reporting — Sentry (free tier)**
-  - Install `@sentry/react-native` in the Expo app
-  - Configure DSN, environment tagging (dev/staging/prod)
-  - Set up Sentry alerts for new crash types
-  - *Reasoning:* If the app crashes for a user in the mountains with no cell signal, you'll never hear about it unless Sentry captures it automatically
-- [ ] **Basic analytics — PostHog or Plausible (free tier)**
-  - Track key events:
-    - `app_opened` — daily active users
-    - `area_scanned` — how often users scan areas (core engagement metric)
-    - `spot_viewed` — how many spots detail views per session
-    - `spot_navigated` — how often users actually navigate to a spot (highest-value action)
-    - `spot_inspected` — Google Maps satellite/street view opens
-    - `offline_area_saved` — offline cache usage (validates monetization gating)
-    - `config_changed` — which preferences do users adjust (slope threshold, hide restricted)
-  - *Reasoning:* These events directly map to your monetization gating decisions. If nobody uses offline cache, don't gate it. If `spot_viewed` averages 10/day, gating at 3/day is reasonable.
-- [ ] **In-app feedback button**
-  - Simple "Send Feedback" in Settings/Config screen
-  - Options (low effort):
-    - `mailto:` link to a dedicated email (e.g., `feedback@wildspotter.app`)
-    - Google Form link
-  - Options (medium effort):
-    - In-app text form that POSTs to a simple endpoint or Airtable
-  - *Reasoning:* The most valuable early data is "I checked this spot and it was actually private land" or "the slope score says 3% but it's clearly a cliff." This feedback directly improves data quality.
-- [ ] **Report bad spots**
-  - Add a "Report" button on the spot detail screen
-  - Categories: "Incorrect legal data", "Not accessible", "Private property", "Score too high/low"
-  - Store reports in a `spot_reports` table or forward to email
-  - *Reasoning:* User-reported corrections are free data quality improvement. Each report makes the product better for everyone.
+- [x] **Crash reporting — Sentry (free tier)** ✅
+  - Installed `@sentry/react-native` with Expo plugin in `app.json`
+  - `src/services/sentry/index.ts` — DSN via `EXPO_PUBLIC_SENTRY_DSN` env var, environment tagging (dev/prod via `__DEV__`)
+  - Wraps root layout with `Sentry.wrap()` for error boundary + performance monitoring
+  - Disabled by default when DSN is placeholder — set env var to activate
+- [x] **Basic analytics — PostHog (free tier)** ✅
+  - Installed `posthog-react-native`, configured via `EXPO_PUBLIC_POSTHOG_API_KEY` env var
+  - `src/services/analytics/index.ts` — thin wrapper with `initAnalytics()` + `trackEvent()`
+  - Events tracked: `app_opened`, `area_scanned`, `spot_viewed`, `spot_navigated`, `spot_inspected`, `config_changed`
+  - Note: `offline_area_saved` not yet tracked (offline cache feature not implemented)
+- [x] **In-app feedback button** ✅
+  - "Send Feedback" card in Config → About section (`src/components/config/AboutSection.tsx`)
+  - Opens `mailto:feedback@wildspotter.app?subject=WildSpotter Feedback`
+  - Styled with mail icon, hint text, chevron — matches existing card pattern
+- [x] **Report bad spots** ✅
+  - `spot_reports` table added to `db/init.sql` (UUID PK, FK to spots, category enum, optional comment)
+  - `POST /reports` endpoint in `backend/src/routes/reports.ts` with JSON Schema validation
+  - `ReportModal` component (`src/components/spots/ReportModal.tsx`) — slide-up modal with 6 categories + comment
+  - Subtle "Report" link at bottom of spot detail screen
+  - i18n keys added for both EN and ES
+
+---
+
+### Phase 2.5 — Waitlist Landing Page 🌐
+> **Goal:** Build a single-page waitlist site that catches the TikTok/Reels campaign traffic while the App Store review is pending. This is the connective tissue between the marketing campaign and monetization — without it, video traffic leaks into the void.
+> **Full spec:** See `docs/landing-spec.md`.
+
+- [ ] **Build landing page** — single Astro page, hero = ParkingLleno video render, one email field, "Avísame cuando lance" CTA, subtle "Pioneer €24.99/yr lifetime-locked — first 500 signups" scarcity badge
+- [ ] **Set up email storage** — Cloudflare D1 (or Supabase free tier) with `waitlist` table (`id`, `email`, `locale`, `referrer`, `utm_*`, `created_at`, `position`)
+- [ ] **Deploy to Cloudflare Pages** — custom domain `wildspotter.app`, automatic HTTPS, SSR worker for form submission
+- [ ] **Double opt-in email confirmation** — via Resend free tier (3k emails/mo) or Cloudflare Email Workers
+- [ ] **Analytics** — Plausible or PostHog tracking form submit, scroll depth, video play
+- [ ] **Social meta tags** — OpenGraph + Twitter card with a still from ParkingLleno for rich previews when shared
+- [ ] **Launch before marketing campaign week 1** — all video CTAs point here, not to the App Store
 
 ---
 
@@ -155,15 +161,15 @@ At €25/mo, with no paying users, the project can run indefinitely at minimal c
   - iOS: build with `eas build --platform ios` (requires Apple Developer Program, €99/yr)
   - Android: build with `eas build --platform android` (requires Google Play Developer account, €25 one-time)
   - Test all flows: map browsing, area scanning, spot detail, Google Maps deep links, offline cache, Sentry crash capture, analytics events firing
-- [ ] **App Store assets**
-  - Screenshots (6.7" iPhone, 6.5" iPhone, Android phone + tablet)
-  - App icon (1024x1024, radar/compass theme)
-  - App Store description + keywords (see Marketing section below)
-  - Privacy policy page (required by both stores)
-- [ ] **Add "Early Access" badge**
-  - Small non-intrusive badge on the map screen or settings
-  - Text: "Early Access — All features free during preview"
-  - Sets user expectations that paid tiers are coming
+- [ ] **App Store assets** (partially done)
+  - [ ] Screenshots (6.7" iPhone, 6.5" iPhone, Android phone + tablet) — TODO: capture from live app
+  - [x] App icon (1024x1024) — `assets/icon.png` ✅ (warm earthy gradient, map pin/mountain mark)
+  - [x] App Store description + keywords — `docs/appstore-description.md` ✅ (EN, iOS + Google Play formats, ASO-optimized keywords)
+  - [x] Privacy policy — `docs/privacy-policy.md` ✅ (covers location, analytics, crash reports, GDPR)
+- [x] **Add "Early Access" badge** ✅
+  - Pill badge next to version string in Config → About section
+  - Muted border, JetBrains Mono 10px — subtle, non-intrusive
+  - i18n: "Early Access" (EN) / "Acceso Anticipado" (ES)
 - [ ] **Submit to App Store / Google Play**
   - Apple: ~1-3 day review process
   - Google: ~1-7 day review process
@@ -190,9 +196,11 @@ At €25/mo, with no paying users, the project can run indefinitely at minimal c
 ---
 
 ### Phase 5 — Marketing & Launch Day 🚀
-> **Goal:** Get the first 100 users within the first 2 weeks.
+> **Goal:** 500+ waitlist signups during Early Access, then 100+ app installs within 2 weeks of store approval.
 > **Full video strategy:** See `marketing-path/marketing-strategy.md` for the 4-week TikTok/Reels content calendar, produced videos, and creative concepts.
+> **CTAs point to the waitlist landing page (Phase 2.5), NOT directly to the App Store.** This absorbs the risk of store review delays and builds a mailing list for the monetization launch.
 
+- [ ] **Hook variation budget** — for each of the 4 produced videos, render **2-3 opening-3s variations** (different hook text, different opening footage). TikTok algo rewards variation testing. Assume 3 of 4 videos will underperform — iterate on hooks, not bodies.
 - [ ] **TikTok + Instagram Reels campaign** (videos already produced in `marketing-path/`)
   - Week 1 (Agitate the problem): "El Parking Lleno", Natura 2000 micro-clip, "La Multa de 600€"
   - Week 2 (Reveal the solution): "87 Spots", pipeline BTS, hook variations
@@ -200,10 +208,10 @@ At €25/mo, with no paying users, the project can run indefinitely at minimal c
   - Week 4 (Social proof): Real scan results, community engagement, aspirational compilation
   - Render final videos: `npx remotion render ParkingLleno out/parking-lleno.mp4` (etc.)
   - Set up Instagram `@wildspotter` and TikTok accounts before launch week
-- [ ] **App Store Optimization (ASO)**
+- [x] **App Store Optimization (ASO)** ✅ — see `docs/appstore-description.md`
   - Title: "WildSpotter — Wild Spot Finder"
-  - Subtitle: "AI-Powered Vanlife Radar for Spain"
-  - Keywords: vanlife, wild camping, Spain, free camping, overnight parking, overlanding
+  - Subtitle: "AI Vanlife Radar for Spain"
+  - Keywords: vanlife,wild camping,Spain,free camping,overnight parking,overlanding,camper spots,off grid,van life,road trip (99 chars)
 
 ---
 
@@ -237,13 +245,15 @@ Based on real data, finalize:
 - [ ] Grandfather early users: "You've been with us since Early Access — get 50% off your first year"
 - [ ] Announce paid tiers via in-app notification + email (if collected)
 
-### Pricing Tiers (to be validated)
+### Pricing Tiers (see `monetization-plan.md`)
 
-| Tier | Price | Key Gated Features |
-|------|-------|--------------------|
-| Scout (Free) | €0 | 3 spot views/day, score number only, legal yes/no |
-| Explorer | €3.99/mo or €29.99/yr | Unlimited views, full breakdown, satellite preview, offline |
-| Lifetime Explorer | €49.99 | Everything in Explorer, forever |
+| Tier | Price | Gated Features |
+|------|-------|----------------|
+| Scout (Free) | €0 | Everything EXCEPT satellite previews, offline cache, advanced filters. Full legal data, full scores, full context — all free. |
+| Explorer | €4.99/mo or €34.99/yr | Offline cache, satellite previews, advanced filters |
+| Pioneer (Early Access only) | €24.99/yr, locked forever | Same as Explorer. First 500 waitlist signups only. |
+
+> Lifetime tier removed at launch. Legal data is deliberately free — it's the marketing campaign's core trust signal, gating it would break the promise.
 
 ---
 
@@ -266,16 +276,19 @@ Based on real data, finalize:
 ```
 April 2026
 ├── Week 1: Phase 0 — Run full pipeline, verify data quality
-│           Phase 2 — Integrate Sentry, analytics, feedback button (app-side, no server needed)
+│           Phase 2 — Sentry, analytics, feedback button (done)
+│           Phase 2.5 — Waitlist landing page (Cloudflare Pages + D1 + Resend)
 ├── Week 2: Phase 1 — Deploy to Hetzner, set up domain + SSL
-│           Phase 4 — Server monitoring, community channels
-├── Week 3: Phase 3 — Build app binaries (with observability baked in), App Store assets
-└── Week 4: Phase 3 — Submit to stores
-             Phase 5 — Prepare launch posts and marketing assets
+│           Phase 4 — Server monitoring
+│           Phase 5 — Render hook variations for all 4 videos
+├── Week 3: 🚀 WAITLIST LAUNCH — TikTok/Reels campaign week 1, all CTAs → landing
+│           Phase 3 — Build app binaries, App Store assets
+├── Week 4: TikTok/Reels week 2 + Phase 3 store submission
 
 May 2026
-├── Week 1: 🚀 LAUNCH DAY — Reddit posts, Instagram, community outreach
-├── Weeks 2-4: Monitor, fix bugs, respond to feedback
+├── Week 1-2: TikTok/Reels weeks 3-4, waitlist growing, store review
+├── Week 3: 📱 APP LAUNCH — email waitlist with Pioneer €24.99/yr offer
+├── Week 4: Monitor installs, convert waitlist → Pioneers
 
 June-July 2026
 ├── Analyze usage data

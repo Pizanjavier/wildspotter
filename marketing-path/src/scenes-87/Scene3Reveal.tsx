@@ -1,6 +1,7 @@
 import {
   AbsoluteFill,
   interpolate,
+  random,
   spring,
   staticFile,
   useCurrentFrame,
@@ -88,7 +89,7 @@ export const Scene3Reveal: React.FC = () => {
             left: 0,
             right: 0,
             height: 2,
-            background: `rgba(217,119,6,${0.3 + Math.random() * 0.3})`,
+            background: `rgba(217,119,6,${0.3 + random(`scene3-glitch-${frame}`) * 0.3})`,
             filter: "blur(1px)",
           }}
         />

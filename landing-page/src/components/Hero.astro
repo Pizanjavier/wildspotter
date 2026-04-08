@@ -1,0 +1,59 @@
+---
+import type { Dict } from '@/i18n/es';
+import { EmailForm } from '@/islands/EmailForm';
+import { PioneerCounter } from '@/islands/PioneerCounter';
+interface Props { t: Dict; locale: 'es' | 'en' }
+const { t, locale } = Astro.props;
+const VIDEO_URL = '/hero.mp4';
+const POSTER = '/hero-poster.jpg';
+---
+<section class="relative w-full h-[100svh] min-h-[720px] overflow-hidden">
+  <video
+    class="absolute inset-0 w-full h-full object-cover scale-[1.03]"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster={POSTER}
+    aria-hidden="true"
+  >
+    <source src={VIDEO_URL} type="video/mp4" />
+  </video>
+
+  <!-- Legibility overlays: stronger bottom + left vignette -->
+  <div class="absolute inset-0 hero-gradient"></div>
+  <div class="absolute inset-0 hero-vignette"></div>
+  <div class="absolute inset-0 bg-[#0F0D0B]/20"></div>
+
+  <div class="relative z-10 h-full flex flex-col justify-end px-5 md:px-10 pb-16 md:pb-24 max-w-[1280px] mx-auto">
+    <div class="max-w-[900px]">
+      <h1
+        class="reveal font-sans font-black tracking-[-0.025em] leading-[1.02] display-cream text-[42px] sm:text-[62px] md:text-[84px] mb-8 hero-headline"
+      >
+        {t.hero.headline}
+      </h1>
+      <p class="reveal font-sans text-[18px] md:text-[23px] leading-[1.5] text-[#F5EBD8]/90 max-w-[640px] mb-12 hero-sub" data-delay="1">
+        {t.hero.subtitle}
+      </p>
+      <div class="reveal mb-3" data-delay="2">
+        <EmailForm client:load copy={t.hero} locale={locale} variant="hero" />
+      </div>
+      <p class="reveal font-mono text-[11px] tracking-[0.1em] text-[#B7A089]/80 mb-6" data-delay="2">
+        {t.hero.microcopy}
+      </p>
+      <p class="reveal text-[14px] md:text-[15px] leading-[1.55] text-[#E8D9BF]/85 max-w-[560px] mb-5" data-delay="3">
+        {t.hero.promise}
+      </p>
+      <div class="reveal" data-delay="4">
+        <PioneerCounter client:visible label={t.hero.counterLabel} />
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll hint -->
+  <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-[#F5EBD8]/50">
+    <div class="w-px h-10 bg-gradient-to-b from-transparent to-[#F5EBD8]/60"></div>
+    <span class="font-mono text-[10px] tracking-[0.2em] uppercase">Scroll</span>
+  </div>
+</section>

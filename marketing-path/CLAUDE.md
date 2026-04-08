@@ -166,7 +166,7 @@ These rules come directly from feedback during the production of "El Parking Lle
 | `ai_Spanish_Beach_VW_Van_Golden_Hour.mp4` | 8s | 720p | VW van on Spanish beach, golden hour | Veo AI |
 | `ai_Spanish_Countryside_Van_Video.mp4` | 8s | 720p | Van driving through Spanish countryside | Veo AI |
 | `ai_Campervan_Sunset_Time_Lapse_Video.mp4` | 8s | 720p | Campervan sunset time-lapse | Veo AI |
-| `ai_Campervan_Gathering_in_Golden_Hour.mp4` | 8s | 720p | Aerial: VW vans packed in coastal clearing, golden hour | Veo AI |
+| `ai_Van_trying_to_park_full_parking.mp4` | 8s | 720p | Aerial: VW vans packed in coastal clearing, golden hour | Veo AI |
 
 ### AI-generated footage (Veo) — watermark handling
 
@@ -189,8 +189,8 @@ AI-generated clips (prefixed `ai_`) have a **"VEO" watermark in the bottom-right
 #### ParkingLleno (✅ DONE)
 | Scene | Footage | Dim | Role |
 |-------|---------|-----|------|
-| S1 Hook | `ai_Campervan_Gathering_in_Golden_Hour.mp4` | 35% | Hero — vanlife overcrowding |
-| S2 Stars | `ai_Campervan_Gathering_in_Golden_Hour.mp4` (continued) | 75% | Same footage, darker, tighter zoom |
+| S1 Hook | `ai_Van_trying_to_park_full_parking.mp4` | 35% | Hero — vanlife overcrowding |
+| S2 Stars | `ai_Van_trying_to_park_full_parking.mp4` (continued) | 75% | Same footage, darker, tighter zoom |
 | S3 Question | `drone_mountains.mp4` | 55% | Pivot — nature emerging |
 | S4 Scan | `road_trip_sunset.mp4` | 85% | Subtle warmth behind phone |
 | S5 CTA | `van_in_spot_calm.mp4` | 40% | Payoff — the dream |
@@ -220,7 +220,7 @@ AI-generated clips (prefixed `ai_`) have a **"VEO" watermark in the bottom-right
 | S3 Reveal | `road_trip_sunset.mp4` | 82% | Moody vanishing-point road |
 | S4 Demo | `rv_mountain_road.mp4` | 85% | Subtle driving behind phone frame |
 | S5 Pipeline | `coffee_camping.mp4` | 90% | Minimal — pipeline cards are the focus |
-| S6 Choice (top/bottom) | TOP: `ai_Campervan_Gathering_in_Golden_Hour.mp4`, BOTTOM: `van_in_spot_calm.mp4` | 45%/55% | Landscape footage fills full width |
+| S6 Choice (top/bottom) | TOP: `ai_Van_trying_to_park_full_parking.mp4`, BOTTOM: `van_in_spot_calm.mp4` | 45%/55% | Landscape footage fills full width |
 
 ### AI video generation — when to use
 
@@ -314,7 +314,7 @@ AI video generators (Runway Gen-3 Alpha, Kling 1.6, Sora) are best for shots tha
 - A generic city parking lot aerial reads as "parking app" — viewers think "Parkopedia" not "vanlife overcrowding."
 - For "crowded spot" scenes, use footage of **campervans/VW vans packed in a natural setting** (coastal clearing, dirt lot, forest), not urban parking lots.
 - AI video generation (Veo) excels here — "aerial of VW vans packed in a coastal clearing at golden hour" is too specific for stock libraries but trivial for AI.
-- The `ai_Campervan_Gathering_in_Golden_Hour.mp4` clip solved this across ParkingLleno and OchentaYSiete.
+- The `ai_Van_trying_to_park_full_parking.mp4` clip solved this across ParkingLleno and OchentaYSiete.
 
 ### Map scenes don't need video backgrounds
 - When a scene's visual IS the map (animated counter + appearing dots + geography), adding a video background behind it creates visual confusion — two competing layers.

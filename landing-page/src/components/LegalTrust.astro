@@ -1,0 +1,33 @@
+---
+import type { Dict } from '@/i18n/es';
+interface Props { t: Dict }
+const { t } = Astro.props;
+---
+<section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
+  <video class="absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline preload="none" aria-hidden="true">
+    <source src="/videos/legal.mp4" type="video/mp4" />
+  </video>
+  <div class="absolute inset-0 bg-[#0F0D0B]/94"></div>
+  <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 0%, #0F0D0B 75%);"></div>
+
+  <div class="relative max-w-[1080px] mx-auto text-center">
+    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">Fuentes</p>
+    <h2 class="reveal font-sans font-black text-[38px] sm:text-[54px] md:text-[76px] leading-[1.02] tracking-[-0.025em] display-cream mb-10" data-delay="1">
+      {t.legal.title}
+    </h2>
+    <p class="reveal text-[17px] md:text-[19px] leading-[1.55] text-[#B7A089] max-w-[660px] mx-auto mb-16" data-delay="2">
+      {t.legal.sub}
+    </p>
+    <div class="reveal flex flex-wrap items-center justify-center gap-x-5 gap-y-4 mb-12" data-delay="3">
+      {t.legal.sources.map((src, i) => (
+        <>
+          {i > 0 && <span class="text-[#D97706] text-[22px] leading-none">·</span>}
+          <span class="font-sans font-black text-[18px] md:text-[24px] tracking-[0.01em] text-[#F5EBD8]">{src}</span>
+        </>
+      ))}
+    </div>
+    <p class="reveal font-sans text-[11px] tracking-wide text-[#B7A089]/60 max-w-[640px] mx-auto" data-delay="4">
+      {t.legal.attribution}
+    </p>
+  </div>
+</section>

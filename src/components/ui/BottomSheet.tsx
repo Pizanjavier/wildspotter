@@ -14,12 +14,14 @@ import { t } from '@/i18n';
 type BottomSheetProps = {
   spotsCount: number;
   regionName?: string;
+  fromCache?: boolean;
   children?: ReactNode;
 };
 
 export const BottomSheet = ({
   spotsCount,
   regionName,
+  fromCache = false,
   children,
 }: BottomSheetProps) => {
   const colors = useThemeColors();
@@ -65,6 +67,20 @@ export const BottomSheet = ({
               </Text>
             </View>
             <View style={styles.headerRight}>
+              {fromCache ? (
+                <View
+                  style={[
+                    styles.cachedBadge,
+                    { borderColor: colors.ACCENT },
+                  ]}
+                >
+                  <Text
+                    style={[styles.cachedBadgeText, { color: colors.ACCENT }]}
+                  >
+                    {t('map.cached')}
+                  </Text>
+                </View>
+              ) : null}
               {regionName ? (
                 <Text style={[styles.regionName, { color: colors.TEXT_SECONDARY }]}>
                   {regionName}
@@ -135,6 +151,17 @@ const styles = StyleSheet.create({
   regionName: {
     fontFamily: FONT_FAMILIES.DATA,
     fontSize: 12,
+    letterSpacing: 1,
+  },
+  cachedBadge: {
+    borderWidth: 1,
+    borderRadius: 999,
+    paddingHorizontal: SPACING.SM,
+    paddingVertical: 2,
+  },
+  cachedBadgeText: {
+    fontFamily: FONT_FAMILIES.DATA_BOLD,
+    fontSize: 10,
     letterSpacing: 1,
   },
   content: {

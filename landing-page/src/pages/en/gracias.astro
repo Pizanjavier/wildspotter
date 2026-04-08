@@ -1,0 +1,17 @@
+---
+import Base from '@/layouts/Base.astro';
+import Nav from '@/components/Nav.astro';
+const pos = Astro.url.searchParams.get('pos');
+---
+<Base title="Confirmed · WildSpotter" description="Pioneer confirmed." locale="en">
+  <Nav locale="en" />
+  <main class="min-h-screen flex items-center justify-center px-5 contour-bg">
+    <div class="text-center max-w-xl">
+      <p class="font-mono text-[11px] tracking-[0.28em] uppercase text-[#D97706] mb-4">/ CONFIRMED</p>
+      <h1 class="font-black text-[44px] md:text-[64px] leading-[0.95] tracking-[-0.02em] mb-5">
+        You are Pioneer {pos ? `#${pos}` : ''}
+      </h1>
+      <p class="text-[#A0836C] text-[18px]">Your €24.99/yr price is locked forever. We will notify you on launch day.</p>
+    </div>
+  </main>
+</Base>

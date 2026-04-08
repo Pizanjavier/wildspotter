@@ -65,6 +65,18 @@ export type TranslationKeys = {
     aiVans: string;
     aiClear: string;
     back: string;
+    report: string;
+    reportTitle: string;
+    reportIncorrectLegal: string;
+    reportNotAccessible: string;
+    reportPrivateProperty: string;
+    reportScoreTooHigh: string;
+    reportScoreTooLow: string;
+    reportOther: string;
+    reportCommentPlaceholder: string;
+    reportSubmit: string;
+    reportThanks: string;
+    reportError: string;
   };
   legal: {
     title: string;
@@ -109,6 +121,12 @@ export type TranslationKeys = {
     language: string;
     settingsTitle: string;
     theme: string;
+    sendFeedback: string;
+    sendFeedbackHint: string;
+    earlyAccess: string;
+    privacyTitle: string;
+    analyticsLabel: string;
+    analyticsHint: string;
   };
   ai: {
     pending: string;
@@ -121,6 +139,8 @@ export type TranslationKeys = {
     topographer: string;
     legal: string;
     ai: string;
+    context: string;
+    amenities: string;
   };
   scanning: {
     title: string;

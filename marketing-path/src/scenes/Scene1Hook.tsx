@@ -48,7 +48,7 @@ export const Scene1Hook: React.FC = () => {
 				}}
 			>
 				<Video
-					src={staticFile("videos/ai_Campervan_Gathering_in_Golden_Hour.mp4")}
+					src={staticFile("videos/ai_Van_trying_to_park_full_parking.mp4")}
 					muted
 					style={{
 						width: "100%",
@@ -113,8 +113,7 @@ export const Scene1Hook: React.FC = () => {
 						color: "#FFFFFF",
 						lineHeight: 1.1,
 						letterSpacing: -1,
-						textShadow:
-							"0 4px 30px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.7)",
+						textShadow: "0 4px 30px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.7)",
 					}}
 				>
 					El parking de
@@ -142,8 +141,7 @@ export const Scene1Hook: React.FC = () => {
 						fontSize: 48,
 						fontWeight: 700,
 						color: "rgba(255,255,255,0.85)",
-						textShadow:
-							"0 3px 20px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.7)",
+						textShadow: "0 3px 20px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.7)",
 					}}
 				>
 					Sin hueco. Anocheciendo.
@@ -155,8 +153,7 @@ export const Scene1Hook: React.FC = () => {
 						fontWeight: 700,
 						color: "rgba(255,255,255,0.85)",
 						marginTop: 4,
-						textShadow:
-							"0 3px 20px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.7)",
+						textShadow: "0 3px 20px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.7)",
 					}}
 				>
 					2 horas de carretera.

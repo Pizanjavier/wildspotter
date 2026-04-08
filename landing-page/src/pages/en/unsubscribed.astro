@@ -1,0 +1,15 @@
+---
+import Base from '@/layouts/Base.astro';
+import Nav from '@/components/Nav.astro';
+---
+<Base title="Unsubscribed · WildSpotter" description="You have unsubscribed from the WildSpotter list." locale="en">
+  <Nav locale="en" />
+  <main class="min-h-screen flex items-center justify-center px-5">
+    <div class="text-center max-w-xl">
+      <p class="font-mono text-[11px] tracking-[0.28em] uppercase text-[#B7A089] mb-4">/ UNSUBSCRIBED</p>
+      <h1 class="font-black text-[44px] md:text-[60px] leading-[0.98] tracking-[-0.02em] mb-5 text-[#F5EBD8]">You are out.</h1>
+      <p class="text-[#B7A089] text-[17px] mb-10 leading-relaxed">You will no longer receive emails from us. If this was a mistake, you can always sign up again.</p>
+      <a href="/en/" class="font-mono text-[12px] tracking-[0.2em] uppercase text-[#B7A089] hover:text-[#D97706] transition">← Back to home</a>
+    </div>
+  </main>
+</Base>

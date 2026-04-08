@@ -45,6 +45,13 @@
         {
           "locationWhenInUsePermission": "WildSpotter needs your location to center the map on your position."
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "YOUR_SENTRY_ORG",
+          "project": "wildspotter"
+        }
       ]
     ]
   }

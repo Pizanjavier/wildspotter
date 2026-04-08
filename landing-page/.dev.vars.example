@@ -1,0 +1,4 @@
+RESEND_API_KEY=
+RESEND_FROM="WildSpotter <hola@wildspotter.app>"
+SITE_URL="http://localhost:4321"
+TURNSTILE_SECRET=
