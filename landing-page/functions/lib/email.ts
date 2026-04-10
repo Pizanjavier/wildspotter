@@ -4,14 +4,17 @@ type Locale = 'es' | 'en';
 
 const subjects: Record<Locale, { confirm: string; welcome: (pos: number) => string }> = {
   es: {
-    confirm: 'Confirma tu lugar en WildSpotter',
+    confirm: '[Acción requerida] Confirma tu plaza Pioneer en WildSpotter',
     welcome: (pos) => `Eres Pioneer #${pos}. Bienvenido al radar.`,
   },
   en: {
-    confirm: 'Confirm your WildSpotter Early Access spot',
+    confirm: '[Action required] Confirm your WildSpotter Pioneer seat',
     welcome: (pos) => `You are Pioneer #${pos}. Welcome to the radar.`,
   },
 };
+
+const preheader = (text: string): string =>
+  `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#0F0D0B;opacity:0">${text}</div>`;
 
 const wrap = (locale: Locale, inner: string, unsubUrl: string): string => {
   const foot =
@@ -28,6 +31,10 @@ You are receiving this because you joined the WildSpotter waitlist.
 };
 
 const confirmBody = (locale: Locale, url: string, unsubUrl: string): string => {
+  const pre =
+    locale === 'es'
+      ? preheader('Confirma tu plaza Pioneer — un solo clic. Si no lo ves, revisa spam o promociones.')
+      : preheader('Confirm your Pioneer seat — one click. If you cannot see it, check spam or promotions.');
   const inner =
     locale === 'es'
       ? `<h1 style="font-size:24px;margin:0 0 16px;color:#F5EBD8">Confirma tu email</h1>
@@ -38,7 +45,7 @@ const confirmBody = (locale: Locale, url: string, unsubUrl: string): string => {
 <p style="line-height:1.55;color:#E8D9BF">Thanks for joining WildSpotter. Click to confirm your email and reserve your Pioneer seat.</p>
 <p><a href="${url}" style="background:#D97706;color:#fff;padding:14px 24px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;margin:16px 0">Confirm email</a></p>
 <p style="color:#B7A089;font-size:13px">If this was not you, just ignore this email.</p>`;
-  return wrap(locale, inner, unsubUrl);
+  return pre + wrap(locale, inner, unsubUrl);
 };
 
 const welcomeBody = (locale: Locale, position: number, isPioneer: boolean, unsubUrl: string): string => {

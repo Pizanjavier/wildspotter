@@ -14,6 +14,8 @@ import {
 } from "remotion";
 import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
 import { loadFont as loadJetBrains } from "@remotion/google-fonts/JetBrainsMono";
+import { GenericHook } from "./components/GenericHook";
+import { StoreInstallIntro, STORE_INTRO_FRAMES } from "./components/StoreInstallIntro";
 
 const { fontFamily: interFont } = loadInter("normal", {
   weights: ["400", "600", "700", "900"],
@@ -25,9 +27,14 @@ const { fontFamily: jetbrainsFont } = loadJetBrains("normal", {
   subsets: ["latin"],
 });
 
-// Total: 130 + 150 + 120 + 130 = 530 raw
-// Transitions: 16 + 16 + 16 = 48 overlap
-// Net: 482 frames ≈ 16.1s @ 30fps
+// Base: 482 frames ≈ 16.1s @ 30fps
+// With intro: 482 + 105 = 587 frames ≈ 19.6s
+
+export type Natura2000ClipProps = {
+  hookVariant: "N1" | "N2";
+  withIntro: boolean;
+  musicTrack: "tension" | "digital-clouds";
+};
 
 // --- Scene 1: Beautiful nature with "Este rincón parece perfecto" ---
 const Scene1Map: React.FC = () => {
@@ -796,12 +803,12 @@ const Scene4Logo: React.FC = () => {
 };
 
 // --- Music track ---
-const TensionMusic: React.FC = () => {
+const TensionMusic: React.FC<{ src: string }> = ({ src }) => {
   const { durationInFrames, fps } = useVideoConfig();
 
   return (
     <Audio
-      src={staticFile("audio/music/tension.mp3")}
+      src={staticFile(src)}
       volume={(f) => {
         const fadeIn = interpolate(f, [0, 0.8 * fps], [0, 0.35], {
           extrapolateLeft: "clamp",
@@ -821,56 +828,84 @@ const TensionMusic: React.FC = () => {
   );
 };
 
+// --- Hook variant ---
+const HookN2: React.FC = () => (
+  <GenericHook
+    title={<>¿Sabes qué es<br /><span style={{ color: "#DC2626" }}>Natura 2000</span>?</>}
+    subtitle="Cubre el 27% de España."
+    subtitle2="Y tu spot puede estar dentro."
+    videoSrc="videos/drone_forest.mp4"
+    dimOpacity={0.4}
+  />
+);
+
+const HOOK_MAP = { N1: Scene1Map, N2: HookN2 } as const;
+
 // --- Main composition ---
-// Scene durations: 130 + 150 + 120 + 130 = 530
-// Transitions: 16 + 16 + 16 = 48
-// Net: 482 frames ≈ 16.1s @ 30fps
-export const Natura2000Clip: React.FC = () => {
+export const Natura2000Clip: React.FC<Natura2000ClipProps> = ({
+  hookVariant = "N1",
+  withIntro = false,
+  musicTrack = "tension",
+}) => {
+  const HookScene = HOOK_MAP[hookVariant];
+  const introOffset = withIntro ? STORE_INTRO_FRAMES : 0;
+  const musicSrc = `audio/music/${musicTrack}.mp3`;
+
+  const scenes = (
+    <TransitionSeries>
+      <TransitionSeries.Sequence durationInFrames={130}>
+        <HookScene />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={150}>
+        <Scene2Natura />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={120}>
+        <Scene3Warning />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={130}>
+        <Scene4Logo />
+      </TransitionSeries.Sequence>
+    </TransitionSeries>
+  );
+
   return (
     <>
-      <TensionMusic />
+      <TensionMusic src={musicSrc} />
 
-      {/* Radar ping SFX on Natura 2000 reveal */}
-      <Sequence from={122}>
+      <Sequence from={introOffset + 122}>
         <Audio src={staticFile("audio/sfx/radar-ping.mp3")} volume={0.6} />
       </Sequence>
 
-      <TransitionSeries>
-        {/* Scene 1: Beautiful nature spot */}
-        <TransitionSeries.Sequence durationInFrames={130}>
-          <Scene1Map />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 2: Natura 2000 overlay drops */}
-        <TransitionSeries.Sequence durationInFrames={150}>
-          <Scene2Natura />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 3: "¿Sabías que estás dentro?" */}
-        <TransitionSeries.Sequence durationInFrames={120}>
-          <Scene3Warning />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 4: Logo + tagline close */}
-        <TransitionSeries.Sequence durationInFrames={130}>
-          <Scene4Logo />
-        </TransitionSeries.Sequence>
-      </TransitionSeries>
+      {withIntro ? (
+        <>
+          <Sequence durationInFrames={STORE_INTRO_FRAMES}>
+            <StoreInstallIntro />
+          </Sequence>
+          <Sequence from={STORE_INTRO_FRAMES}>
+            {scenes}
+          </Sequence>
+        </>
+      ) : (
+        scenes
+      )}
     </>
   );
 };

@@ -297,20 +297,20 @@ Once the app is live and users have installed it, push notifications become the 
 
 ## 11. Pre-Launch Checklist
 
-- [ ] Register `wildspotter.app` domain
-- [ ] Create Cloudflare account + Pages project + D1 database
-- [ ] Create Resend account + verify sending domain (DKIM/SPF)
-- [ ] Set up `wildspotter-landing` git repo
-- [ ] Build Astro project with sections 1-6
-- [ ] Write ES + EN copy for all sections
-- [ ] Render ParkingLleno 10s cut → upload to R2
-- [ ] Implement `/api/subscribe` + `/api/confirm` Pages Functions
-- [ ] Implement live Pioneer counter (cached 60s)
-- [ ] Write confirmation + welcome email templates in Resend
+- [x] Register `wildspotter.app` domain
+- [x] Create Cloudflare account + Pages project + D1 database
+- [x] Create Resend account + verify sending domain (DKIM/SPF)
+- [x] Set up `wildspotter-landing` git repo
+- [x] Build Astro project with sections 1-6
+- [x] Write ES + EN copy for all sections
+- [x] Render ParkingLleno 10s cut → upload to R2 (self-hosted in `public/videos/hero.mp4`)
+- [x] Implement `/api/subscribe` + `/api/confirm` Pages Functions
+- [x] Implement live Pioneer counter (cached 60s)
+- [x] Write confirmation + welcome email templates in Resend
 - [ ] Set up Plausible/PostHog
-- [ ] Test full flow: form → email → confirm → welcome email → database row with correct position
-- [ ] Legal: privacy policy page, unsubscribe flow, data export/delete
-- [ ] Deploy to production, verify HTTPS + custom domain
+- [x] Test full flow: form → email → confirm → welcome email → database row with correct position (verified end-to-end 2026-04-08, Pioneer #1 assigned)
+- [x] Legal: privacy policy page, unsubscribe flow, data export/delete
+- [x] Deploy to production, verify HTTPS + custom domain (https://wildspotter.app live)
 - [ ] Add landing URL to all TikTok/Instagram bio links before marketing week 1
 
 ## 12. Post-Launch Maintenance

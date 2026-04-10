@@ -85,10 +85,21 @@ Marketing videos and content should showcase what the app **actually looks like 
 ```
 marketing-path/
 ├── src/
-│   ├── Root.tsx              # Remotion entry — register all compositions here
-│   ├── Composition.tsx       # Video compositions
+│   ├── Root.tsx              # Remotion entry — registers all 28 composition variants
+│   ├── components/
+│   │   ├── StoreInstallIntro.tsx  # Reusable "app store install" intro (3.5s)
+│   │   └── GenericHook.tsx        # Reusable text-over-video hook scene
+│   ├── scenes/               # ParkingLleno scene files
+│   ├── scenes-87/            # OchentaYSiete scene files
+│   ├── ParkingLleno.tsx      # Concepto A — accepts hookVariant + withIntro props
+│   ├── Natura2000Clip.tsx     # Micro-clip educativo — accepts props
+│   ├── LaMulta.tsx           # Concepto C — accepts props
+│   ├── OchentaYSiete.tsx     # Concepto B — accepts props
+│   ├── ElPipeline.tsx        # Concepto D — accepts props
 │   ├── index.ts              # Bundle entry
 │   └── index.css             # Global styles (Tailwind)
+├── scripts/
+│   └── render-all-variants.sh  # Batch render all 28 variants
 ├── public/                   # Static assets (images, audio, fonts)
 ├── remotion.config.ts        # Remotion + Tailwind config
 ├── .claude/skills/           # Remotion-specific skills
@@ -115,18 +126,31 @@ Load the relevant skill before starting any marketing task.
 
 ## Produced Videos
 
-| File | Composition ID | Duration | Video Footage | Status |
-|------|---------------|----------|---------------|--------|
-| `src/ParkingLleno.tsx` | `ParkingLleno` | ~26.8s (805f @ 30fps) | ✅ All scenes have video bg | ✅ Ready to render |
-| `src/Natura2000Clip.tsx` | `Natura2000Clip` | ~16.1s (482f @ 30fps) | ✅ All scenes have video bg | ✅ Ready to render |
-| `src/LaMulta.tsx` | `LaMulta` | ~25.5s (766f @ 30fps) | ✅ All scenes have video bg | ✅ Ready to render |
-| `src/OchentaYSiete.tsx` | `OchentaYSiete` | 30.0s (900f @ 30fps) | ✅ All scenes have video bg | ✅ Ready to render |
+Each video has **hook variants** (different first 3 seconds) and optional **store intro** (3.5s app install simulation). All registered in `Root.tsx` via props — no file duplication.
+
+| File | Base ID | Variants | Base Duration | With Intro |
+|------|---------|----------|---------------|------------|
+| `src/ParkingLleno.tsx` | `ParkingLleno` | A1, A2, A3 | 26.8s (805f) | 30.3s (910f) |
+| `src/Natura2000Clip.tsx` | `Natura2000Clip` | N1, N2 | 16.1s (482f) | 19.6s (587f) |
+| `src/LaMulta.tsx` | `LaMulta` | C1, C2, C3 | 25.5s (766f) | 29.0s (871f) |
+| `src/OchentaYSiete.tsx` | `OchentaYSiete` | B1, B2, B3 | 30.0s (900f) | 33.5s (1005f) |
+| `src/ElPipeline.tsx` | `ElPipeline` | D1, D2, D3 | 27.9s (836f) | 31.4s (941f) |
+
+**Total: 28 renderable compositions** (14 hooks × with/without intro).
 
 Render commands:
-- `npx remotion render ParkingLleno out/parking-lleno.mp4`
-- `npx remotion render Natura2000Clip out/natura2000-clip.mp4`
-- `npx remotion render LaMulta out/la-multa.mp4`
-- `npx remotion render OchentaYSiete out/ochenta-y-siete.mp4`
+```bash
+# Individual
+npx remotion render ParkingLleno out/parking-lleno.mp4
+npx remotion render ParkingLleno-A2 out/parking-lleno-a2.mp4
+npx remotion render LaMulta-C2-Intro out/la-multa-c2-intro.mp4
+
+# All hook variants (14 videos)
+./scripts/render-all-variants.sh --hooks-only
+
+# All 28 variants
+./scripts/render-all-variants.sh
+```
 
 ---
 
@@ -279,7 +303,7 @@ AI video generators (Runway Gen-3 Alpha, Kling 1.6, Sora) are best for shots tha
 - Valid MP3: `Audio file with ID3...` or `MPEG ADTS, layer III`. Invalid: `HTML document text`.
 - Royalty-free music sources: [Mixkit](https://mixkit.co/free-stock-music/) (direct MP3 links at `https://assets.mixkit.co/music/{id}/{id}.mp3`), Pixabay (requires browser download).
 - Each video should have its **own distinct music track** — don't reuse the same background music across videos. Different moods need different tracks.
-- Current audio inventory: `background.mp3` (cinematic, used in ParkingLleno), `tension.mp3` (suspense piano, used in Natura2000Clip), `suspense.mp3` (documentary suspense, used in LaMulta), `radar-ping.mp3` (SFX), `score-reveal.mp3` (SFX), `whoosh.mp3` (SFX).
+- Current audio inventory: `background.mp3` (cinematic — ParkingLleno A1), `tension.mp3` (suspense piano — Natura2000 N1), `suspense.mp3` (documentary — LaMulta C1), `epic-drums.mp3` (OchentaYSiete B1), `sci-fi-score.mp3` (futuristic tech — ElPipeline D1), `the-journey.mp3` (reflective — ParkingLleno A2/A3), `echoes.mp3` (dark ambient — LaMulta C2/C3), `spirit-in-the-woods.mp3` (atmospheric — OchentaYSiete B2/B3), `digital-clouds.mp3` (ambient — Natura2000 N2), `voxscape.mp3` (electronic — ElPipeline D2/D3), `radar-ping.mp3` (SFX), `score-reveal.mp3` (SFX), `whoosh.mp3` (SFX).
 
 ### Scene duration — Err on the side of longer
 - Initial instinct is to make scenes too short. **Always add 30-50% more frames** than feels necessary on first pass.
@@ -309,6 +333,24 @@ AI video generators (Runway Gen-3 Alpha, Kling 1.6, Sora) are best for shots tha
 - Text like "¿Sabías que estabas dentro?" fails if the viewer doesn't know what "dentro" refers to. Each scene must either explicitly reference the previous context or be self-contained.
 - When rewriting copy, ask: "If someone watched only this scene, would they understand the message?" If not, add context.
 - Example fix: "¿Sabías que estás dentro?" → "Estás en una zona protegida." — self-contained, no dangling reference.
+
+### Use REAL product data, not invented values
+- When showing app output (AI scores, metrics, sub-scores, labels), **always cross-reference the actual worker code** in the parent project before writing numbers on screen. Inventing plausible-sounding fields undermines credibility for the tech-savvy audience.
+- WildSpotter AI sub-scores live in `workers/ai_vision_labeler.py` — the real keys are `surface_quality`, `vehicle_access`, `open_space`, `van_presence`, `obstruction_absence` (each 0-10, weighted into final `ai_score`). The vision model is Claude Haiku 4.5; the satellite tile source is IGN PNOA at 25cm/px.
+- Context sub-scores live in `workers/context_scoring.py` and are documented in `SPEC_V2.md` §2.6. Use those exact labels (road_noise, urban_density, scenic_value, privacy, industrial, railway, van_community, drinking_water, dog_friendly).
+- Pipeline statuses: `pending → terrain_done → legal_done → ai_done → context_done → amenities_done → completed`.
+- **Translate labels to Spanish** for the on-screen display (audience is Spanish vanlifers) — keep the raw English keys only when the scene is explicitly showing "raw data / JSON / API" framing.
+
+### Footage variety across concepts — don't reuse the same clips
+- Each video should have a **distinct footage palette** from the other concepts. Reusing the same 5-6 "greatest hits" clips (drone_mountains, drone_forest, van_in_spot_calm, coffee_camping) across every video makes the series feel like one long ad.
+- Before picking footage for a new concept, check the "Per-video footage map" tables above and **prioritize clips not yet used** — especially the underused AI-generated clips (`ai_Spanish_Beach_VW_Van_Golden_Hour`, `ai_Spanish_Countryside_Van_Video`, `ai_Campervan_Sunset_Time_Lapse_Video`) and `rvs_parked_outdoors`.
+- Thematic match still beats novelty — don't force a wrong clip just for variety. But if two clips both fit, always pick the less-used one.
+
+### Each video needs its own music track
+- Reusing the same background music across videos makes them blur together in the feed. **Every concept gets its own distinct track.**
+- **Mixkit direct download pattern:** `curl -sL -o public/audio/music/name.mp3 https://assets.mixkit.co/music/{ID}/{ID}.mp3`. Verify with `file name.mp3` — must be `MPEG ADTS, layer III`, not HTML.
+- Get track IDs from Mixkit category pages via WebFetch (e.g. `mixkit.co/free-stock-music/tag/electronic/`) — don't guess IDs.
+- Current music inventory: `background.mp3` (cinematic — ParkingLleno A1), `tension.mp3` (suspense piano — Natura2000 N1), `suspense.mp3` (documentary — LaMulta C1), `epic-drums.mp3` (OchentaYSiete B1), `sci-fi-score.mp3` (Mixkit 464, futuristic tech — ElPipeline D1), `the-journey.mp3` (Mixkit 79, reflective — ParkingLleno A2/A3), `echoes.mp3` (Mixkit 188, dark ambient — LaMulta C2/C3), `spirit-in-the-woods.mp3` (Mixkit 139, atmospheric — OchentaYSiete B2/B3), `digital-clouds.mp3` (Mixkit 175, ambient — Natura2000 N2), `voxscape.mp3` (Mixkit 571, electronic — ElPipeline D2/D3).
 
 ### Footage must match the product context, not just the emotion
 - A generic city parking lot aerial reads as "parking app" — viewers think "Parkopedia" not "vanlife overcrowding."

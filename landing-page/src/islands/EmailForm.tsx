@@ -24,6 +24,9 @@ type Copy = {
 	emailPlaceholder: string;
 	cta: string;
 	thanks: string;
+	successTitle: string;
+	successBody: string;
+	successSpam: string;
 	errorGeneric: string;
 	errorEmail: string;
 	errorDup: string;
@@ -48,6 +51,8 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 	>([]);
 	const tsRef = useRef<HTMLDivElement>(null);
 	const widgetId = useRef<string | null>(null);
+	const tokenRef = useRef<string>("");
+	const tokenResolvers = useRef<Array<(t: string) => void>>([]);
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
@@ -74,38 +79,28 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 			if (!tsRef.current || !window.turnstile || widgetId.current) return;
 			widgetId.current = window.turnstile.render(tsRef.current, {
 				sitekey: TURNSTILE_SITE_KEY,
-				size: "invisible",
+				callback: (t: string) => {
+					tokenRef.current = t;
+					const q = tokenResolvers.current;
+					tokenResolvers.current = [];
+					for (const r of q) r(t);
+				},
 			});
 		});
 	}, []);
 
 	const getTurnstileToken = async (): Promise<string> => {
-		if (typeof window === "undefined" || !window.turnstile || !widgetId.current)
-			return "";
-		const current = window.turnstile.getResponse(widgetId.current);
-		if (current) return current;
-		const id = widgetId.current;
-		const ts = window.turnstile;
+		if (tokenRef.current) return tokenRef.current;
+		if (typeof window === "undefined" || !window.turnstile) return "";
 		return new Promise((resolve) => {
-			let done = false;
-			const check = () => {
-				if (done) return;
-				const t = ts.getResponse(id);
-				if (t) {
-					done = true;
-					resolve(t);
-				}
-			};
-			ts.execute(id);
-			const iv = setInterval(() => {
-				check();
-				if (done) clearInterval(iv);
-			}, 120);
+			tokenResolvers.current.push(resolve);
 			setTimeout(() => {
-				done = true;
-				clearInterval(iv);
-				resolve("");
-			}, 4000);
+				const i = tokenResolvers.current.indexOf(resolve);
+				if (i >= 0) {
+					tokenResolvers.current.splice(i, 1);
+					resolve("");
+				}
+			}, 8000);
 		});
 	};
 
@@ -169,9 +164,58 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 		? "h-[64px] text-[20px] md:text-[24px]"
 		: "h-[56px] text-[18px]";
 
+	if (state === "success") {
+		const body = copy.successBody.replace(
+			"{email}",
+			`<strong class="text-[#F5EBD8]">${email.replace(/[<>&]/g, "")}</strong>`,
+		);
+		return (
+			<div
+				role="status"
+				aria-live="polite"
+				class="w-full max-w-xl rounded-lg border border-[#D97706]/40 bg-[#221B16]/90 p-6 sm:p-7 shadow-[0_0_40px_rgba(217,119,6,0.15)] animate-[fadeIn_300ms_ease-out]"
+			>
+				<div class="flex items-start gap-4">
+					<div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#D97706] flex items-center justify-center">
+						<svg
+							width="26"
+							height="26"
+							viewBox="0 0 24 24"
+							fill="none"
+							role="img"
+							aria-label="ok"
+						>
+							<title>ok</title>
+							<path
+								d="M4 12.5l5 5L20 6.5"
+								stroke="white"
+								stroke-width="3"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</div>
+					<div class="flex-1 min-w-0">
+						<h3 class="text-[22px] sm:text-[26px] font-semibold text-[#F5EBD8] leading-tight">
+							{copy.successTitle}
+						</h3>
+						<p
+							class="mt-2 text-[15px] sm:text-[16px] leading-relaxed text-[#E8D9BF] break-words"
+							// biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized
+							dangerouslySetInnerHTML={{ __html: body }}
+						/>
+						<p class="mt-3 text-[13px] leading-relaxed text-[#B7A089] font-mono tracking-tight">
+							⚠ {copy.successSpam}
+						</p>
+					</div>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<form onSubmit={onSubmit} class="w-full max-w-xl relative" noValidate>
-			<div ref={tsRef} class="cf-turnstile" aria-hidden="true" />
+			<div ref={tsRef} aria-hidden="true" />
 			<div
 				class={`relative flex flex-col sm:flex-row gap-3 sm:gap-0 rounded-md overflow-visible`}
 			>
@@ -181,34 +225,15 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 					placeholder={copy.emailPlaceholder}
 					value={email}
 					onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
-					disabled={state === "loading" || state === "success"}
+					disabled={state === "loading"}
 					class={`min-w-70 ${inputH} px-5 rounded-md sm:rounded-r-none bg-[#221B16] border border-white/10 focus:border-[#D97706] focus:outline-none text-[#F5EBD8] placeholder:text-[#B7A089]/60 font-sans transition-colors`}
 				/>
 				<button
 					type="submit"
-					disabled={state === "loading" || state === "success"}
+					disabled={state === "loading"}
 					class={`btn-amber ${inputH} px-6 sm:px-8 rounded-md sm:rounded-l-none font-sans text-[14px] sm:text-[15px] tracking-[-0.005em] sm:whitespace-nowrap text-white font-semibold disabled:opacity-80 flex items-center justify-center gap-2 relative text-center leading-tight`}
 				>
-					{state === "success" ? (
-						<svg
-							width="24"
-							height="24"
-							viewBox="0 0 24 24"
-							fill="none"
-							class="animate-[check_400ms_ease-out]"
-							role="img"
-							aria-label="success"
-						>
-							<title>success</title>
-							<path
-								d="M4 12.5l5 5L20 6.5"
-								stroke="white"
-								stroke-width="3"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
-						</svg>
-					) : state === "loading" ? (
+					{state === "loading" ? (
 						<span class="inline-block w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
 					) : (
 						<span>{copy.cta}</span>
@@ -228,11 +253,8 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 				))}
 			</div>
 			{message && (
-				<p
-					class={`mt-3 font-mono text-[12px] tracking-wider ${state === "success" ? "text-[#4ADE80]" : "text-[#D97706]"}`}
-				>
-					{state === "success" ? "✓ " : "✕ "}
-					{message}
+				<p class="mt-3 font-mono text-[12px] tracking-wider text-[#D97706]">
+					✕ {message}
 				</p>
 			)}
 		</form>

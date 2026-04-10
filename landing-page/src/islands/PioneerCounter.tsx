@@ -40,7 +40,7 @@ export const PioneerCounter = ({ label, cap = 500 }: Props) => {
     <div class="inline-flex flex-col gap-2 max-w-[360px]">
       <div class="flex items-baseline justify-between gap-4">
         <span class={`font-sans font-black text-[22px] md:text-[26px] text-[#F5EBD8] ${pulse ? 'pulse-amber' : ''}`}>
-          {left} <span class="text-[13px] font-normal text-[#B7A089] uppercase tracking-[0.1em]">{label}</span>
+          {left} <span class="ml-2 text-[13px] font-normal text-[#B7A089] uppercase tracking-[0.1em]">{label}</span>
         </span>
         <span class="font-mono text-[11px] text-[#B7A089] tabular-nums">{taken}/{cap}</span>
       </div>

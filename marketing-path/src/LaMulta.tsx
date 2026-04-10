@@ -10,9 +10,12 @@ import {
   staticFile,
   useCurrentFrame,
   useVideoConfig,
+  Sequence,
 } from "remotion";
 import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
 import { loadFont as loadJetBrains } from "@remotion/google-fonts/JetBrainsMono";
+import { GenericHook } from "./components/GenericHook";
+import { StoreInstallIntro, STORE_INTRO_FRAMES } from "./components/StoreInstallIntro";
 
 const { fontFamily: interFont } = loadInter("normal", {
   weights: ["400", "600", "700", "900"],
@@ -24,9 +27,14 @@ const { fontFamily: jetbrainsFont } = loadJetBrains("normal", {
   subsets: ["latin"],
 });
 
-// Total: 140 + 150 + 130 + 180 + 230 = 830 raw
-// Transitions: 16 + 16 + 16 + 16 = 64 overlap
-// Net: 766 frames ≈ 25.5s @ 30fps
+// Base: 766 frames ≈ 25.5s @ 30fps
+// With intro: 766 + 105 = 871 frames ≈ 29.0s
+
+export type LaMultaProps = {
+  hookVariant: "C1" | "C2" | "C3";
+  withIntro: boolean;
+  musicTrack: "suspense" | "echoes";
+};
 
 // --- Scene 1: HOOK — "600€. Por dormir en tu furgo." ---
 const Scene1Hook: React.FC = () => {
@@ -1036,12 +1044,12 @@ const Scene5CTA: React.FC = () => {
 };
 
 // --- Music track ---
-const SuspenseMusic: React.FC = () => {
+const SuspenseMusic: React.FC<{ src: string }> = ({ src }) => {
   const { durationInFrames, fps } = useVideoConfig();
 
   return (
     <Audio
-      src={staticFile("audio/music/suspense.mp3")}
+      src={staticFile(src)}
       volume={(f) => {
         const fadeIn = interpolate(f, [0, 1 * fps], [0, 0.3], {
           extrapolateLeft: "clamp",
@@ -1061,61 +1069,96 @@ const SuspenseMusic: React.FC = () => {
   );
 };
 
+// --- Hook variants ---
+const HookC2: React.FC = () => (
+  <GenericHook
+    title={<>Dormiste <span style={{ color: "#DC2626" }}>aquí</span>.<br />Era Natura 2000.</>}
+    subtitle="Y la multa llega después."
+    videoSrc="videos/Aerial_Spanish_Mediterranean_coast.mp4"
+    dimOpacity={0.45}
+  />
+);
+
+const HookC3: React.FC = () => (
+  <GenericHook
+    title={<>El <span style={{ color: "#DC2626" }}>27%</span> de España<br />es zona protegida.</>}
+    subtitle="¿Sabes si tu spot está dentro?"
+    videoSrc="videos/drone_forest.mp4"
+    dimOpacity={0.4}
+  />
+);
+
+const HOOK_MAP = { C1: Scene1Hook, C2: HookC2, C3: HookC3 } as const;
+
 // --- Main composition ---
-// Scene durations: 140 + 150 + 130 + 180 + 230 = 830
-// Transitions: 16 + 16 + 16 + 16 = 64
-// Net: 766 frames ≈ 25.5s @ 30fps
-export const LaMulta: React.FC = () => {
+export const LaMulta: React.FC<LaMultaProps> = ({
+  hookVariant = "C1",
+  withIntro = false,
+  musicTrack = "suspense",
+}) => {
+  const HookScene = HOOK_MAP[hookVariant];
+  const musicSrc = `audio/music/${musicTrack}.mp3`;
+
+  const scenes = (
+    <TransitionSeries>
+      <TransitionSeries.Sequence durationInFrames={140}>
+        <HookScene />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={150}>
+        <Scene2Zones />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={130}>
+        <Scene3Question />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={180}>
+        <Scene4Checklist />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={230}>
+        <Scene5CTA />
+      </TransitionSeries.Sequence>
+    </TransitionSeries>
+  );
+
   return (
     <>
-      <SuspenseMusic />
+      <SuspenseMusic src={musicSrc} />
 
-      <TransitionSeries>
-        {/* Scene 1: "600€" stamp hook */}
-        <TransitionSeries.Sequence durationInFrames={140}>
-          <Scene1Hook />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 2: Map with legal zone overlays */}
-        <TransitionSeries.Sequence durationInFrames={150}>
-          <Scene2Zones />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 3: "Podrías estar aparcando..." */}
-        <TransitionSeries.Sequence durationInFrames={130}>
-          <Scene3Question />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 4: Legal checklist cards */}
-        <TransitionSeries.Sequence durationInFrames={180}>
-          <Scene4Checklist />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 5: CTA + Logo */}
-        <TransitionSeries.Sequence durationInFrames={230}>
-          <Scene5CTA />
-        </TransitionSeries.Sequence>
-      </TransitionSeries>
+      {withIntro ? (
+        <>
+          <Sequence durationInFrames={STORE_INTRO_FRAMES}>
+            <StoreInstallIntro />
+          </Sequence>
+          <Sequence from={STORE_INTRO_FRAMES}>
+            {scenes}
+          </Sequence>
+        </>
+      ) : (
+        scenes
+      )}
     </>
   );
 };

@@ -8,29 +8,25 @@ import { Scene3Reveal } from "./scenes-87/Scene3Reveal";
 import { Scene4Demo } from "./scenes-87/Scene4Demo";
 import { Scene5Pipeline } from "./scenes-87/Scene5Pipeline";
 import { Scene6Choice } from "./scenes-87/Scene6Choice";
+import { GenericHook } from "./components/GenericHook";
+import { StoreInstallIntro, STORE_INTRO_FRAMES } from "./components/StoreInstallIntro";
 
 // Concepto B: "87 Spots y Tu No Conoces Ninguno"
-//
-// Scene durations (raw frames @ 30fps):
-//   1. Map Hook:       140f  (4.7s)
-//   2. Qualities:      150f  (5.0s)
-//   3. Reveal:         130f  (4.3s)
-//   4. App Demo:       185f  (6.2s)
-//   5. Pipeline:       195f  (6.5s)
-//   6. Choice + CTA:   180f  (6.0s)
-//   Total raw:         980f
-//
-// Transitions (all fade 16f):
-//   5 transitions × 16f = 80f overlap
-//
-// Net duration: 980 - 80 = 900f = 30.0s
+// Base: 900 frames = 30.0s @ 30fps
+// With intro: 900 + 105 = 1005 frames = 33.5s
 
-const MusicTrack: React.FC = () => {
+export type OchentaYSieteProps = {
+  hookVariant: "B1" | "B2" | "B3";
+  withIntro: boolean;
+  musicTrack: "epic-drums" | "spirit-in-the-woods";
+};
+
+const MusicTrack: React.FC<{ src: string }> = ({ src }) => {
   const { durationInFrames, fps } = useVideoConfig();
 
   return (
     <Audio
-      src={staticFile("audio/music/epic-drums.mp3")}
+      src={staticFile(src)}
       trimBefore={2 * fps}
       volume={(f) => {
         const fadeIn = interpolate(f, [0, 1.5 * fps], [0, 0.32], {
@@ -66,24 +62,96 @@ const ScoreRevealSfx: React.FC = () => (
   <Audio src={staticFile("audio/sfx/score-reveal.mp3")} volume={0.5} />
 );
 
-export const OchentaYSiete: React.FC = () => {
-  // Scene start times (accounting for transition overlaps, all fade 16f):
-  // Scene1: 0
-  // Scene2: 140 - 16 = 124
-  // Scene3: 124 + 150 - 16 = 258
-  // Scene4: 258 + 130 - 16 = 372
-  // Scene5: 372 + 185 - 16 = 541
-  // Scene6: 541 + 195 - 16 = 720
+// --- Hook variants ---
+const HookB2: React.FC = () => (
+  <GenericHook
+    title={<>Hay <span style={{ color: "#D97706" }}>87 spots</span> vacíos<br />a 1h de ti.</>}
+    subtitle="Planos. Legales. Con vistas."
+    videoSrc="videos/drone_mountains.mp4"
+    dimOpacity={0.4}
+  />
+);
 
-  // Radar ping when scan starts in Scene4 (~22f into Scene4)
-  const radarPingFrame = 372 + 22;
+const HookB3: React.FC = () => (
+  <GenericHook
+    title={<><span style={{ color: "#D97706" }}>Ninguna app</span><br />conoce estos 87 spots.</>}
+    subtitle="Porque no vienen de reviews."
+    videoSrc="videos/ai_Spanish_Countryside_Van_Video.mp4"
+    dimOpacity={0.35}
+  />
+);
 
-  // Score reveal when pipeline score appears in Scene5 (~100f into Scene5)
-  const scoreRevealFrame = 541 + 100;
+const HOOK_MAP = { B1: Scene1Map, B2: HookB2, B3: HookB3 } as const;
+
+export const OchentaYSiete: React.FC<OchentaYSieteProps> = ({
+  hookVariant = "B1",
+  withIntro = false,
+  musicTrack = "epic-drums",
+}) => {
+  const HookScene = HOOK_MAP[hookVariant];
+  const introOffset = withIntro ? STORE_INTRO_FRAMES : 0;
+  const musicSrc = `audio/music/${musicTrack}.mp3`;
+
+  // SFX timings (offset by intro if present)
+  const radarPingFrame = introOffset + 372 + 22;
+  const scoreRevealFrame = introOffset + 541 + 100;
+
+  const scenes = (
+    <TransitionSeries>
+      <TransitionSeries.Sequence durationInFrames={140}>
+        <HookScene />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={150}>
+        <Scene2Qualities />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={130}>
+        <Scene3Reveal />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={185}>
+        <Scene4Demo />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={195}>
+        <Scene5Pipeline />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: 16 })}
+      />
+
+      <TransitionSeries.Sequence durationInFrames={180}>
+        <Scene6Choice />
+      </TransitionSeries.Sequence>
+    </TransitionSeries>
+  );
 
   return (
     <>
-      <MusicTrack />
+      <MusicTrack src={musicSrc} />
 
       <Sequence from={radarPingFrame}>
         <RadarPingSfx />
@@ -93,62 +161,18 @@ export const OchentaYSiete: React.FC = () => {
         <ScoreRevealSfx />
       </Sequence>
 
-      <TransitionSeries>
-        {/* Scene 1: Aerial coast + dark map — animated 87 counter */}
-        <TransitionSeries.Sequence durationInFrames={140}>
-          <Scene1Map />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 2: "Planos. Legales. Con vistas al mar." */}
-        <TransitionSeries.Sequence durationInFrames={150}>
-          <Scene2Qualities />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 3: "Y no están en ninguna app de reviews." */}
-        <TransitionSeries.Sequence durationInFrames={130}>
-          <Scene3Reveal />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 4: App demo — scan, radar, results */}
-        <TransitionSeries.Sequence durationInFrames={185}>
-          <Scene4Demo />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 5: Pipeline — 5 layers, score 92 */}
-        <TransitionSeries.Sequence durationInFrames={195}>
-          <Scene5Pipeline />
-        </TransitionSeries.Sequence>
-
-        <TransitionSeries.Transition
-          presentation={fade()}
-          timing={linearTiming({ durationInFrames: 16 })}
-        />
-
-        {/* Scene 6: Split footage comparison + "Elige." + CTA */}
-        <TransitionSeries.Sequence durationInFrames={180}>
-          <Scene6Choice />
-        </TransitionSeries.Sequence>
-      </TransitionSeries>
+      {withIntro ? (
+        <>
+          <Sequence durationInFrames={STORE_INTRO_FRAMES}>
+            <StoreInstallIntro />
+          </Sequence>
+          <Sequence from={STORE_INTRO_FRAMES}>
+            {scenes}
+          </Sequence>
+        </>
+      ) : (
+        scenes
+      )}
     </>
   );
 };

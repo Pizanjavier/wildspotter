@@ -7,7 +7,7 @@ const { t, locale } = Astro.props;
 const VIDEO_URL = '/hero.mp4';
 const POSTER = '/hero-poster.jpg';
 ---
-<section class="relative w-full h-[100svh] min-h-[720px] overflow-hidden">
+<section class="relative w-full min-h-[100svh] md:min-h-[720px] overflow-hidden">
   <video
     class="absolute inset-0 w-full h-full object-cover scale-[1.03]"
     autoplay
@@ -26,7 +26,7 @@ const POSTER = '/hero-poster.jpg';
   <div class="absolute inset-0 hero-vignette"></div>
   <div class="absolute inset-0 bg-[#0F0D0B]/20"></div>
 
-  <div class="relative z-10 h-full flex flex-col justify-end px-5 md:px-10 pb-16 md:pb-24 max-w-[1280px] mx-auto">
+  <div class="relative z-10 min-h-[100svh] md:min-h-[720px] flex flex-col justify-end px-5 md:px-10 pt-24 md:pt-20 pb-16 md:pb-24 max-w-[1280px] mx-auto">
     <div class="max-w-[900px]">
       <h1
         class="reveal font-sans font-black tracking-[-0.025em] leading-[1.02] display-cream text-[42px] sm:text-[62px] md:text-[84px] mb-8 hero-headline"

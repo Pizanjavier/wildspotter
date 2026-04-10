@@ -141,12 +141,12 @@ At €25/mo, with no paying users, the project can run indefinitely at minimal c
 > **Goal:** Build a single-page waitlist site that catches the TikTok/Reels campaign traffic while the App Store review is pending. This is the connective tissue between the marketing campaign and monetization — without it, video traffic leaks into the void.
 > **Full spec:** See `docs/landing-spec.md`.
 
-- [ ] **Build landing page** — single Astro page, hero = ParkingLleno video render, one email field, "Avísame cuando lance" CTA, subtle "Pioneer €24.99/yr lifetime-locked — first 500 signups" scarcity badge
-- [ ] **Set up email storage** — Cloudflare D1 (or Supabase free tier) with `waitlist` table (`id`, `email`, `locale`, `referrer`, `utm_*`, `created_at`, `position`)
-- [ ] **Deploy to Cloudflare Pages** — custom domain `wildspotter.app`, automatic HTTPS, SSR worker for form submission
-- [ ] **Double opt-in email confirmation** — via Resend free tier (3k emails/mo) or Cloudflare Email Workers
+- [x] **Build landing page** ✅ — Astro + Preact, ES/EN, hero video, email form, Pioneer counter, Problem/Pipeline/Legal/Offer/CTA sections
+- [x] **Set up email storage** ✅ — Cloudflare D1 `wildspotter-waitlist` with `waitlist` table (migration `0001_waitlist.sql`)
+- [x] **Deploy to Cloudflare Pages** ✅ — live at `https://wildspotter.app`, Pages Functions for `/api/subscribe`, `/api/confirm`, `/api/pioneer-count` + scheduled cleanup Worker
+- [x] **Double opt-in email confirmation** ✅ — Resend (`hola@wildspotter.app`), verified end-to-end 2026-04-08 (Pioneer #1 assigned on confirm)
 - [ ] **Analytics** — Plausible or PostHog tracking form submit, scroll depth, video play
-- [ ] **Social meta tags** — OpenGraph + Twitter card with a still from ParkingLleno for rich previews when shared
+- [x] **Social meta tags** ✅ — OpenGraph + Twitter card in `Base.astro`
 - [ ] **Launch before marketing campaign week 1** — all video CTAs point here, not to the App Store
 
 ---

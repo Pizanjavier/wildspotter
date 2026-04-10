@@ -47,7 +47,7 @@ const start = async (): Promise<void> => {
     // from the mobile app / Expo web dev origin. Without this, helmet's default
     // `Cross-Origin-Resource-Policy: same-origin` causes browsers to block image
     // requests to /satellite/*.jpg, surfacing as failed/503-like network errors.
-    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginResourcePolicy: false,
     crossOriginEmbedderPolicy: false,
   });
 
