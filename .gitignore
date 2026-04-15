@@ -60,3 +60,6 @@ models/labels_corrected.csv
 models/labels_corrected_round_2.csv
 models/spot-classifier.tflite
 models/spot-classifier.onnx
+
+
+marketing-path/public/videos/*
