@@ -3,16 +3,20 @@ import Constants from 'expo-constants';
 
 /**
  * Resolve the API base URL:
- * 1. Explicit env var always wins (set EXPO_PUBLIC_API_URL for production or custom setups)
+ * 1. Explicit env var always wins — set EXPO_PUBLIC_API_URL in .env to point
+ *    anywhere (e.g. EXPO_PUBLIC_API_URL=http://localhost:8000 for local backend,
+ *    or https://api-stage.wildspotter.app for a stage build)
  * 2. In dev on Android emulator → 10.0.2.2 (Android's alias for host loopback)
  * 3. In dev on physical device via Expo Go → use the debugger host IP (your Mac's LAN IP)
- * 4. Fallback → localhost (web / iOS simulator)
+ * 4. Release builds → prod API on Hetzner
  */
+const PROD_API_URL = 'https://api.wildspotter.app';
+
 const resolveApiUrl = (): string => {
   const explicit = process.env.EXPO_PUBLIC_API_URL;
   if (explicit) return explicit;
 
-  if (!__DEV__) return 'http://localhost:8000';
+  if (!__DEV__) return PROD_API_URL;
 
   // Android emulator maps 10.0.2.2 to the host machine's localhost
   if (Platform.OS === 'android') {
