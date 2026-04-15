@@ -63,3 +63,4 @@ models/spot-classifier.onnx
 
 
 marketing-path/public/videos/*
+miteco_data/*
