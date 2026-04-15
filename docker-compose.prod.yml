@@ -1,0 +1,116 @@
+services:
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - wildspotter-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: ${API_IMAGE:-wildspotter-api}:${API_IMAGE_TAG:-latest}
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      PORT: 8000
+      HOST: 0.0.0.0
+      NODE_ENV: production
+      SATELLITE_DIR: /data/satellite_tiles
+      CORS_ORIGINS: ${ALLOWED_ORIGINS}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    volumes:
+      - satellite_tiles:/data/tiles
+      - ./data/legal-tiles:/data/legal-tiles:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wildspotter-net
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: ./workers
+      dockerfile: Dockerfile
+    image: ${WORKER_IMAGE:-wildspotter-worker}:${WORKER_IMAGE_TAG:-latest}
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - ./models:/models:ro
+      - satellite_tiles:/data/tiles
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wildspotter-net
+    restart: unless-stopped
+    command: ["python", "api.py"]
+
+  n8n:
+    image: n8nio/n8n
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD}
+      N8N_HOST: ${N8N_HOST:-n8n.internal}
+      N8N_PROTOCOL: http
+      N8N_PORT: 5678
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: db
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${POSTGRES_DB}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD}
+      N8N_PUBLIC_API_DISABLED: "true"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wildspotter-net
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - wildspotter-net
+    restart: unless-stopped
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  n8n_data:
+  satellite_tiles:
+  caddy_data:
+  caddy_config:
+
+networks:
+  # External name is fixed so the stage stack can attach to the same bridge.
+  wildspotter-net:
+    name: wildspotter-net
+    driver: bridge

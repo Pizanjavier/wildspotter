@@ -12,7 +12,7 @@ Launch WildSpotter as a **free "Early Access"** app. All features unlocked, no p
 
 | Factor | Rationale |
 |--------|-----------|
-| **Low burn rate** | €25/mo server (Hetzner CX41) + €80 one-time AI processing = ~€105 total. Sustainable for months without revenue. |
+| **Low burn rate** | €23/mo server (Hetzner CX43) + €80 one-time AI processing = ~€103 total. Sustainable for months without revenue. |
 | **Community trust** | The vanlife community is skeptical of paid spot apps. Free launch builds organic word-of-mouth in forums, Reddit, and Instagram — the channels where vanlifers actually discover tools. |
 | **Product validation** | We don't yet know if users prefer WildSpotter over Park4night/iOverlander for daily use. Free access maximizes trial volume and feedback quality. |
 | **Architecture supports it** | Feature gating is API-side (see `monetization-plan.md`). We can activate paid tiers server-side without any app update. Zero wasted dev work. |
@@ -49,15 +49,15 @@ Launch WildSpotter as a **free "Early Access"** app. All features unlocked, no p
 
 | Item | Cost | Notes |
 |------|------|-------|
-| Hetzner CX41 VPS | €15.90 | 4 vCPU, 16GB RAM, 160GB disk |
+| Hetzner CX43 VPS | €14.51 | 8 vCPU, 16GB RAM, 160GB disk (CX41 successor) |
 | Volume storage (100GB) | €4.80 | Satellite tiles + OSM data |
-| Automated backups | €3.80 | Daily |
+| Automated backups | €2.90 | Daily — 20% of VPS price |
 | Domain (.app) + DNS | ~€1.00 | Cloudflare free tier |
-| **Total monthly** | **~€25/mo** | Plus ~€8/mo amortized Apple renewal |
+| **Total monthly** | **~€23/mo** | Plus ~€8/mo amortized Apple renewal |
 
 ### Runway
 
-At €25/mo, with no paying users, the project can run indefinitely at minimal cost. Break-even requires only **7 paying Explorer users** once monetization is activated.
+At €23/mo, with no paying users, the project can run indefinitely at minimal cost. Break-even requires only **6 paying Explorer users** once monetization is activated.
 
 ---
 
@@ -85,7 +85,7 @@ At €25/mo, with no paying users, the project can run indefinitely at minimal c
 ### Phase 1 — Production Infrastructure 🏗️
 > **Goal:** Move from local Docker development to a live production server.
 
-- [ ] **Provision Hetzner CX41 server**
+- [ ] **Provision Hetzner CX43 server**
   - Ubuntu 22.04, Docker + Docker Compose installed
   - Open ports: 22 (SSH), 80/443 (reverse proxy), 8000 (API — behind proxy)
   - Lock down ports 5432, 5678, 8001 to internal/VPN only

@@ -170,6 +170,14 @@ When implementing features, fixing bugs, or doing any non-trivial task, **always
 
 For simple, single-file changes (typo fix, config tweak), agents are optional. For anything involving new features, modules, or bug fixes — use the orchestrator or the relevant agent team.
 
+## Cost Discipline
+
+WildSpotter runs on a hobby budget — target **~€25/mo all-in** per `docs/monetization-plan.md`. Before running any command that creates a billable cloud resource (Hetzner server/volume/IP, extra Cloudflare add-ons, paid API keys beyond Anthropic), stop and confirm with the user. One-off local-only costs (AI model inference during pipeline runs) are fine within the explicit Phase 0 budget.
+
+- Default to **no new recurring costs**.
+- Stage and prod share **one Hetzner CX43** — no second server.
+- See `.claude/skills/hetzner-deploy/SKILL.md` for detailed cost rules.
+
 ## Protected Files
 
 - **`SPEC.md`** — Do NOT modify unless the user explicitly asks

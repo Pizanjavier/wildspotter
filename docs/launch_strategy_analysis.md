@@ -15,7 +15,7 @@
 | Item | Cost |
 |------|------|
 | Initial launch investment | ~€100 (one-time setup) |
-| Monthly server (Hetzner CX41) | ~€25/mo |
+| Monthly server (Hetzner CX43) | ~€23/mo |
 | Break-even | **7 paying users** |
 
 Your costs are remarkably low. At €25/month running cost, you can sustain WildSpotter for **4 months on your initial €100 budget alone** if we're talking just server costs. This is a massive advantage — you have room to breathe.

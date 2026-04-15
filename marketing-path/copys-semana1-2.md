@@ -7,7 +7,7 @@
 
 ## Semana 1
 
-### Mar 08 tarde — ParkingLleno A1 ✅ PUBLICADO
+### Mier 08 tarde — ParkingLleno A1 ✅ PUBLICADO
 
 ```
 2 horas de carretera. Llegas al spot "secreto".
@@ -26,7 +26,7 @@ Early access en el link de la bio
 
 ---
 
-### Mie 09 manana — LaMulta C1 ✅ PUBLICADO
+### Jue 09 manana — LaMulta C1 ✅ PUBLICADO
 
 ```
 600€ de multa. Por dormir en tu furgo.
@@ -44,7 +44,7 @@ Early access → link en bio
 
 ---
 
-### Mie 09 tarde — Natura2000 N1 ✅ PUBLICADO
+### Jue 09 tarde — Natura2000 N1 ✅ PUBLICADO
 
 ```
 Natura 2000 es la mayor red de espacios protegidos de Europa. En Espana cubre mas del 27% del territorio.
@@ -60,7 +60,7 @@ Tu radar sabe lo que tu no.
 
 ---
 
-### Mie 09 noche — POV-B (Formato Nativo) ✅
+### Jue 09 noche — POV-B (Formato Nativo) (NO SUBIDO)
 
 ```
 POV: abres una app y te encuentra spots sin gente a 20 metros del mar 🏖️
@@ -78,7 +78,7 @@ Early access → link en bio
 
 ---
 
-### Jue 10 manana — OchentaYSiete B1
+### Viernes 10 manana — OchentaYSiete B1 ✅ PUBLICADO
 
 ```
 87 spots en la costa murciana.
@@ -97,7 +97,9 @@ Early access → link en bio
 
 ---
 
-### Jue 10 tarde — ElPipeline D1
+### Vier 10 tarde — Frutas ✅ PUBLICADO
+
+### Sab 11 mañana — ElPipeline D1 ✅ PUBLICADO
 
 ```
 6 capas de analisis. 0 opiniones humanas.
@@ -113,7 +115,7 @@ Early access → link en bio
 
 ---
 
-### Vie 11 manana — ParkingLleno A2
+### Sab 11 tarde — ParkingLleno A2 ✅ PUBLICADO
 
 ```
 Has conducido 2 horas. Y no cabe ni tu furgo.
@@ -131,7 +133,7 @@ Early access → link en bio
 
 ---
 
-### Vie 11 tarde — LaMulta C2
+### Dom 12 mañana — LaMulta C2 Intro ✅ PUBLICADO
 
 ```
 Dormiste ahi. Era Natura 2000.
@@ -149,7 +151,7 @@ Early access → link en bio
 
 ---
 
-### Lun 14 manana — OchentaYSiete B2
+### Lun 13 manana — OchentaYSiete B2
 
 ```
 Hay 87 spots vacios a 1 hora de ti.
@@ -168,7 +170,7 @@ Early access → link en bio
 
 ---
 
-### Lun 14 tarde — Natura2000 N2
+### Lun 13 tarde — Natura2000 N2
 
 ```
 ¿Sabes que es Natura 2000?
@@ -184,7 +186,7 @@ Tu radar sabe lo que tu no.
 
 ---
 
-### Mar 15 manana — ElPipeline D2
+### Mar 14 manana — ElPipeline D2
 
 ```
 6 capas. 0 opiniones.
@@ -204,7 +206,7 @@ Early access → link en bio
 
 ## Semana 2
 
-### Mie 16 tarde — ParkingLleno A3
+### Mie 15 tarde — ParkingLleno A3
 
 ```
 Otras apps lo publicaron. Hoy hay 15 furgos. Sin espacio.
@@ -220,7 +222,7 @@ Tu primer spot empieza en el link de la bio.
 
 ---
 
-### Jue 17 tarde — LaMulta C3
+### Jue 16 tarde — LaMulta C3
 
 ```
 El 27% de Espana es zona protegida. ¿Sabes si tu spot esta dentro?
@@ -236,7 +238,7 @@ Early access → link en bio
 
 ---
 
-### Vie 18 tarde — OchentaYSiete B3
+### Vie 17 tarde — OchentaYSiete B3
 
 ```
 Ninguna app conoce estos 87 spots. Porque no vienen de reviews.
@@ -254,7 +256,7 @@ Early access → link en bio
 
 ---
 
-### Lun 21 tarde — ElPipeline D3
+### Lun 20 tarde — ElPipeline D3
 
 ```
 Esto no es una app de reviews. Es un radar.

@@ -5,6 +5,7 @@ import { Natura2000Clip } from "./Natura2000Clip";
 import { LaMulta } from "./LaMulta";
 import { OchentaYSiete } from "./OchentaYSiete";
 import { ElPipeline } from "./ElPipeline";
+import { FruitStory, FRUIT_STORY_FRAMES } from "./FruitStory";
 import { STORE_INTRO_FRAMES } from "./components/StoreInstallIntro";
 
 // --- Base durations (without intro) ---
@@ -52,78 +53,311 @@ export const RemotionRoot: React.FC = () => {
 		<>
 			{/* ============ ParkingLleno ============ */}
 			<Folder name="ParkingLleno">
-				<Variant id="ParkingLleno" component={ParkingLleno} baseFrames={PARKING_LLENO_FRAMES}
-					props={{ hookVariant: "A1" as const, withIntro: false, musicTrack: "background" as const }} />
-				<Variant id="ParkingLleno-A2" component={ParkingLleno} baseFrames={PARKING_LLENO_FRAMES}
-					props={{ hookVariant: "A2" as const, withIntro: false, musicTrack: "the-journey" as const }} />
-				<Variant id="ParkingLleno-A3" component={ParkingLleno} baseFrames={PARKING_LLENO_FRAMES}
-					props={{ hookVariant: "A3" as const, withIntro: false, musicTrack: "the-journey" as const }} />
-				<Variant id="ParkingLleno-Intro" component={ParkingLleno} baseFrames={PARKING_LLENO_FRAMES}
-					props={{ hookVariant: "A1" as const, withIntro: true, musicTrack: "background" as const }} />
-				<Variant id="ParkingLleno-A2-Intro" component={ParkingLleno} baseFrames={PARKING_LLENO_FRAMES}
-					props={{ hookVariant: "A2" as const, withIntro: true, musicTrack: "the-journey" as const }} />
-				<Variant id="ParkingLleno-A3-Intro" component={ParkingLleno} baseFrames={PARKING_LLENO_FRAMES}
-					props={{ hookVariant: "A3" as const, withIntro: true, musicTrack: "the-journey" as const }} />
+				<Variant
+					id="ParkingLleno"
+					component={ParkingLleno}
+					baseFrames={PARKING_LLENO_FRAMES}
+					props={{
+						hookVariant: "A1" as const,
+						withIntro: false,
+						musicTrack: "background" as const,
+					}}
+				/>
+				<Variant
+					id="ParkingLleno-A2"
+					component={ParkingLleno}
+					baseFrames={PARKING_LLENO_FRAMES}
+					props={{
+						hookVariant: "A2" as const,
+						withIntro: false,
+						musicTrack: "the-journey" as const,
+					}}
+				/>
+				<Variant
+					id="ParkingLleno-A3"
+					component={ParkingLleno}
+					baseFrames={PARKING_LLENO_FRAMES}
+					props={{
+						hookVariant: "A3" as const,
+						withIntro: false,
+						musicTrack: "the-journey" as const,
+					}}
+				/>
+				<Variant
+					id="ParkingLleno-Intro"
+					component={ParkingLleno}
+					baseFrames={PARKING_LLENO_FRAMES}
+					props={{
+						hookVariant: "A1" as const,
+						withIntro: true,
+						musicTrack: "background" as const,
+					}}
+				/>
+				<Variant
+					id="ParkingLleno-A2-Intro"
+					component={ParkingLleno}
+					baseFrames={PARKING_LLENO_FRAMES}
+					props={{
+						hookVariant: "A2" as const,
+						withIntro: true,
+						musicTrack: "the-journey" as const,
+					}}
+				/>
+				<Variant
+					id="ParkingLleno-A3-Intro"
+					component={ParkingLleno}
+					baseFrames={PARKING_LLENO_FRAMES}
+					props={{
+						hookVariant: "A3" as const,
+						withIntro: true,
+						musicTrack: "the-journey" as const,
+					}}
+				/>
 			</Folder>
 
 			{/* ============ Natura2000Clip ============ */}
 			<Folder name="Natura2000Clip">
-				<Variant id="Natura2000Clip" component={Natura2000Clip} baseFrames={NATURA2000_FRAMES}
-					props={{ hookVariant: "N1" as const, withIntro: false, musicTrack: "tension" as const }} />
-				<Variant id="Natura2000Clip-N2" component={Natura2000Clip} baseFrames={NATURA2000_FRAMES}
-					props={{ hookVariant: "N2" as const, withIntro: false, musicTrack: "digital-clouds" as const }} />
-				<Variant id="Natura2000Clip-Intro" component={Natura2000Clip} baseFrames={NATURA2000_FRAMES}
-					props={{ hookVariant: "N1" as const, withIntro: true, musicTrack: "tension" as const }} />
-				<Variant id="Natura2000Clip-N2-Intro" component={Natura2000Clip} baseFrames={NATURA2000_FRAMES}
-					props={{ hookVariant: "N2" as const, withIntro: true, musicTrack: "digital-clouds" as const }} />
+				<Variant
+					id="Natura2000Clip"
+					component={Natura2000Clip}
+					baseFrames={NATURA2000_FRAMES}
+					props={{
+						hookVariant: "N1" as const,
+						withIntro: false,
+						musicTrack: "tension" as const,
+					}}
+				/>
+				<Variant
+					id="Natura2000Clip-N2"
+					component={Natura2000Clip}
+					baseFrames={NATURA2000_FRAMES}
+					props={{
+						hookVariant: "N2" as const,
+						withIntro: false,
+						musicTrack: "digital-clouds" as const,
+					}}
+				/>
+				<Variant
+					id="Natura2000Clip-Intro"
+					component={Natura2000Clip}
+					baseFrames={NATURA2000_FRAMES}
+					props={{
+						hookVariant: "N1" as const,
+						withIntro: true,
+						musicTrack: "tension" as const,
+					}}
+				/>
+				<Variant
+					id="Natura2000Clip-N2-Intro"
+					component={Natura2000Clip}
+					baseFrames={NATURA2000_FRAMES}
+					props={{
+						hookVariant: "N2" as const,
+						withIntro: true,
+						musicTrack: "digital-clouds" as const,
+					}}
+				/>
 			</Folder>
 
 			{/* ============ LaMulta ============ */}
 			<Folder name="LaMulta">
-				<Variant id="LaMulta" component={LaMulta} baseFrames={LA_MULTA_FRAMES}
-					props={{ hookVariant: "C1" as const, withIntro: false, musicTrack: "suspense" as const }} />
-				<Variant id="LaMulta-C2" component={LaMulta} baseFrames={LA_MULTA_FRAMES}
-					props={{ hookVariant: "C2" as const, withIntro: false, musicTrack: "echoes" as const }} />
-				<Variant id="LaMulta-C3" component={LaMulta} baseFrames={LA_MULTA_FRAMES}
-					props={{ hookVariant: "C3" as const, withIntro: false, musicTrack: "echoes" as const }} />
-				<Variant id="LaMulta-Intro" component={LaMulta} baseFrames={LA_MULTA_FRAMES}
-					props={{ hookVariant: "C1" as const, withIntro: true, musicTrack: "suspense" as const }} />
-				<Variant id="LaMulta-C2-Intro" component={LaMulta} baseFrames={LA_MULTA_FRAMES}
-					props={{ hookVariant: "C2" as const, withIntro: true, musicTrack: "echoes" as const }} />
-				<Variant id="LaMulta-C3-Intro" component={LaMulta} baseFrames={LA_MULTA_FRAMES}
-					props={{ hookVariant: "C3" as const, withIntro: true, musicTrack: "echoes" as const }} />
+				<Variant
+					id="LaMulta"
+					component={LaMulta}
+					baseFrames={LA_MULTA_FRAMES}
+					props={{
+						hookVariant: "C1" as const,
+						withIntro: false,
+						musicTrack: "suspense" as const,
+					}}
+				/>
+				<Variant
+					id="LaMulta-C2"
+					component={LaMulta}
+					baseFrames={LA_MULTA_FRAMES}
+					props={{
+						hookVariant: "C2" as const,
+						withIntro: false,
+						musicTrack: "echoes" as const,
+					}}
+				/>
+				<Variant
+					id="LaMulta-C3"
+					component={LaMulta}
+					baseFrames={LA_MULTA_FRAMES}
+					props={{
+						hookVariant: "C3" as const,
+						withIntro: false,
+						musicTrack: "echoes" as const,
+					}}
+				/>
+				<Variant
+					id="LaMulta-Intro"
+					component={LaMulta}
+					baseFrames={LA_MULTA_FRAMES}
+					props={{
+						hookVariant: "C1" as const,
+						withIntro: true,
+						musicTrack: "suspense" as const,
+					}}
+				/>
+				<Variant
+					id="LaMulta-C2-Intro"
+					component={LaMulta}
+					baseFrames={LA_MULTA_FRAMES}
+					props={{
+						hookVariant: "C2" as const,
+						withIntro: true,
+						musicTrack: "echoes" as const,
+					}}
+				/>
+				<Variant
+					id="LaMulta-C3-Intro"
+					component={LaMulta}
+					baseFrames={LA_MULTA_FRAMES}
+					props={{
+						hookVariant: "C3" as const,
+						withIntro: true,
+						musicTrack: "echoes" as const,
+					}}
+				/>
 			</Folder>
 
 			{/* ============ OchentaYSiete ============ */}
 			<Folder name="OchentaYSiete">
-				<Variant id="OchentaYSiete" component={OchentaYSiete} baseFrames={OCHENTA_Y_SIETE_FRAMES}
-					props={{ hookVariant: "B1" as const, withIntro: false, musicTrack: "epic-drums" as const }} />
-				<Variant id="OchentaYSiete-B2" component={OchentaYSiete} baseFrames={OCHENTA_Y_SIETE_FRAMES}
-					props={{ hookVariant: "B2" as const, withIntro: false, musicTrack: "spirit-in-the-woods" as const }} />
-				<Variant id="OchentaYSiete-B3" component={OchentaYSiete} baseFrames={OCHENTA_Y_SIETE_FRAMES}
-					props={{ hookVariant: "B3" as const, withIntro: false, musicTrack: "spirit-in-the-woods" as const }} />
-				<Variant id="OchentaYSiete-Intro" component={OchentaYSiete} baseFrames={OCHENTA_Y_SIETE_FRAMES}
-					props={{ hookVariant: "B1" as const, withIntro: true, musicTrack: "epic-drums" as const }} />
-				<Variant id="OchentaYSiete-B2-Intro" component={OchentaYSiete} baseFrames={OCHENTA_Y_SIETE_FRAMES}
-					props={{ hookVariant: "B2" as const, withIntro: true, musicTrack: "spirit-in-the-woods" as const }} />
-				<Variant id="OchentaYSiete-B3-Intro" component={OchentaYSiete} baseFrames={OCHENTA_Y_SIETE_FRAMES}
-					props={{ hookVariant: "B3" as const, withIntro: true, musicTrack: "spirit-in-the-woods" as const }} />
+				<Variant
+					id="OchentaYSiete"
+					component={OchentaYSiete}
+					baseFrames={OCHENTA_Y_SIETE_FRAMES}
+					props={{
+						hookVariant: "B1" as const,
+						withIntro: false,
+						musicTrack: "epic-drums" as const,
+					}}
+				/>
+				<Variant
+					id="OchentaYSiete-B2"
+					component={OchentaYSiete}
+					baseFrames={OCHENTA_Y_SIETE_FRAMES}
+					props={{
+						hookVariant: "B2" as const,
+						withIntro: false,
+						musicTrack: "spirit-in-the-woods" as const,
+					}}
+				/>
+				<Variant
+					id="OchentaYSiete-B3"
+					component={OchentaYSiete}
+					baseFrames={OCHENTA_Y_SIETE_FRAMES}
+					props={{
+						hookVariant: "B3" as const,
+						withIntro: false,
+						musicTrack: "spirit-in-the-woods" as const,
+					}}
+				/>
+				<Variant
+					id="OchentaYSiete-Intro"
+					component={OchentaYSiete}
+					baseFrames={OCHENTA_Y_SIETE_FRAMES}
+					props={{
+						hookVariant: "B1" as const,
+						withIntro: true,
+						musicTrack: "epic-drums" as const,
+					}}
+				/>
+				<Variant
+					id="OchentaYSiete-B2-Intro"
+					component={OchentaYSiete}
+					baseFrames={OCHENTA_Y_SIETE_FRAMES}
+					props={{
+						hookVariant: "B2" as const,
+						withIntro: true,
+						musicTrack: "spirit-in-the-woods" as const,
+					}}
+				/>
+				<Variant
+					id="OchentaYSiete-B3-Intro"
+					component={OchentaYSiete}
+					baseFrames={OCHENTA_Y_SIETE_FRAMES}
+					props={{
+						hookVariant: "B3" as const,
+						withIntro: true,
+						musicTrack: "spirit-in-the-woods" as const,
+					}}
+				/>
 			</Folder>
 
 			{/* ============ ElPipeline ============ */}
 			<Folder name="ElPipeline">
-				<Variant id="ElPipeline" component={ElPipeline} baseFrames={EL_PIPELINE_FRAMES}
-					props={{ hookVariant: "D1" as const, withIntro: false, musicTrack: "sci-fi-score" as const }} />
-				<Variant id="ElPipeline-D2" component={ElPipeline} baseFrames={EL_PIPELINE_FRAMES}
-					props={{ hookVariant: "D2" as const, withIntro: false, musicTrack: "voxscape" as const }} />
-				<Variant id="ElPipeline-D3" component={ElPipeline} baseFrames={EL_PIPELINE_FRAMES}
-					props={{ hookVariant: "D3" as const, withIntro: false, musicTrack: "voxscape" as const }} />
-				<Variant id="ElPipeline-Intro" component={ElPipeline} baseFrames={EL_PIPELINE_FRAMES}
-					props={{ hookVariant: "D1" as const, withIntro: true, musicTrack: "sci-fi-score" as const }} />
-				<Variant id="ElPipeline-D2-Intro" component={ElPipeline} baseFrames={EL_PIPELINE_FRAMES}
-					props={{ hookVariant: "D2" as const, withIntro: true, musicTrack: "voxscape" as const }} />
-				<Variant id="ElPipeline-D3-Intro" component={ElPipeline} baseFrames={EL_PIPELINE_FRAMES}
-					props={{ hookVariant: "D3" as const, withIntro: true, musicTrack: "voxscape" as const }} />
+				<Variant
+					id="ElPipeline"
+					component={ElPipeline}
+					baseFrames={EL_PIPELINE_FRAMES}
+					props={{
+						hookVariant: "D1" as const,
+						withIntro: false,
+						musicTrack: "sci-fi-score" as const,
+					}}
+				/>
+				<Variant
+					id="ElPipeline-D2"
+					component={ElPipeline}
+					baseFrames={EL_PIPELINE_FRAMES}
+					props={{
+						hookVariant: "D2" as const,
+						withIntro: false,
+						musicTrack: "voxscape" as const,
+					}}
+				/>
+				<Variant
+					id="ElPipeline-D3"
+					component={ElPipeline}
+					baseFrames={EL_PIPELINE_FRAMES}
+					props={{
+						hookVariant: "D3" as const,
+						withIntro: false,
+						musicTrack: "voxscape" as const,
+					}}
+				/>
+				<Variant
+					id="ElPipeline-Intro"
+					component={ElPipeline}
+					baseFrames={EL_PIPELINE_FRAMES}
+					props={{
+						hookVariant: "D1" as const,
+						withIntro: true,
+						musicTrack: "sci-fi-score" as const,
+					}}
+				/>
+				<Variant
+					id="ElPipeline-D2-Intro"
+					component={ElPipeline}
+					baseFrames={EL_PIPELINE_FRAMES}
+					props={{
+						hookVariant: "D2" as const,
+						withIntro: true,
+						musicTrack: "voxscape" as const,
+					}}
+				/>
+				<Variant
+					id="ElPipeline-D3-Intro"
+					component={ElPipeline}
+					baseFrames={EL_PIPELINE_FRAMES}
+					props={{
+						hookVariant: "D3" as const,
+						withIntro: true,
+						musicTrack: "voxscape" as const,
+					}}
+				/>
+			</Folder>
+
+			<Folder name="FruitStory">
+				<Variant
+					id="FruitStory"
+					component={FruitStory}
+					baseFrames={FRUIT_STORY_FRAMES}
+					props={{ hookVariant: "F1" as const, withIntro: false }}
+				/>
 			</Folder>
 		</>
 	);

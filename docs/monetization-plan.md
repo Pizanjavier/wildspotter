@@ -8,22 +8,22 @@ Open-source the React Native client to build community trust. Monetize via tiere
 
 ## Infrastructure Costs
 
-### Base Server (Hetzner CX41)
+### Base Server (Hetzner CX43)
 
 | Resource | Spec | Monthly Cost |
 |----------|------|-------------|
-| VPS | 4 vCPU, 16GB RAM, 160GB disk | 15.90 |
+| VPS | 8 vCPU, 16GB RAM, 160GB disk | 14.51 |
 | Volume storage | 100GB (satellite tiles + OSM) | 4.80 |
-| Backups | Automated daily | 3.80 |
+| Backups | Automated daily (20% of VPS) | 2.90 |
 | Domain + DNS | Cloudflare free + .app domain | ~1.00 |
-| **Total** | | **~25/mo** |
+| **Total** | | **~23/mo** |
 
 ### Scaling Thresholds
 
 | Monthly Active Users | Server Needs | Est. Cost/mo |
 |---------------------|-------------|-------------|
-| 1-500 | CX41 single server | 25 |
-| 500-2,000 | CX41 + CDN for tiles | 35 |
+| 1-500 | CX43 single server | 23 |
+| 500-2,000 | CX43 + CDN for tiles | 33 |
 | 2,000-10,000 | Dedicated + read replica | 80-100 |
 | 10,000+ | Multiple servers + LB | 150-200 |
 

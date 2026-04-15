@@ -1,0 +1,59 @@
+# Stage overrides: run with
+#   docker compose -p wildspotter-stage -f docker-compose.prod.yml -f docker-compose.stage.overrides.yml --env-file .env.stage up -d
+#
+# Trade-off chosen: stage uses a SEPARATE db container (`db-stage`) with its own
+# volume. Rationale: a separate DB instance is fully isolated (schema changes,
+# destructive migrations, restores from trimmed dumps can't corrupt prod), at
+# the cost of ~200MB extra RAM. The alternative — a second database inside the
+# prod Postgres instance — saves RAM but shares shared_buffers/WAL and makes a
+# stage restore risky. On CX43 (16GB RAM) the isolation is worth it.
+#
+# Stage does NOT run its own caddy. The prod caddy terminates TLS for both
+# vhosts. For caddy to reach this stack's api, the stage api container joins
+# the prod `wildspotter-net` as an *external* network and is aliased as
+# `stage-api` so the Caddyfile can proxy to `stage-api:8000`.
+
+services:
+  db:
+    container_name: wildspotter-stage-db
+    ports: !reset []
+    volumes:
+      - pgdata_stage:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  api:
+    container_name: wildspotter-stage-api
+    image: ${API_IMAGE:-wildspotter-api}:${API_IMAGE_TAG:-latest}
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      PORT: 8000
+      HOST: 0.0.0.0
+      NODE_ENV: production
+      SATELLITE_DIR: /data/satellite_tiles
+      CORS_ORIGINS: ${ALLOWED_ORIGINS}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    networks:
+      wildspotter-net:
+        aliases:
+          - stage-api
+
+  worker:
+    container_name: wildspotter-stage-worker
+
+  n8n:
+    # Stage doesn't need its own n8n — disable by scaling to zero at runtime
+    # (`docker compose ... up -d --scale n8n=0`) or comment this service out
+    # locally. Leaving the service defined keeps parity with prod compose.
+    profiles: ["stage-n8n"]
+
+  caddy:
+    # Stage piggybacks on prod caddy for TLS. Do not start a second caddy here.
+    profiles: ["disabled"]
+
+volumes:
+  pgdata_stage:
+
+networks:
+  wildspotter-net:
+    external: true
+    name: wildspotter-net
