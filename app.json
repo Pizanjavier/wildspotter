@@ -14,7 +14,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.wildspotter"
+      "bundleIdentifier": "com.wildspotter.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +24,11 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.wildspotter"
+      "package": "com.wildspotter.app",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -49,10 +53,19 @@
       [
         "@sentry/react-native/expo",
         {
-          "organization": "YOUR_SENTRY_ORG",
+          "organization": "wildspotter",
           "project": "wildspotter"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "root": "./src/app"
+      },
+      "eas": {
+        "projectId": "dab3e345-6861-4942-ab8e-a08c453bf9f4"
+      }
+    },
+    "owner": "wildspotter"
   }
 }
