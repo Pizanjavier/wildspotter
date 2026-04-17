@@ -66,3 +66,4 @@ marketing-path/public/videos/*
 miteco_data/*
 
 .env.local
+spots_pre_v3.sql
