@@ -13,6 +13,7 @@ const DATA_SOURCES: ReadonlyArray<{ label: string; url: string }> = [
   { label: 'IGN', url: 'https://www.ign.es/' },
   { label: 'MITECO', url: 'https://www.miteco.gob.es/' },
   { label: 'Catastro', url: 'https://www.sedecatastro.gob.es/' },
+  { label: 'Copernicus', url: 'https://land.copernicus.eu/en/products/corine-land-cover' },
 ];
 
 const FEEDBACK_EMAIL = 'feedback@wildspotter.app';

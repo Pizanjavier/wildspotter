@@ -5,33 +5,46 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { getScoreColor } from '@/components/spots/ScoreBadge';
 import { t } from '@/i18n';
 
+const TERRAIN_WEIGHT = 0.10;
+const AI_WEIGHT = 0.55;
+const CONTEXT_WEIGHT = 0.15;
+
 type ScoreBreakdownProps = {
   compositeScore: number | null;
   terrainScore: number | null;
   aiScore: number | null;
   contextScore: number | null;
+  wildBonus: number | null;
+  landcoverPenalty: number | null;
 };
 
-type BreakdownRow = {
+type BaseRow = {
   label: string;
   score: number | null;
-  weight: number;
 };
+
+const round = (n: number | null): string =>
+  n != null && !isNaN(n) ? String(Math.round(n)) : '--';
 
 export const ScoreBreakdown = ({
   compositeScore,
   terrainScore,
   aiScore,
   contextScore,
+  wildBonus,
+  landcoverPenalty,
 }: ScoreBreakdownProps) => {
   const colors = useThemeColors();
   const overallColor = getScoreColor(compositeScore, colors);
 
-  const rows: BreakdownRow[] = [
-    { label: t('spotDetail.terrainWeight'), score: terrainScore, weight: 0.20 },
-    { label: t('spotDetail.aiWeight'), score: aiScore, weight: 0.25 },
-    { label: t('spotDetail.contextWeight'), score: contextScore, weight: 0.55 },
+  const baseRows: BaseRow[] = [
+    { label: t('spotDetail.terrainWeight'), score: terrainScore },
+    { label: t('spotDetail.aiWeight'), score: aiScore },
+    { label: t('spotDetail.contextWeight'), score: contextScore },
   ];
+
+  const showBonus = wildBonus != null && wildBonus > 0;
+  const showPenalty = landcoverPenalty != null && landcoverPenalty > 0;
 
   return (
     <View style={styles.container}>
@@ -40,15 +53,17 @@ export const ScoreBreakdown = ({
           {t('spotDetail.scoreBreakdown')}
         </Text>
         <View style={[styles.scorePill, { backgroundColor: overallColor }]}>
-          <Text style={styles.scoreText}>
-            {compositeScore !== null ? Math.round(compositeScore) : '--'}
-          </Text>
+          <Text style={styles.scoreText}>{round(compositeScore)}</Text>
         </View>
       </View>
+
       <View style={styles.rows}>
-        {rows.map((row) => {
+        {baseRows.map((row) => {
           const barColor = getScoreColor(row.score, colors);
-          const barWidth = row.score != null && !isNaN(row.score) ? `${Math.min(row.score, 100)}%` : '0%';
+          const barWidth =
+            row.score != null && !isNaN(row.score)
+              ? `${Math.min(row.score, 100)}%`
+              : '0%';
           return (
             <View key={row.label} style={styles.row}>
               <Text style={[styles.rowLabel, { color: colors.TEXT_SECONDARY }]}>
@@ -56,22 +71,53 @@ export const ScoreBreakdown = ({
               </Text>
               <View style={[styles.barBg, { backgroundColor: colors.CARD }]}>
                 <View
-                  style={[styles.barFill, { width: barWidth as `${number}%`, backgroundColor: barColor }]}
+                  style={[
+                    styles.barFill,
+                    {
+                      width: barWidth as `${number}%`,
+                      backgroundColor: barColor,
+                    },
+                  ]}
                 />
               </View>
               <Text style={[styles.rowScore, { color: colors.TEXT_PRIMARY }]}>
-                {row.score != null && !isNaN(row.score) ? Math.round(row.score) : '--'}
+                {round(row.score)}
               </Text>
             </View>
           );
         })}
+
+        {showBonus && (
+          <View style={styles.adjustRow}>
+            <Text style={[styles.adjustLabel, { color: colors.SCORE_HIGH }]}>
+              {`+ ${t('spotDetail.wildBonusLabel')}`}
+            </Text>
+            <Text style={[styles.adjustValue, { color: colors.SCORE_HIGH }]}>
+              {`+${round(wildBonus)}`}
+            </Text>
+          </View>
+        )}
+
+        {showPenalty && (
+          <View style={styles.adjustRow}>
+            <Text style={[styles.adjustLabel, { color: colors.SCORE_LOW }]}>
+              {`− ${t('spotDetail.landcoverPenaltyLabel')}`}
+            </Text>
+            <Text style={[styles.adjustValue, { color: colors.SCORE_LOW }]}>
+              {`−${round(landcoverPenalty)}`}
+            </Text>
+          </View>
+        )}
       </View>
+
       {compositeScore !== null && (
         <Text style={[styles.formula, { color: colors.TEXT_MUTED }]}>
-          {`Score = ${terrainScore != null && !isNaN(terrainScore) ? Math.round(terrainScore) : '--'}`}
-          {` x 0.20 + ${aiScore != null && !isNaN(aiScore) ? Math.round(aiScore) : '--'}`}
-          {` x 0.25 + ${contextScore != null && !isNaN(contextScore) ? Math.round(contextScore) : '--'}`}
-          {` x 0.55 = ${Math.round(compositeScore)}`}
+          {`${round(terrainScore)} × ${Math.round(TERRAIN_WEIGHT * 100)}% + `}
+          {`${round(aiScore)} × ${Math.round(AI_WEIGHT * 100)}% + `}
+          {`${round(contextScore)} × ${Math.round(CONTEXT_WEIGHT * 100)}%`}
+          {showBonus ? ` + ${round(wildBonus)}` : ''}
+          {showPenalty ? ` − ${round(landcoverPenalty)}` : ''}
+          {` = ${Math.round(compositeScore)}`}
         </Text>
       )}
     </View>
@@ -129,6 +175,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     width: 30,
     textAlign: 'right',
+  },
+  adjustRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 2,
+  },
+  adjustLabel: {
+    fontFamily: FONT_FAMILIES.BODY_MEDIUM,
+    fontSize: 13,
+  },
+  adjustValue: {
+    fontFamily: FONT_FAMILIES.DATA_BOLD,
+    fontSize: 14,
   },
   formula: {
     fontFamily: FONT_FAMILIES.DATA,

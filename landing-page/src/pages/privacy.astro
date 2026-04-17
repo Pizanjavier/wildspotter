@@ -9,21 +9,40 @@ const t = getDict('es');
   <Nav locale="es" />
   <main class="max-w-[760px] mx-auto px-5 md:px-10 pt-32 pb-24">
     <p class="font-mono text-[11px] tracking-[0.28em] uppercase text-[#D97706] mb-4">/ PRIVACIDAD</p>
-    <h1 class="font-black text-[44px] md:text-[64px] leading-[0.95] tracking-[-0.02em] mb-10">Política de privacidad</h1>
+    <h1 class="font-black text-[44px] md:text-[64px] leading-[0.95] tracking-[-0.02em] mb-4">Política de privacidad</h1>
+    <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[#B7A089] mb-10">En vigor desde 15 abr 2026</p>
     <div class="prose-ws space-y-6 text-[#A0836C] text-[16px] leading-relaxed">
-      <p><strong class="text-white">Responsable:</strong> WildSpotter — hola@wildspotter.app</p>
-      <h2 class="text-white text-[22px] font-bold pt-4">1. Qué datos recogemos</h2>
-      <p>Solo email, idioma, parámetros UTM de la campaña, país (cabecera Cloudflare) y user agent. No usamos cookies de terceros ni Google Analytics.</p>
-      <h2 class="text-white text-[22px] font-bold pt-4">2. Para qué</h2>
-      <p>Avisarte cuando WildSpotter esté disponible y entregarte tu precio Pioneer bloqueado. Nada más. No vendemos ni cedemos tus datos.</p>
-      <h2 class="text-white text-[22px] font-bold pt-4">3. Base legal</h2>
-      <p>Tu consentimiento explícito (doble opt-in) según el RGPD.</p>
-      <h2 class="text-white text-[22px] font-bold pt-4">4. Conservación</h2>
-      <p>Hasta que solicites la baja. Confirmaciones pendientes &gt; 30 días se eliminan automáticamente.</p>
-      <h2 class="text-white text-[22px] font-bold pt-4">5. Tus derechos</h2>
-      <p>Acceso, rectificación, supresión, portabilidad y oposición. Escribe a hola@wildspotter.app o usa el enlace de baja en cualquier email.</p>
-      <h2 class="text-white text-[22px] font-bold pt-4">6. Encargados</h2>
-      <p>Cloudflare (hosting + base de datos D1), Resend (envío de emails). Ambos cumplen RGPD.</p>
+      <p><strong class="text-white">Responsable:</strong> WildSpotter — hola@wildspotter.app. Esta política cubre tanto la web <strong class="text-white">wildspotter.app</strong> como la aplicación móvil WildSpotter para Android e iOS.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">1. Resumen</h2>
+      <p>No vendemos ni cedemos tus datos. No usamos publicidad ni analítica de terceros. La app no tiene cuentas de usuario, así que no pedimos nombre, edad ni teléfono. Tu ubicación se usa solo en el dispositivo para centrar el mapa.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">2. Web y lista de espera</h2>
+      <p>En la web solo recogemos email, idioma, parámetros UTM de la campaña, país (cabecera Cloudflare) y user agent. Sin cookies de terceros ni Google Analytics. Los datos se usan para avisarte del lanzamiento y entregarte tu precio Pioneer bloqueado. Base legal: tu consentimiento explícito (doble opt-in) según el RGPD.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">3. Ubicación en la app</h2>
+      <p>La app pide permiso de ubicación («mientras se usa la app») con el único fin de centrar el mapa en tu posición y marcarla con un punto azul. Tu ubicación <strong class="text-white">no se transmite a nuestros servidores</strong>, no se almacena y no se comparte. Puedes revocar el permiso en cualquier momento desde los ajustes del sistema.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">4. Informes de errores</h2>
+      <p>Usamos <strong class="text-white">Sentry</strong> para detectar fallos técnicos. Cuando la app crashea se envía a Sentry una traza del error, la versión de la app, el modelo del dispositivo y la versión del sistema operativo. No se envía tu ubicación, tu email ni el contenido que visualizas en la app. Base legal: interés legítimo en mantener el servicio estable y seguro.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">5. API de WildSpotter</h2>
+      <p>La app consulta la API en <strong class="text-white">api.wildspotter.app</strong> para obtener los spots de una zona. Las peticiones incluyen la caja de búsqueda (coordenadas del mapa) y tus filtros de preferencia. El servidor, alojado en <strong class="text-white">Hetzner</strong> (Alemania), registra la IP de la petición en los logs de acceso estándar durante un máximo de 30 días con fines de seguridad. No asociamos esa IP a ningún usuario porque la app no tiene cuentas.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">6. Publicidad, analítica y menores</h2>
+      <p>La app no integra SDKs de anuncios, Google Analytics, Facebook/TikTok Pixel ni ningún otro sistema de tracking. WildSpotter no está dirigida a menores de 13 años y no recogemos conscientemente datos de menores de esa edad.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">7. Conservación</h2>
+      <p>Web: hasta que solicites la baja; las confirmaciones pendientes más de 30 días se eliminan automáticamente. App: informes de error en Sentry durante 90 días; logs de acceso de la API durante 30 días.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">8. Encargados</h2>
+      <p>Cloudflare (hosting web + base de datos D1), Resend (emails transaccionales), Hetzner Online GmbH en Alemania (servidor de la API móvil) y Sentry / Functional Software, Inc. (informes de errores). Todos cumplen RGPD.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">9. Tus derechos</h2>
+      <p>Acceso, rectificación, supresión, portabilidad y oposición. Escribe a hola@wildspotter.app o usa el enlace de baja en cualquier email. Responderemos en un plazo máximo de 30 días.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">10. Cambios</h2>
+      <p>Si actualizamos esta política, cambiaremos la fecha de arriba. Los cambios sustanciales se avisan por email a los suscriptores de la lista.</p>
     </div>
   </main>
   <Footer t={t} locale="es" />

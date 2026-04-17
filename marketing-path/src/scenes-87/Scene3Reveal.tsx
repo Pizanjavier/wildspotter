@@ -59,7 +59,7 @@ export const Scene3Reveal: React.FC = () => {
         }}
       >
         <Video
-          src={staticFile("videos/road_trip_sunset.mp4")}
+          src={staticFile("videos/ai_Spanish_Countryside_Van_Video.mp4")}
           muted
           style={{
             width: "calc(100% + 40px)",

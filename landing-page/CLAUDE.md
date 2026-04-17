@@ -30,7 +30,7 @@ Rhythm rule: alternate video-backed sections with static stylish sections so the
 ## Content Rules
 
 - **Spanish must sound native**, not machine-translated. No "Sin furgos encima" weirdness.
-- **Never invent stats.** Only real, sourced numbers (27% Natura 2000, 600€ sanction, 4 data sources). If you don't have a source, use a qualitative phrase.
+- **Never invent stats.** Only real, sourced numbers (27% Natura 2000, 600€ sanction, 5 data sources). If you don't have a source, use a qualitative phrase.
 - **Honest promise:** first 500 Pioneer lifetime price. The counter shows seats LEFT + taken/500.
 - **No lyrics, no copyrighted copy** from competitors.
 
@@ -58,6 +58,16 @@ npx wrangler pages dev dist --d1 DB=./local.db   # Full stack w/ D1
 ## Verification
 
 The user hosts this locally at **http://localhost:4321**. Always verify visual changes in Chrome via the `mcp__claude-in-chrome__*` tools against that URL. The side panel may be locked at 150px; use `javascript_tool` DOM introspection (offsetWidth, querySelector) instead of visual screenshots when that happens.
+
+## Pipeline & Scoring (pending update)
+
+The landing page currently shows a **6-stage pipeline** (Radar/Terreno/Legal/Satélite/Contexto/Puntuación) and the **LegalTrust section** lists 4 data sources (MITECO/IGN/Catastro/OSM). Both need updating to reflect V4:
+
+- **Pipeline** should show 7 stages: add **Uso del Suelo** (CORINE Land Cover) between Contexto and Puntuación. Update `src/i18n/{es,en}.ts` → `pipeline.stages`.
+- **LegalTrust** should add **Copernicus** as a 5th data source. Update `src/components/LegalTrust.astro` and the i18n copy.
+- **Scoring description** (stage 06/07 copy) should reference the V4 formula: Terrain 10% + AI 55% + Context 15% + wild_bonus − landcover_penalty.
+
+These changes are cosmetic (i18n strings + one component) and do not affect the backend or form logic.
 
 ## Coding Rules (inherits from parent)
 

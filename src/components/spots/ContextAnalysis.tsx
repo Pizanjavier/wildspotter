@@ -4,7 +4,7 @@ import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { getScoreColor } from '@/components/spots/ScoreBadge';
-import type { ContextDetails } from '@/services/api/types';
+import type { ContextDetails, ContextSubScore } from '@/services/api/types';
 import type { ThemeColors } from '@/constants/theme';
 import { t } from '@/i18n';
 
@@ -13,11 +13,22 @@ type ContextAnalysisProps = {
   contextDetails: ContextDetails | null;
 };
 
+type SubScoreKey =
+  | 'road_noise'
+  | 'urban_density'
+  | 'scenic_value'
+  | 'privacy'
+  | 'industrial'
+  | 'railway'
+  | 'van_community'
+  | 'drinking_water'
+  | 'dog_friendly';
+
 type FactorConfig = {
-  key: keyof ContextDetails;
+  key: SubScoreKey;
   label: string;
   icon: keyof typeof Ionicons.glyphMap;
-  getDetail: (sub: NonNullable<ContextDetails[keyof ContextDetails]>) => string;
+  getDetail: (sub: ContextSubScore) => string;
 };
 
 const FACTORS: FactorConfig[] = [
@@ -127,7 +138,7 @@ export const ContextAnalysis = ({
       </View>
       <View style={styles.factorList}>
         {FACTORS.map((factor) => {
-          const sub = contextDetails[factor.key];
+          const sub = contextDetails[factor.key] as ContextSubScore | undefined;
           if (!sub) return null;
           const deltaColor = getScoreDeltaColor(sub.score, colors);
           return (

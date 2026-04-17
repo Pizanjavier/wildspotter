@@ -56,6 +56,18 @@ export type ContextDetails = {
   van_community: ContextSubScore;
   drinking_water?: ContextSubScore;
   dog_friendly?: ContextSubScore;
+  wild_bonus_raw?: number;
+  wild_bonus?: number;
+  landcover_penalty?: number;
+  wild_paths?: string[];
+  ai_gate?: number;
+  onspot_quarry?: boolean;
+};
+
+export type SioseDominant = {
+  code?: string | null;
+  label?: string | null;
+  cover_pct?: number | null;
 };
 
 export type AiDetails = {
@@ -72,6 +84,9 @@ export type SpotDetail = SpotSummary & {
   ai_details: AiDetails | null;
   context_score: number | null;
   context_details: ContextDetails | null;
+  landcover_class: string | null;
+  landcover_label: string | null;
+  siose_dominant: SioseDominant | null;
   satellite_image_path: string | null;
   osm_tags: Record<string, string> | null;
   rejection_reason: string | null;

@@ -36,7 +36,7 @@ signal.signal(signal.SIGTERM, handle_signal)
 # Status helpers
 # ---------------------------------------------------------------------------
 
-ALL_STATUSES = ("pending", "terrain_done", "legal_done", "ai_done", "context_done", "amenities_done", "completed")
+ALL_STATUSES = ("pending", "terrain_done", "legal_done", "ai_done", "context_done", "amenities_done", "landcover_done", "completed")
 
 
 def get_status_counts() -> dict[str, int]:
@@ -105,6 +105,7 @@ def pipeline_loop(batch_size: int) -> None:
     import ai_inference
     import context_scoring
     import amenities_scoring
+    import landcover
     import scoring
 
     idle = 0
@@ -153,6 +154,17 @@ def pipeline_loop(batch_size: int) -> None:
                 logger.info("Amenities scoring: processed %d spots", processed)
         except Exception:
             logger.exception("Amenities scoring stage error")
+
+        if shutdown.is_set():
+            break
+
+        try:
+            processed = landcover.process_batch(batch_size=min(batch_size, 200))
+            work_done += processed
+            if processed > 0:
+                logger.info("Land-cover: processed %d spots", processed)
+        except Exception:
+            logger.exception("Land-cover stage error")
 
         if shutdown.is_set():
             break
@@ -245,7 +257,7 @@ def main() -> None:
     )
     pipeline_thread.start()
     threads.append(pipeline_thread)
-    logger.info("Started pipeline loop (legal -> AI -> context -> amenities -> scoring)")
+    logger.info("Started pipeline loop (legal -> AI -> context -> amenities -> landcover -> scoring)")
 
     # Wait for all threads
     try:

@@ -77,6 +77,9 @@ export interface SpotDetail {
   ai_details: AiDetails | null;
   context_score: number | null;
   context_details: Record<string, unknown> | null;
+  landcover_class: string | null;
+  landcover_label: string | null;
+  siose_dominant: Record<string, unknown> | null;
   composite_score: number | null;
   satellite_image_path: string | null;
   status: SpotStatus;

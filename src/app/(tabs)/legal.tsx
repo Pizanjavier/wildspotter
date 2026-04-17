@@ -12,6 +12,7 @@ import {
   SatelliteSection,
   ContextSection,
   LegalSourcesSection,
+  LandcoverSection,
   ScoringSection,
 } from '@/components/guide';
 
@@ -54,6 +55,10 @@ export const GuideScreen = () => {
 
         <CollapsibleSection icon="shield-checkmark-outline" title={t('guide.legalSourcesTitle')}>
           <LegalSourcesSection />
+        </CollapsibleSection>
+
+        <CollapsibleSection icon="leaf-outline" title={t('guide.landcoverTitle')}>
+          <LandcoverSection />
         </CollapsibleSection>
 
         <CollapsibleSection icon="speedometer-outline" title={t('guide.scoringTitle')}>

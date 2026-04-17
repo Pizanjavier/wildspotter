@@ -5,6 +5,8 @@
 > **Destino de todos los CTAs: `wildspotter.app` (waitlist landing page)** — NO al App Store directamente. La landing captura emails para el lanzamiento del tier Pioneer (€24.99/yr, primeros 500 signups, locked forever). Ver `../docs/landing-spec.md` y `../docs/launch-plan.md` Phase 2.5.
 >
 > **Presupuesto de variaciones:** Por cada video producido, renderizar 2-3 variaciones del hook de los primeros 3 segundos (texto distinto, footage inicial distinto). El algoritmo de TikTok recompensa variacion. Asumir que 3 de 4 videos van a flopear — iterar sobre hooks, no sobre el cuerpo.
+>
+> **Pipeline V4 (abril 2026):** La app ahora tiene 7 capas de analisis (Radar → Terreno → Legal → Satelite → Contexto → **Uso del Suelo** → Puntuacion). La nueva capa clasifica el suelo con CORINE Land Cover 2018 (Copernicus): terrenos salvajes (costa, bosque, alta montana) reciben bonus; agricolas/urbanos/industriales reciben penalizacion. Formula V4: `Terreno × 10% + IA × 55% + Contexto × 15% + bonus_salvaje − penalizacion_suelo`. Los videos producidos antes de esta fecha muestran 5 capas y pesos V2 (20/25/55) — los futuros deben reflejar V4.
 
 ---
 

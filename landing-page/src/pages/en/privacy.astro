@@ -1,0 +1,49 @@
+---
+import Base from '@/layouts/Base.astro';
+import Nav from '@/components/Nav.astro';
+import Footer from '@/components/Footer.astro';
+import { getDict } from '@/i18n';
+const t = getDict('en');
+---
+<Base title="Privacy · WildSpotter" description="WildSpotter privacy policy." locale="en">
+  <Nav locale="en" />
+  <main class="max-w-[760px] mx-auto px-5 md:px-10 pt-32 pb-24">
+    <p class="font-mono text-[11px] tracking-[0.28em] uppercase text-[#D97706] mb-4">/ PRIVACY</p>
+    <h1 class="font-black text-[44px] md:text-[64px] leading-[0.95] tracking-[-0.02em] mb-4">Privacy policy</h1>
+    <p class="font-mono text-[11px] uppercase tracking-[0.22em] text-[#B7A089] mb-10">Effective 15 Apr 2026</p>
+    <div class="prose-ws space-y-6 text-[#A0836C] text-[16px] leading-relaxed">
+      <p><strong class="text-white">Data controller:</strong> WildSpotter — hola@wildspotter.app. This policy covers both the website <strong class="text-white">wildspotter.app</strong> and the WildSpotter mobile app for Android and iOS.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">1. Summary</h2>
+      <p>We don't sell or share your data. We don't use third-party advertising or analytics. The app has no user accounts, so we don't ask for your name, age or phone number. Your location is used only on-device to center the map.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">2. Website and waitlist</h2>
+      <p>On the website we only collect email, language, campaign UTM parameters, country (from the Cloudflare header) and user agent. No third-party cookies, no Google Analytics. The data is used to notify you at launch and to deliver your locked Pioneer price. Legal basis: your explicit consent (double opt-in) under the GDPR.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">3. Location in the app</h2>
+      <p>The app requests location permission ("while using the app") for one purpose only: to center the map on your position and show a blue dot marker. Your location is <strong class="text-white">never transmitted to our servers</strong>, stored, or shared. You can revoke the permission any time from your OS settings.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">4. Crash reporting</h2>
+      <p>We use <strong class="text-white">Sentry</strong> to detect technical failures. When the app crashes, Sentry receives a stack trace, the app version, device model and OS version. It does not receive your location, your email, or the content you are viewing in the app. Legal basis: legitimate interest in keeping the service stable and secure.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">5. WildSpotter API</h2>
+      <p>The app queries the API at <strong class="text-white">api.wildspotter.app</strong> to fetch spots for an area. Requests include the map bounding box (coordinates) and your filter preferences. Our server, hosted on <strong class="text-white">Hetzner</strong> (Germany), records the request IP in standard access logs for up to 30 days for security purposes. We do not tie that IP to any user because the app has no accounts.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">6. Advertising, analytics and children</h2>
+      <p>The app ships no ad SDKs, no Google Analytics, no Facebook/TikTok Pixel, and no other tracking system. WildSpotter is not directed to children under 13 and we do not knowingly collect data from children under that age.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">7. Retention</h2>
+      <p>Website: until you unsubscribe; unconfirmed signups older than 30 days are deleted automatically. App: crash reports stored in Sentry for 90 days; API access logs for 30 days.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">8. Processors</h2>
+      <p>Cloudflare (website hosting + D1 database), Resend (transactional email), Hetzner Online GmbH in Germany (mobile API hosting) and Sentry / Functional Software, Inc. (app crash reporting). All are GDPR-compliant.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">9. Your rights</h2>
+      <p>Access, rectification, erasure, portability and objection. Write to hola@wildspotter.app or use the unsubscribe link in any email. We respond within 30 days.</p>
+
+      <h2 class="text-white text-[22px] font-bold pt-4">10. Changes</h2>
+      <p>If we update this policy we'll update the date above. Material changes are emailed to waitlist subscribers.</p>
+    </div>
+  </main>
+  <Footer t={t} locale="en" />
+</Base>

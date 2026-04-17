@@ -33,6 +33,9 @@ const DETAIL_COLUMNS = `
   ai_details,
   context_score,
   context_details,
+  landcover_class,
+  landcover_label,
+  siose_dominant,
   composite_score,
   satellite_image_path,
   status,
@@ -66,6 +69,9 @@ interface DetailRow extends SummaryRow {
   ai_details: Record<string, unknown> | null;
   context_score: number | null;
   context_details: Record<string, unknown> | null;
+  landcover_class: string | null;
+  landcover_label: string | null;
+  siose_dominant: Record<string, unknown> | null;
   satellite_image_path: string | null;
   rejection_reason: string | null;
   created_at: Date;
@@ -102,6 +108,9 @@ const mapDetailRow = (row: DetailRow): SpotDetail => ({
   ai_details: row.ai_details as SpotDetail['ai_details'],
   context_score: row.context_score,
   context_details: row.context_details,
+  landcover_class: row.landcover_class,
+  landcover_label: row.landcover_label,
+  siose_dominant: row.siose_dominant,
   composite_score: row.composite_score,
   satellite_image_path: row.satellite_image_path,
   status: row.status as SpotDetail['status'],

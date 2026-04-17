@@ -241,6 +241,7 @@ const STEPS: Array<{ titleKey: string; bodyKey: string }> = [
   { titleKey: 'onboarding.step3Title', bodyKey: 'onboarding.step3Body' },
   { titleKey: 'onboarding.step4Title', bodyKey: 'onboarding.step4Body' },
   { titleKey: 'onboarding.step5Title', bodyKey: 'onboarding.step5Body' },
+  { titleKey: 'onboarding.step6Title', bodyKey: 'onboarding.step6Body' },
 ];
 
 const HowItWorksPage = ({

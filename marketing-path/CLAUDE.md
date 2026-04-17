@@ -15,7 +15,10 @@ WildSpotter is an advanced geographical exploration tool for the **overland and 
 3. **Legal Judge** — Cross-references spots against Natura 2000, National Parks, Coastal Law, and Cadastre data
 4. **Satellite Eye** — AI model analyzes satellite imagery for ground surface, vehicle detection, canopy density
 5. **Context Analyst** — Spatial scoring (road noise, urban density, scenic value, privacy, etc.)
-6. **Success Score** — Composite 0-100 score: Terrain 20% + AI 25% + Context 55%
+6. **Landcover** — Classifies land use via CORINE Land Cover 2018 (Copernicus). Wild archetypes (coast, alpine, forest, water) get a bonus; agricultural/urban/industrial get a penalty.
+7. **Success Score** — Composite 0-100 score: Terrain 10% + AI 55% + Context 15% + wild_bonus − landcover_penalty
+
+> **NOTE:** Existing produced videos (ParkingLleno, OchentaYSiete, etc.) show 5 pipeline stages and the old V2 scoring weights (20/25/55). Future videos should show the 7-stage pipeline and V4 formula. The `Scene5Pipeline.tsx` stages array and `marketing-strategy.md` pipeline references need updating when producing new video content.
 
 ### Key Value Proposition
 
@@ -338,6 +341,8 @@ AI video generators (Runway Gen-3 Alpha, Kling 1.6, Sora) are best for shots tha
 - When showing app output (AI scores, metrics, sub-scores, labels), **always cross-reference the actual worker code** in the parent project before writing numbers on screen. Inventing plausible-sounding fields undermines credibility for the tech-savvy audience.
 - WildSpotter AI sub-scores live in `workers/ai_vision_labeler.py` — the real keys are `surface_quality`, `vehicle_access`, `open_space`, `van_presence`, `obstruction_absence` (each 0-10, weighted into final `ai_score`). The vision model is Claude Haiku 4.5; the satellite tile source is IGN PNOA at 25cm/px.
 - Context sub-scores live in `workers/context_scoring.py` and are documented in `SPEC_V2.md` §2.6. Use those exact labels (road_noise, urban_density, scenic_value, privacy, industrial, railway, van_community, drinking_water, dog_friendly).
+- Landcover data lives in `workers/landcover.py`. Fields: `landcover_class` (CORINE code, e.g. "323"), `landcover_label` (e.g. "Vegetación esclerófila"). Source: CORINE Land Cover 2018 (Copernicus). Wild archetypes: coastal, alpine_strong, water_feature_strong, forest_dead_end, scenic_viewpoint. Penalty classes: agricultural (2xx), urban (1xx), industrial (131/132/133).
+- V4 scoring formula: `Terrain × 10% + AI × 55% + Context × 15% + wild_bonus − landcover_penalty`. The old V2 weights (20/25/55) are obsolete.
 - Pipeline statuses: `pending → terrain_done → legal_done → ai_done → context_done → amenities_done → completed`.
 - **Translate labels to Spanish** for the on-screen display (audience is Spanish vanlifers) — keep the raw English keys only when the scene is explicitly showing "raw data / JSON / API" framing.
 

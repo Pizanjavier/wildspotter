@@ -18,6 +18,7 @@ import { ActionButtons } from '@/components/spots/ActionButtons';
 import { SpotDetailHeader } from '@/components/spots/SpotDetailHeader';
 import { LegalChecklist } from '@/components/legal/LegalChecklist';
 import { MetricsRow } from '@/components/spots/MetricsRow';
+import { LandcoverCard } from '@/components/spots/LandcoverCard';
 import { AiAnalysis } from '@/components/spots/AiAnalysis';
 import { ContextAnalysis } from '@/components/spots/ContextAnalysis';
 import { ScoreBreakdown } from '@/components/spots/ScoreBreakdown';
@@ -174,6 +175,11 @@ export const SpotDetailScreen = () => {
           }
         />
 
+        <LandcoverCard
+          landcoverClass={spot.landcover_class}
+          landcoverLabel={spot.landcover_label}
+        />
+
         <LegalChecklist legalStatus={spot.legal_status} />
 
         {spot.ai_details && (
@@ -195,6 +201,8 @@ export const SpotDetailScreen = () => {
           aiScore={spot.ai_score}
           contextScore={spot.context_score}
           compositeScore={spot.composite_score}
+          wildBonus={spot.context_details?.wild_bonus ?? null}
+          landcoverPenalty={spot.context_details?.landcover_penalty ?? null}
         />
 
         <ActionButtons

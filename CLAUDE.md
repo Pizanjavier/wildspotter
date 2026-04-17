@@ -10,7 +10,7 @@ Geographical exploration tool for the overland/vanlife community. A "radar" that
 - **Maps:** MapLibre GL (`@maplibre/maplibre-react-native`)
 - **AI:** ONNX Runtime or PyTorch (server-side inference in Python workers)
 - **Backend:** Fastify (TypeScript) API, Python workers, PostgreSQL + PostGIS, n8n (Docker Compose)
-- **Data:** Local OSM via Geofabrik/osm2pgsql, Terrain-RGB, Spanish WMS (server-side)
+- **Data:** Local OSM via Geofabrik/osm2pgsql, Terrain-RGB, CORINE Land Cover 2018, Spanish WMS (server-side)
 - **Design:** Dark radar theme — see `design/wildspotter-mockup.pen`
 
 ## Project Structure
@@ -52,7 +52,8 @@ workers/                     # Processing scripts (Python)
 ├── terrain.py               # Terrain-RGB slope/elevation
 ├── legal.py                 # WMS queries (MITECO, Catastro, IGN)
 ├── ai_inference.py          # ONNX/PyTorch satellite analysis
-├── scoring.py               # Composite score calculation
+├── landcover.py             # CORINE Land Cover classification
+├── scoring.py               # Composite score calculation (V4)
 ├── Dockerfile
 └── requirements.txt
 db/                          # Database initialization
@@ -64,6 +65,16 @@ models/                      # ML model files (.onnx)
 design/                      # Mockups (.pen) and exported PNGs
 docker-compose.yml           # Stack orchestration
 ```
+
+## Pipeline & Scoring (V4 — current)
+
+The processing pipeline has 7 stages: **Radar → Terrain → Legal → Satellite Eye → Context → Landcover → Score**.
+
+- **Landcover** (`workers/landcover.py`): Classifies each spot against CORINE Land Cover 2018 (44 classes, EU-wide). Stores `landcover_class` (e.g. "323") and `landcover_label` (e.g. "Vegetación esclerófila"). Source: Copernicus Land Monitoring Service.
+- **Scoring formula (V4):** `Terrain × 10% + AI × 55% + Context × 15% + wild_bonus − landcover_penalty`
+  - **Wild bonus** (up to +30): awarded for wild archetypes (coastal, alpine, water, forest dead-end, scenic viewpoint). Gated by Claude Vision AI sub-scores (surface_quality, open_space, obstruction_absence ≥ 6/10 each).
+  - **Landcover penalty**: deducted when CORINE class indicates agricultural, urban, or industrial land.
+- **Data sources:** OSM (Geofabrik), Terrain-RGB (AWS/IGN), MITECO shapefiles, Catastro REST API, IGN PNOA orthophotos, CORINE Land Cover 2018 (Copernicus).
 
 ## Coding Practices
 
@@ -178,10 +189,22 @@ WildSpotter runs on a hobby budget — target **~€25/mo all-in** per `docs/mon
 - Stage and prod share **one Hetzner CX43** — no second server.
 - See `.claude/skills/hetzner-deploy/SKILL.md` for detailed cost rules.
 
+## Token Budget — User Runs Heavy Tasks
+
+Claude's token consumption is a hard constraint. Long-running, large-output, or large-input tasks must be done **by the user**, not by Claude.
+
+- **[USER] tasks (default for anything heavy):** downloads, `ogr2ogr` imports, full pipeline runs, `docker-compose` log tailing, batch SQL re-scoring, opening folders of satellite tiles, scanning large CSVs / SHP / GPKG files, visual audits of many images.
+- **[CLAUDE] tasks:** writing migrations, writing worker code, designing SQL queries, designing the scoring formula, code review, interpreting **short** results the user pastes back.
+- **Plans must tag every step `[USER]` or `[CLAUDE]`.** See `docs/scoring-v3-plan.md` for the convention.
+- **Definitions of done must specify the minimal output to paste back** (e.g., "paste the count + the false-positive osm_ids with one-word descriptors"). Never ask the user to paste full tables, log files, or directory listings.
+- **Never read large files / tile folders / log dumps into context** — ask the user to grep, sample, or summarise first.
+- For visual audits: the user does the looking; Claude only sees the verdict and the IDs that need attention.
+
 ## Protected Files
 
 - **`SPEC.md`** — Do NOT modify unless the user explicitly asks
 - **`SPEC_V2.md`** — Do NOT modify unless the user explicitly asks
+- **`SPEC_V3.md`** — Do NOT modify unless the user explicitly asks (extends V2; see file header)
 - **`design/`** — Do NOT modify any file in this directory unless the user explicitly asks
 - These files are reference material, not implementation targets
 

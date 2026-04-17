@@ -221,7 +221,7 @@ export const Scene4Scan: React.FC = () => {
 				}}
 			>
 				<Video
-					src={staticFile("videos/road_trip_sunset.mp4")}
+					src={staticFile("videos/rv_mountain_road.mp4")}
 					muted
 					style={{
 						width: "100%",
