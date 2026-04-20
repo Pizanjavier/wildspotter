@@ -57,7 +57,8 @@
           "organization": "wildspotter",
           "project": "wildspotter"
         }
-      ]
+      ],
+      "./plugins/withAdiRegistration"
     ],
     "extra": {
       "router": {
