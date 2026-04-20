@@ -1,16 +1,18 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { SPACING, RADIUS } from '@/constants/theme';
+import { SPACING } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import type { LegalStatus } from '@/services/api/types';
 import type { ThemeColors } from '@/constants/theme';
 import { t } from '@/i18n';
 
-type LegalCheckStatus = 'pass' | 'fail' | 'pending';
+type LegalCheckStatus = 'pass' | 'warn' | 'block' | 'pending';
 
 type LegalCheckItem = {
+  key: string;
   label: string;
+  hint?: string;
   status: LegalCheckStatus;
 };
 
@@ -23,46 +25,74 @@ const getStatusConfig = (
   colors: ThemeColors,
 ): { icon: keyof typeof Ionicons.glyphMap; color: string } => {
   switch (status) {
-    case 'pass': return { icon: 'checkmark-circle', color: colors.SCORE_HIGH };
-    case 'fail': return { icon: 'close-circle', color: colors.DANGER };
-    case 'pending': return { icon: 'ellipse-outline', color: colors.TEXT_SECONDARY };
+    case 'pass':
+      return { icon: 'checkmark-circle', color: colors.SCORE_HIGH };
+    case 'warn':
+      return { icon: 'warning', color: colors.SCORE_LOW };
+    case 'block':
+      return { icon: 'close-circle', color: colors.DANGER };
+    case 'pending':
+      return { icon: 'ellipse-outline', color: colors.TEXT_SECONDARY };
   }
 };
 
 const buildItems = (legalStatus: LegalStatus | null): LegalCheckItem[] => {
   if (!legalStatus) {
     return [
-      { label: t('legal.publicForestry'), status: 'pending' },
-      { label: t('legal.outsideProtected'), status: 'pending' },
-      { label: t('legal.outsideCoastal'), status: 'pending' },
+      { key: 'natura2000', label: t('legal.natura2000'), status: 'pending' },
+      { key: 'national_park', label: t('legal.nationalParks'), status: 'pending' },
+      { key: 'coastal_law', label: t('legal.coastalLaw'), status: 'pending' },
+      { key: 'cadastre', label: t('legal.cadastre'), status: 'pending' },
     ];
   }
 
+  const naturaInside = Boolean(legalStatus.natura2000?.inside);
+  const parkInside = Boolean(legalStatus.national_park?.inside);
+  const coastInside = Boolean(legalStatus.coastal_law?.inside);
+  const cadastrePrivate = Boolean(legalStatus.cadastre?.private);
+  const cadastreClass = legalStatus.cadastre?.classification;
+
   return [
     {
-      label: `Natura 2000 — ${legalStatus.natura2000?.inside ? 'Inside' : 'Not inside'}`,
-      status: legalStatus.natura2000?.inside ? 'fail' : 'pass',
+      key: 'natura2000',
+      label: t('legal.natura2000'),
+      hint: naturaInside
+        ? t('legal.natura2000InsideHint')
+        : t('legal.natura2000OutsideHint'),
+      status: naturaInside ? 'warn' : 'pass',
     },
     {
-      label: `National Parks — ${legalStatus.national_park?.inside ? 'Inside' : 'Not inside'}`,
-      status: legalStatus.national_park?.inside ? 'fail' : 'pass',
+      key: 'national_park',
+      label: t('legal.nationalParks'),
+      hint: parkInside
+        ? t('legal.nationalParksInsideHint')
+        : t('legal.nationalParksOutsideHint'),
+      status: parkInside ? 'warn' : 'pass',
     },
     {
-      label: `Coastal Law — ${legalStatus.coastal_law?.inside ? 'Inside' : 'Not inside'}`,
-      status: legalStatus.coastal_law?.inside ? 'fail' : 'pass',
+      key: 'coastal_law',
+      label: t('legal.coastalLaw'),
+      hint: coastInside
+        ? t('legal.coastalLawInsideHint')
+        : t('legal.coastalLawOutsideHint'),
+      status: coastInside ? 'warn' : 'pass',
     },
     {
-      label: legalStatus.cadastre?.classification
-        ? `Cadastre — ${legalStatus.cadastre.classification.replace(/_/g, ' ')}`
-        : t('legal.publicForestry'),
-      status: legalStatus.cadastre?.private ? 'fail' : 'pass',
+      key: 'cadastre',
+      label: t('legal.cadastre'),
+      hint: cadastrePrivate
+        ? t('legal.cadastrePrivateHint')
+        : cadastreClass
+          ? t('legal.cadastrePublicHint', {
+              classification: cadastreClass.replace(/_/g, ' '),
+            })
+          : undefined,
+      status: cadastrePrivate ? 'block' : 'pass',
     },
   ];
 };
 
-export const LegalChecklist = ({
-  legalStatus,
-}: LegalChecklistProps) => {
+export const LegalChecklist = ({ legalStatus }: LegalChecklistProps) => {
   const colors = useThemeColors();
   const items = buildItems(legalStatus);
 
@@ -71,15 +101,34 @@ export const LegalChecklist = ({
       <Text style={[styles.header, { color: colors.TEXT_PRIMARY }]}>
         {t('spotDetail.legalStatus')}
       </Text>
+      <Text style={[styles.disclaimer, { color: colors.TEXT_SECONDARY }]}>
+        {t('legal.informationalDisclaimer')}
+      </Text>
       <View style={styles.list}>
         {items.map((item) => {
           const config = getStatusConfig(item.status, colors);
           return (
-            <View key={item.label} style={styles.item}>
-              <Ionicons name={config.icon} size={20} color={config.color} />
-              <Text style={[styles.itemText, { color: colors.TEXT_SECONDARY }]}>
-                {item.label}
-              </Text>
+            <View key={item.key} style={styles.item}>
+              <Ionicons
+                name={config.icon}
+                size={20}
+                color={config.color}
+                style={styles.icon}
+              />
+              <View style={styles.itemBody}>
+                <Text
+                  style={[styles.itemLabel, { color: colors.TEXT_PRIMARY }]}
+                >
+                  {item.label}
+                </Text>
+                {item.hint ? (
+                  <Text
+                    style={[styles.itemHint, { color: colors.TEXT_SECONDARY }]}
+                  >
+                    {item.hint}
+                  </Text>
+                ) : null}
+              </View>
             </View>
           );
         })}
@@ -98,18 +147,36 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILIES.BODY_BOLD,
     fontSize: 16,
   },
+  disclaimer: {
+    fontFamily: FONT_FAMILIES.BODY,
+    fontSize: 12,
+    fontStyle: 'italic',
+    marginTop: -2,
+    marginBottom: SPACING.XS,
+  },
   list: {
-    gap: SPACING.XS + 2,
+    gap: SPACING.SM,
   },
   item: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: SPACING.SM + 2,
-    paddingVertical: SPACING.XS + 2,
+    paddingVertical: SPACING.XS,
   },
-  itemText: {
-    fontFamily: FONT_FAMILIES.BODY,
-    fontSize: 14,
+  icon: {
+    marginTop: 1,
+  },
+  itemBody: {
     flex: 1,
+    gap: 2,
+  },
+  itemLabel: {
+    fontFamily: FONT_FAMILIES.BODY_MEDIUM,
+    fontSize: 14,
+  },
+  itemHint: {
+    fontFamily: FONT_FAMILIES.BODY,
+    fontSize: 12,
+    lineHeight: 16,
   },
 });

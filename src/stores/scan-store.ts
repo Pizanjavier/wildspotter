@@ -78,6 +78,41 @@ const fetchSpots = async (
   });
 };
 
+const isNetworkError = (err: unknown): boolean =>
+  err instanceof TypeError ||
+  (err instanceof Error && /network|fetch/i.test(err.message));
+
+const handleScanError = async (
+  err: unknown,
+  bounds: BoundingBox,
+  set: (partial: Partial<ScanStore>) => void,
+): Promise<void> => {
+  const message =
+    err instanceof ApiError
+      ? err.message
+      : err instanceof Error
+        ? err.message
+        : 'Unknown error during scan';
+
+  if (isNetworkError(err)) {
+    const cached = await getCachedScan(bounds).catch(() => null);
+    if (cached) {
+      console.warn('[ScanStore] Network failed, serving cached scan');
+      set({
+        state: 'complete',
+        spots: cached.spots,
+        regionName: cached.regionName,
+        error: null,
+        fromCache: true,
+      });
+      return;
+    }
+  }
+
+  console.error('[ScanStore] Scan failed:', message);
+  set({ state: 'error', error: message });
+};
+
 export const useScanStore = create<ScanStore>((set, get) => ({
   state: 'idle',
   spots: [],
@@ -103,15 +138,7 @@ export const useScanStore = create<ScanStore>((set, get) => ({
 
       await fetchSpots(bounds, set);
     } catch (err: unknown) {
-      const message =
-        err instanceof ApiError
-          ? err.message
-          : err instanceof Error
-            ? err.message
-            : 'Unknown error during scan';
-
-      console.error('[ScanStore] Scan failed:', message);
-      set({ state: 'error', error: message });
+      await handleScanError(err, bounds, set);
     }
   },
 
@@ -121,15 +148,7 @@ export const useScanStore = create<ScanStore>((set, get) => ({
     try {
       await fetchSpots(bounds, set);
     } catch (err: unknown) {
-      const message =
-        err instanceof ApiError
-          ? err.message
-          : err instanceof Error
-            ? err.message
-            : 'Unknown error during scan';
-
-      console.error('[ScanStore] Scan failed:', message);
-      set({ state: 'error', error: message });
+      await handleScanError(err, bounds, set);
     }
   },
 

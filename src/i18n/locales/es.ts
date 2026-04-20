@@ -106,6 +106,24 @@ export const es: TranslationDictionary = {
     sourcesTitle: 'FUENTES LEGALES',
     sourcesDescription:
       'WildSpotter cruza datos de los spots con fuentes oficiales del gobierno español para ayudarte a entender las restricciones legales.',
+    informationalDisclaimer:
+      'Solo informativo — consulta la normativa local antes de pernoctar.',
+    natura2000: 'Red Natura 2000',
+    natura2000InsideHint:
+      'Dentro de zona protegida. La pernocta puede estar restringida — consulta la normativa local.',
+    natura2000OutsideHint: 'Fuera de zona protegida.',
+    nationalParks: 'Parques Nacionales y Naturales',
+    nationalParksInsideHint:
+      'Dentro de un parque protegido. La pernocta suele estar prohibida — consulta el reglamento del parque.',
+    nationalParksOutsideHint: 'Fuera de cualquier parque protegido.',
+    coastalLaw: 'Ley de Costas',
+    coastalLawInsideHint:
+      'Dentro del dominio público marítimo-terrestre o su servidumbre. La pernocta está restringida.',
+    coastalLawOutsideHint: 'Fuera de zona de protección costera.',
+    cadastre: 'Catastro / Clasificación del suelo',
+    cadastrePrivateHint:
+      'Propiedad privada — no aparques sin permiso del propietario.',
+    cadastrePublicHint: 'Clasificación: {{classification}}.',
   },
   config: {
     title: 'AJUSTES',
@@ -130,8 +148,6 @@ export const es: TranslationDictionary = {
     hideRestrictedHint: 'Ocultar spots en zonas protegidas',
     showLegalZones: 'Mostrar zonas legales en mapa',
     showLegalZonesHint: 'Mostrar zonas restringidas como capa roja',
-    offlineMode: 'Modo sin conexión',
-    offlineModeHint: 'Solo usar datos en caché, sin red',
     about: 'ACERCA DE',
     version: 'Versión',
     tagline: 'Hecho para la comunidad overland',
@@ -202,6 +218,16 @@ export const es: TranslationDictionary = {
     getStartedButton: 'Empezar',
     letsGo: 'Vamos',
     skipLink: '¿Ya conoces la app? Saltar',
+    analyticsTitle: 'Ayúdanos a mejorar WildSpotter',
+    analyticsBody:
+      'WildSpotter lo desarrolla una sola persona. Los datos de uso anónimos me ayudan a ver qué funciona y qué arreglar.',
+    analyticsCollect:
+      'Recogemos: pantallas que abres, número de escaneos, fallos de la app.',
+    analyticsNoCollect:
+      'Nunca recogemos: tu nombre, email, ubicación precisa, spots guardados ni ningún dato personal.',
+    analyticsToggleLabel: 'Compartir datos de uso anónimos',
+    analyticsToggleOn: 'Activado — ¡gracias!',
+    analyticsToggleOff: 'Desactivado — no se enviará nada',
   },
   splash: {
     tagline: 'Descubre spots salvajes. Fuera de lo común.',
@@ -285,8 +311,8 @@ export const es: TranslationDictionary = {
     scoringWildBonus: 'Bonus salvaje — Hasta +30 puntos por arquetipos (costa, alta montaña, bosque sin salida, aguas abiertas).',
     scoringPenalty: 'Penalización suelo — Resta puntos cuando el suelo es agrícola, urbano, industrial o cantera.',
     scoringAiGate: 'Puerta IA — El bonus salvaje solo se aplica si Claude Vision confirma superficie, espacio abierto y ausencia de obstáculos (≥6/10 en cada uno).',
-    scoringGreen: '80+ — Alta confianza, probablemente un gran spot',
-    scoringTeal: '60-79 — Confianza media, merece la pena comprobarlo',
-    scoringAmber: 'Menos de 60 — Baja confianza, proceder con precaución',
+    scoringGreen: '30+ — Alta confianza, probablemente un gran spot',
+    scoringTeal: '10-29 — Confianza media, merece la pena comprobarlo',
+    scoringAmber: 'Menos de 10 — Baja confianza, proceder con precaución',
   },
 };

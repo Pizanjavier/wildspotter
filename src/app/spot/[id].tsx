@@ -218,6 +218,42 @@ export const SpotDetailScreen = () => {
         </Pressable>
       </ScrollView>
 
+      <View
+        style={[
+          styles.saveBar,
+          {
+            backgroundColor: colors.BACKGROUND,
+            borderTopColor: colors.BORDER,
+          },
+        ]}
+      >
+        <Pressable
+          onPress={handleToggleSave}
+          style={[
+            styles.saveButton,
+            {
+              backgroundColor: isSaved ? colors.CARD : colors.ACCENT,
+              borderColor: isSaved ? colors.BORDER : colors.ACCENT,
+            },
+          ]}
+          accessibilityRole="button"
+        >
+          <Ionicons
+            name={isSaved ? 'bookmark' : 'bookmark-outline'}
+            size={20}
+            color={isSaved ? colors.ACCENT : colors.BACKGROUND}
+          />
+          <Text
+            style={[
+              styles.saveButtonText,
+              { color: isSaved ? colors.ACCENT : colors.BACKGROUND },
+            ]}
+          >
+            {isSaved ? t('spotDetail.unsaveSpot') : t('spotDetail.saveSpot')}
+          </Text>
+        </Pressable>
+      </View>
+
       <ReportModal
         visible={reportVisible}
         spotId={id ?? ''}
@@ -235,7 +271,30 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: SPACING.LG,
     gap: SPACING.LG,
-    paddingBottom: SPACING.XL * 2,
+    paddingBottom: SPACING.XL * 3,
+  },
+  saveBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: SPACING.LG,
+    paddingTop: SPACING.MD,
+    paddingBottom: SPACING.LG + 8,
+    borderTopWidth: 1,
+  },
+  saveButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.SM,
+    paddingVertical: SPACING.MD,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  saveButtonText: {
+    fontFamily: FONT_FAMILIES.BODY_BOLD,
+    fontSize: 16,
   },
   backButton: { padding: SPACING.MD },
   centered: {

@@ -15,6 +15,7 @@ import {
 } from "@/components/map/MapOverlays";
 import { FilterChips } from "@/components/map/FilterChips";
 import { MyLocationButton } from "@/components/map/MyLocationButton";
+import { MapLayersButton } from "@/components/map/MapLayersButton";
 import { useMapStore } from "@/stores/map-store";
 import { useScanStore } from "@/stores/scan-store";
 import { useSettingsStore } from "@/stores/settings-store";
@@ -118,6 +119,7 @@ export const MapScreen = () => {
 			<SearchBar onSelect={handleSearchSelect} />
 			<FilterChips />
 			<MyLocationButton />
+			<MapLayersButton />
 			{showZoomWarning && <ZoomWarning />}
 			<ScanButton
 				onPress={handleScan}

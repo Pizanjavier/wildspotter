@@ -17,6 +17,7 @@ import { COLORS } from '@/constants/theme';
 import { API_BASE_URL } from '@/constants/config';
 import { useMapStore } from '@/stores/map-store';
 import { useSettingsStore } from '@/stores/settings-store';
+import { useThemeColors } from '@/hooks/useThemeColors';
 import { getMapStyle } from '@/components/map/map-style';
 import type { SpotSummary } from '@/services/api/types';
 
@@ -33,6 +34,16 @@ const LEGAL_TILE_URL = `${API_BASE_URL}/legal/tiles/{z}/{x}/{y}.pbf`;
 type MapViewProps = {
   onMapReady?: () => void;
   spots?: SpotSummary[];
+};
+
+const isRestricted = (spot: SpotSummary): boolean => {
+  const ls = spot.legal_status;
+  if (!ls) return false;
+  return Boolean(
+    ls.natura2000?.inside ||
+      ls.national_park?.inside ||
+      ls.coastal_law?.inside,
+  );
 };
 
 const spotsToGeoJSON = (
@@ -52,34 +63,31 @@ const spotsToGeoJSON = (
       surface_type: spot.surface_type,
       composite_score: spot.composite_score ?? 0,
       score_label: String(Math.round(spot.composite_score ?? 0)),
+      restricted: isRestricted(spot) ? 1 : 0,
     },
   })),
 });
 
-// Data-driven color: green (80+), cyan (60-79), amber (<60)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const scoreColorExpr: any = [
+const strokeColorExpr: any = [
   'case',
-  ['>=', ['coalesce', ['get', 'composite_score'], 0], 80], COLORS.SCORE_HIGH,
-  ['>=', ['coalesce', ['get', 'composite_score'], 0], 60], COLORS.SCORE_MEDIUM,
-  COLORS.SCORE_LOW,
+  ['==', ['get', 'restricted'], 1], '#EF4444',
+  '#FFFFFF',
 ];
 
-const GLOW_STYLE = {
-  circleRadius: 20,
-  circleColor: scoreColorExpr,
-  circleOpacity: 0.15,
-  circleBlur: 1,
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const strokeWidthExpr: any = [
+  'case',
+  ['==', ['get', 'restricted'], 1], 2.5,
+  1.5,
+];
 
-const DOT_STYLE = {
-  circleRadius: 16,
-  circleColor: scoreColorExpr,
-  circleOpacity: 0.9,
-  circleStrokeWidth: 1.5,
-  circleStrokeColor: '#FFFFFF',
-  circleStrokeOpacity: 0.3,
-};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const strokeOpacityExpr: any = [
+  'case',
+  ['==', ['get', 'restricted'], 1], 0.95,
+  0.3,
+];
 
 /**
  * Native MapLibre map for iOS/Android.
@@ -90,6 +98,42 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
   const cameraRef = useRef<CameraRef>(null);
   const theme = useSettingsStore((s) => s.theme);
   const showLegalZones = useSettingsStore((s) => s.showLegalZones);
+  const themeColors = useThemeColors();
+
+  // Data-driven color: green (30+), cyan (10-29), amber (<10).
+  // Built from theme colors so map dots match ScoreBadge in both light & dark.
+  const scoreColorExpr = useMemo(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (): any => [
+      'case',
+      ['>=', ['coalesce', ['get', 'composite_score'], 0], 30], themeColors.SCORE_HIGH,
+      ['>=', ['coalesce', ['get', 'composite_score'], 0], 10], themeColors.SCORE_MEDIUM,
+      themeColors.SCORE_LOW,
+    ],
+    [themeColors.SCORE_HIGH, themeColors.SCORE_MEDIUM, themeColors.SCORE_LOW],
+  );
+
+  const glowStyle = useMemo(
+    () => ({
+      circleRadius: 20,
+      circleColor: scoreColorExpr,
+      circleOpacity: 0.15,
+      circleBlur: 1,
+    }),
+    [scoreColorExpr],
+  );
+
+  const dotStyle = useMemo(
+    () => ({
+      circleRadius: 16,
+      circleColor: scoreColorExpr,
+      circleOpacity: 0.9,
+      circleStrokeWidth: strokeWidthExpr,
+      circleStrokeColor: strokeColorExpr,
+      circleStrokeOpacity: strokeOpacityExpr,
+    }),
+    [scoreColorExpr],
+  );
   const {
     center,
     zoom,
@@ -215,11 +259,11 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
         <ShapeSource id={SPOTS_SOURCE_ID} shape={spotsGeoJSON} onPress={handleSpotPress} hitbox={{ width: 24, height: 24 }}>
           <CircleLayer
             id={SPOTS_GLOW_LAYER_ID}
-            style={GLOW_STYLE}
+            style={glowStyle}
           />
           <CircleLayer
             id={SPOTS_LAYER_ID}
-            style={DOT_STYLE}
+            style={dotStyle}
           />
           <SymbolLayer
             id="spots-text-layer"

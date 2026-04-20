@@ -28,12 +28,10 @@ export const PreferencesSection = () => {
   const minScore = useSettingsStore((s) => s.minScore);
   const hideRestricted = useSettingsStore((s) => s.hideRestricted);
   const showLegalZones = useSettingsStore((s) => s.showLegalZones);
-  const offlineMode = useSettingsStore((s) => s.offlineMode);
   const setSlopeThreshold = useSettingsStore((s) => s.setSlopeThreshold);
   const setMinScore = useSettingsStore((s) => s.setMinScore);
   const setHideRestricted = useSettingsStore((s) => s.setHideRestricted);
   const setShowLegalZones = useSettingsStore((s) => s.setShowLegalZones);
-  const setOfflineMode = useSettingsStore((s) => s.setOfflineMode);
 
   const handleSlopeChange = (text: string) => {
     const num = parseInt(text, 10);
@@ -116,20 +114,6 @@ export const PreferencesSection = () => {
             value={showLegalZones}
             onValueChange={setShowLegalZones}
             trackColor={{ false: colors.BORDER, true: '#EF4444' }}
-            thumbColor={colors.WHITE}
-          />
-        </SettingRow>
-        <View style={[styles.divider, { backgroundColor: colors.BORDER }]} />
-        <SettingRow
-          icon="cloud-offline-outline"
-          label={t('config.offlineMode')}
-          iconColor={colors.TEXT_MUTED}
-          textColor={colors.TEXT_PRIMARY}
-        >
-          <Switch
-            value={offlineMode}
-            onValueChange={setOfflineMode}
-            trackColor={{ false: colors.BORDER, true: colors.ACCENT }}
             thumbColor={colors.WHITE}
           />
         </SettingRow>

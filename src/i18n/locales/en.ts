@@ -105,6 +105,24 @@ export const en: TranslationDictionary = {
     sourcesTitle: 'LEGAL SOURCES',
     sourcesDescription:
       'WildSpotter cross-references spots against official Spanish government data sources to help you understand legal restrictions.',
+    informationalDisclaimer:
+      'Informational only — verify local rules before staying overnight.',
+    natura2000: 'Natura 2000 network',
+    natura2000InsideHint:
+      'Inside protected area. Overnight stays may be restricted — check local rules.',
+    natura2000OutsideHint: 'Outside protected area.',
+    nationalParks: 'National & Natural Parks',
+    nationalParksInsideHint:
+      'Inside a protected park. Overnight parking is often prohibited — check park regulations.',
+    nationalParksOutsideHint: 'Outside any protected park.',
+    coastalLaw: 'Coastal Law (Ley de Costas)',
+    coastalLawInsideHint:
+      'Inside the coastal public domain or protection buffer. Overnight parking is restricted.',
+    coastalLawOutsideHint: 'Outside coastal protection zone.',
+    cadastre: 'Cadastre / Land classification',
+    cadastrePrivateHint:
+      'Private property — do not park without the owner\'s permission.',
+    cadastrePublicHint: 'Classification: {{classification}}.',
   },
   config: {
     title: 'CONFIG',
@@ -129,8 +147,6 @@ export const en: TranslationDictionary = {
     hideRestrictedHint: 'Hide spots inside protected zones',
     showLegalZones: 'Show legal zones on map',
     showLegalZonesHint: 'Display restriction areas as red overlay',
-    offlineMode: 'Offline mode',
-    offlineModeHint: 'Only use cached data, skip network',
     about: 'ABOUT',
     version: 'Version',
     tagline: 'Built for the overland community',
@@ -200,6 +216,15 @@ export const en: TranslationDictionary = {
     getStartedButton: 'Get Started',
     letsGo: "Let's go",
     skipLink: 'Already know the app? Skip',
+    analyticsTitle: 'Help shape WildSpotter',
+    analyticsBody:
+      'WildSpotter is built by one person. Anonymous usage data helps me see what works and what to fix next.',
+    analyticsCollect: 'We collect: screens you open, scan counts, crashes.',
+    analyticsNoCollect:
+      'We never collect: your name, email, precise location, saved spots, or any personal data.',
+    analyticsToggleLabel: 'Share anonymous usage data',
+    analyticsToggleOn: 'On — thank you!',
+    analyticsToggleOff: 'Off — no data will be sent',
   },
   splash: {
     tagline: 'Discover wild spots. Off the beaten path.',
@@ -283,8 +308,8 @@ export const en: TranslationDictionary = {
     scoringWildBonus: 'Wild bonus — Up to +30 points for archetypes (coast, alpine, forest dead-end, open water).',
     scoringPenalty: 'Landcover penalty — Subtracts points when ground is farmland, urban, industrial or quarry.',
     scoringAiGate: 'AI gate — Wild bonus only applies when Claude Vision confirms surface, open space and absence of obstacles (≥6/10 each).',
-    scoringGreen: '80+ — High confidence, likely a great spot',
-    scoringTeal: '60-79 — Medium confidence, worth checking',
-    scoringAmber: 'Below 60 — Low confidence, proceed with caution',
+    scoringGreen: '30+ — High confidence, likely a great spot',
+    scoringTeal: '10-29 — Medium confidence, worth checking',
+    scoringAmber: 'Below 10 — Low confidence, proceed with caution',
   },
 };

@@ -23,7 +23,6 @@ type PersistedState = {
   minScore: number;
   hideRestricted: boolean;
   showLegalZones: boolean;
-  offlineMode: boolean;
   language: string;
   theme: ThemeMode;
   analyticsEnabled: boolean;
@@ -36,7 +35,6 @@ type SettingsStore = PersistedState & {
   setMinScore: (value: number) => void;
   setHideRestricted: (value: boolean) => void;
   setShowLegalZones: (value: boolean) => void;
-  setOfflineMode: (value: boolean) => void;
   setLanguage: (value: string) => void;
   setTheme: (value: ThemeMode) => void;
   setAnalyticsEnabled: (value: boolean) => void;
@@ -47,7 +45,6 @@ const persistFields = (state: SettingsStore): PersistedState => ({
   minScore: state.minScore,
   hideRestricted: state.hideRestricted,
   showLegalZones: state.showLegalZones,
-  offlineMode: state.offlineMode,
   language: state.language,
   theme: state.theme,
   analyticsEnabled: state.analyticsEnabled,
@@ -66,10 +63,9 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
   minScore: 0,
   hideRestricted: false,
   showLegalZones: false,
-  offlineMode: false,
   language: detectDefaultLanguage(),
   theme: 'light',
-  analyticsEnabled: false,
+  analyticsEnabled: true,
   filtersVersion: 0,
   _hydrated: false,
   setSlopeThreshold: (value) => {
@@ -91,11 +87,6 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
     set({ showLegalZones: value });
     saveToStorage(get());
     trackConfigChange('showLegalZones', value);
-  },
-  setOfflineMode: (value) => {
-    set({ offlineMode: value });
-    saveToStorage(get());
-    trackConfigChange('offlineMode', value);
   },
   setLanguage: (value) => {
     set({ language: value });

@@ -93,6 +93,19 @@ export type TranslationKeys = {
     outsideCoastal: string;
     sourcesTitle: string;
     sourcesDescription: string;
+    informationalDisclaimer: string;
+    natura2000: string;
+    natura2000InsideHint: string;
+    natura2000OutsideHint: string;
+    nationalParks: string;
+    nationalParksInsideHint: string;
+    nationalParksOutsideHint: string;
+    coastalLaw: string;
+    coastalLawInsideHint: string;
+    coastalLawOutsideHint: string;
+    cadastre: string;
+    cadastrePrivateHint: string;
+    cadastrePublicHint: string;
   };
   config: {
     title: string;
@@ -116,8 +129,6 @@ export type TranslationKeys = {
     hideRestrictedHint: string;
     showLegalZones: string;
     showLegalZonesHint: string;
-    offlineMode: string;
-    offlineModeHint: string;
     about: string;
     version: string;
     tagline: string;
@@ -181,6 +192,13 @@ export type TranslationKeys = {
     getStartedButton: string;
     letsGo: string;
     skipLink: string;
+    analyticsTitle: string;
+    analyticsBody: string;
+    analyticsCollect: string;
+    analyticsNoCollect: string;
+    analyticsToggleLabel: string;
+    analyticsToggleOn: string;
+    analyticsToggleOff: string;
   };
   splash: {
     tagline: string;

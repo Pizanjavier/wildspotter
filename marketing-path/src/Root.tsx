@@ -7,6 +7,7 @@ import { OchentaYSiete } from "./OchentaYSiete";
 import { ElPipeline } from "./ElPipeline";
 import { FruitStory, FRUIT_STORY_FRAMES } from "./FruitStory";
 import { STORE_INTRO_FRAMES } from "./components/StoreInstallIntro";
+import { LasCoordenadas, LAS_COORDENADAS_FRAMES } from "./LasCoordenadas";
 
 // --- Base durations (without intro) ---
 const PARKING_LLENO_FRAMES = 805;
@@ -357,6 +358,46 @@ export const RemotionRoot: React.FC = () => {
 					component={FruitStory}
 					baseFrames={FRUIT_STORY_FRAMES}
 					props={{ hookVariant: "F1" as const, withIntro: false }}
+				/>
+			</Folder>
+
+			{/* ============ LasCoordenadas (Concepto E) ============ */}
+			<Folder name="LasCoordenadas">
+				<Composition
+					id="LasCoordenadas-E1"
+					component={LasCoordenadas}
+					durationInFrames={LAS_COORDENADAS_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "E1" as const,
+						musicTrack: "spirit-in-the-woods" as const,
+					}}
+				/>
+				<Composition
+					id="LasCoordenadas-E2"
+					component={LasCoordenadas}
+					durationInFrames={LAS_COORDENADAS_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "E2" as const,
+						musicTrack: "spirit-in-the-woods" as const,
+					}}
+				/>
+				<Composition
+					id="LasCoordenadas-E3"
+					component={LasCoordenadas}
+					durationInFrames={LAS_COORDENADAS_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "E3" as const,
+						musicTrack: "spirit-in-the-woods" as const,
+					}}
 				/>
 			</Folder>
 		</>

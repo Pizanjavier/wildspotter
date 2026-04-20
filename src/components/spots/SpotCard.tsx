@@ -15,6 +15,16 @@ type SpotCardProps = {
 const capitalize = (s: string): string =>
   s.charAt(0).toUpperCase() + s.slice(1);
 
+const isRestricted = (spot: SpotSummary): boolean => {
+  const ls = spot.legal_status;
+  if (!ls) return false;
+  return Boolean(
+    ls.natura2000?.inside ||
+      ls.national_park?.inside ||
+      ls.coastal_law?.inside,
+  );
+};
+
 const formatSubtitle = (spot: SpotSummary): string => {
   const parts: string[] = [];
   if (spot.spot_type) parts.push(capitalize(spot.spot_type.replace(/_/g, ' ')));
@@ -36,6 +46,7 @@ export const SpotCard = ({ spot }: SpotCardProps) => {
 
   const scoreColor = getScoreColor(score, colors);
   const subtitle = formatSubtitle(spot);
+  const restricted = isRestricted(spot);
 
   return (
     <Pressable
@@ -43,10 +54,23 @@ export const SpotCard = ({ spot }: SpotCardProps) => {
       style={({ pressed }) => [
         styles.container,
         { backgroundColor: colors.CARD },
+        restricted && {
+          borderWidth: 1.5,
+          borderColor: colors.DANGER,
+        },
         pressed && styles.pressed,
       ]}
     >
-      <View style={[styles.scoreBadge, { backgroundColor: scoreColor }]}>
+      <View
+        style={[
+          styles.scoreBadge,
+          { backgroundColor: scoreColor },
+          restricted && {
+            borderWidth: 2,
+            borderColor: colors.DANGER,
+          },
+        ]}
+      >
         <Text style={styles.scoreValue}>
           {score !== null ? String(Math.round(score)) : '--'}
         </Text>

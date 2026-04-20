@@ -6,8 +6,8 @@ import type { LngLat } from '@/types/map';
 
 const getThemedScoreColor = (score: number | null, colors: ThemeColors): string => {
   if (score === null) return colors.TEXT_SECONDARY;
-  if (score >= 80) return colors.SCORE_HIGH;
-  if (score >= 60) return colors.SCORE_MEDIUM;
+  if (score >= 30) return colors.SCORE_HIGH;
+  if (score >= 10) return colors.SCORE_MEDIUM;
   return colors.SCORE_LOW;
 };
 

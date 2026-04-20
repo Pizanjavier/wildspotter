@@ -6,6 +6,7 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { API_BASE_URL } from '@/constants/config';
 import { useMapStore } from '@/stores/map-store';
 import { useSettingsStore } from '@/stores/settings-store';
+import { useThemeColors } from '@/hooks/useThemeColors';
 import { getMapStyle, TERRAIN_DEM_SOURCE_ID } from '@/components/map/map-style';
 import type { SpotSummary } from '@/services/api/types';
 
@@ -40,6 +41,16 @@ type MapViewProps = {
   spots?: SpotSummary[];
 };
 
+const isRestricted = (spot: SpotSummary): boolean => {
+  const ls = spot.legal_status;
+  if (!ls) return false;
+  return Boolean(
+    ls.natura2000?.inside ||
+      ls.national_park?.inside ||
+      ls.coastal_law?.inside,
+  );
+};
+
 const spotsToGeoJSON = (
   spots: SpotSummary[],
 ): GeoJSON.FeatureCollection => ({
@@ -57,6 +68,7 @@ const spotsToGeoJSON = (
       surface_type: spot.surface_type,
       composite_score: spot.composite_score ?? 0,
       score_label: String(Math.round(spot.composite_score ?? 0)),
+      restricted: isRestricted(spot) ? 1 : 0,
     },
   })),
 });
@@ -74,6 +86,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
   const userLocation = useMapStore((s) => s.userLocation);
   const theme = useSettingsStore((s) => s.theme);
   const showLegalZones = useSettingsStore((s) => s.showLegalZones);
+  const themeColors = useThemeColors();
 
   const syncBounds = useCallback(
     (map: import('maplibre-gl').Map) => {
@@ -97,6 +110,25 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
     const map = mapRef.current as import('maplibre-gl').Map;
     map.setStyle(getMapStyle(theme));
   }, [theme]);
+
+  // Re-apply theme-aware score colors to spot layers when theme changes
+  useEffect(() => {
+    if (!mapLoadedRef.current || !mapRef.current) return;
+    const map = mapRef.current as import('maplibre-gl').Map;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const expr: any = [
+      'case',
+      ['>=', ['coalesce', ['get', 'composite_score'], 0], 30], themeColors.SCORE_HIGH,
+      ['>=', ['coalesce', ['get', 'composite_score'], 0], 10], themeColors.SCORE_MEDIUM,
+      themeColors.SCORE_LOW,
+    ];
+    try {
+      map.setPaintProperty(SPOTS_LAYER_ID, 'circle-color', expr);
+      map.setPaintProperty(SPOTS_GLOW_LAYER_ID, 'circle-color', expr);
+    } catch {
+      // Layers may have been wiped by setStyle; they will be re-added on next load
+    }
+  }, [themeColors.SCORE_HIGH, themeColors.SCORE_MEDIUM, themeColors.SCORE_LOW]);
 
   // Toggle legal zone layers visibility
   useEffect(() => {
@@ -245,13 +277,14 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             },
           });
 
-          // Data-driven color: green (80+), cyan (60-79), amber (<60)
+          // Data-driven color: green (30+), cyan (10-29), amber (<10).
+          // Built from theme colors so dots match ScoreBadge in both light & dark.
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const scoreColorExpr: any = [
             'case',
-            ['>=', ['coalesce', ['get', 'composite_score'], 0], 80], '#4ADE80',
-            ['>=', ['coalesce', ['get', 'composite_score'], 0], 60], '#34D399',
-            '#FBBF24',
+            ['>=', ['coalesce', ['get', 'composite_score'], 0], 30], themeColors.SCORE_HIGH,
+            ['>=', ['coalesce', ['get', 'composite_score'], 0], 10], themeColors.SCORE_MEDIUM,
+            themeColors.SCORE_LOW,
           ];
 
           // Glow layer (larger, semi-transparent)
@@ -267,7 +300,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             },
           });
 
-          // Main dot layer
+          // Main dot layer — red stroke on legally-restricted spots
           map.addLayer({
             id: SPOTS_LAYER_ID,
             type: 'circle',
@@ -276,9 +309,21 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
               'circle-radius': 12,
               'circle-color': scoreColorExpr,
               'circle-opacity': 0.9,
-              'circle-stroke-width': 2,
-              'circle-stroke-color': '#FFFFFF',
-              'circle-stroke-opacity': 0.3,
+              'circle-stroke-width': [
+                'case',
+                ['==', ['get', 'restricted'], 1], 3,
+                2,
+              ],
+              'circle-stroke-color': [
+                'case',
+                ['==', ['get', 'restricted'], 1], '#EF4444',
+                '#FFFFFF',
+              ],
+              'circle-stroke-opacity': [
+                'case',
+                ['==', ['get', 'restricted'], 1], 0.95,
+                0.3,
+              ],
             },
           });
 
