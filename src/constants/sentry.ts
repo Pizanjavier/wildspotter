@@ -1,14 +1,14 @@
 /**
  * Sentry crash reporting configuration.
  *
- * Replace SENTRY_DSN with your actual DSN from https://sentry.io
- * You can also set it via the EXPO_PUBLIC_SENTRY_DSN environment variable.
+ * The DSN below is the project's real Sentry DSN. It can be
+ * overridden via EXPO_PUBLIC_SENTRY_DSN if needed (e.g. staging).
  */
 
-const FALLBACK_DSN = 'https://5cc01c5880c856cedae67645f08ed135@o4511224843665408.ingest.de.sentry.io/4511224869945424';
+const DEFAULT_DSN = 'https://5cc01c5880c856cedae67645f08ed135@o4511224843665408.ingest.de.sentry.io/4511224869945424';
 
 export const SENTRY_DSN =
-  process.env.EXPO_PUBLIC_SENTRY_DSN ?? FALLBACK_DSN;
+  process.env.EXPO_PUBLIC_SENTRY_DSN || DEFAULT_DSN;
 
 export const SENTRY_ENVIRONMENT: string = (() => {
   const explicit = process.env.EXPO_PUBLIC_SENTRY_ENVIRONMENT;
@@ -17,4 +17,5 @@ export const SENTRY_ENVIRONMENT: string = (() => {
   return 'production';
 })();
 
-export const SENTRY_ENABLED = SENTRY_DSN !== FALLBACK_DSN;
+export const SENTRY_ENABLED = SENTRY_DSN.length > 0;
+

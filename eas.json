@@ -11,7 +11,9 @@
 				"buildType": "apk"
 			},
 			"env": {
-				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app"
+				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app",
+				"EXPO_PUBLIC_POSTHOG_API_KEY": "phc_r54zTP549j3j8HAbxsqsxEyPc29hpKfYQL8b5u4vmBRf",
+				"EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
 			}
 		},
 		"preview": {
@@ -20,7 +22,9 @@
 				"buildType": "apk"
 			},
 			"env": {
-				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app"
+				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app",
+				"EXPO_PUBLIC_POSTHOG_API_KEY": "phc_r54zTP549j3j8HAbxsqsxEyPc29hpKfYQL8b5u4vmBRf",
+				"EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
 			}
 		},
 		"production": {
@@ -29,7 +33,9 @@
 				"buildType": "app-bundle"
 			},
 			"env": {
-				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app"
+				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app",
+				"EXPO_PUBLIC_POSTHOG_API_KEY": "phc_r54zTP549j3j8HAbxsqsxEyPc29hpKfYQL8b5u4vmBRf",
+				"EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
 			}
 		},
 		"verification": {
@@ -38,7 +44,9 @@
 				"buildType": "apk"
 			},
 			"env": {
-				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app"
+				"EXPO_PUBLIC_API_URL": "https://api.wildspotter.app",
+				"EXPO_PUBLIC_POSTHOG_API_KEY": "phc_r54zTP549j3j8HAbxsqsxEyPc29hpKfYQL8b5u4vmBRf",
+				"EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
 			}
 		}
 	},

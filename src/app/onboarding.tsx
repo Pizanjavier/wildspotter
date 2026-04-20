@@ -558,4 +558,47 @@ const styles = StyleSheet.create({
 		fontSize: 13,
 		marginTop: SPACING.SM,
 	},
+	privacyCard: {
+		width: "100%",
+		borderRadius: RADIUS.MD,
+		borderWidth: 1,
+		padding: SPACING.MD,
+		gap: SPACING.SM,
+		marginTop: SPACING.MD,
+	},
+	privacyRow: {
+		flexDirection: "row",
+		alignItems: "flex-start",
+		gap: SPACING.SM,
+	},
+	privacyIcon: {
+		marginTop: 2,
+	},
+	privacyText: {
+		fontFamily: FONT_FAMILIES.BODY,
+		fontSize: 13,
+		lineHeight: 19,
+		flex: 1,
+	},
+	toggleRow: {
+		flexDirection: "row",
+		alignItems: "center",
+		width: "100%",
+		borderRadius: RADIUS.MD,
+		borderWidth: 1,
+		padding: SPACING.MD,
+		marginTop: SPACING.SM,
+	},
+	toggleTextCol: {
+		flex: 1,
+		gap: 2,
+	},
+	toggleLabel: {
+		fontFamily: FONT_FAMILIES.BODY_BOLD,
+		fontSize: 14,
+	},
+	toggleStatus: {
+		fontFamily: FONT_FAMILIES.BODY,
+		fontSize: 13,
+	},
 });

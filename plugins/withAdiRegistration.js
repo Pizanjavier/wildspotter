@@ -6,11 +6,11 @@ const path = require("path");
  * Expo Config Plugin: withAdiRegistration
  *
  * Copies the `adi-registration.properties` file from the project root
- * into the Android APK's Java resources directory during prebuild.
+ * into the Android APK's assets directory during prebuild.
  *
  * This is required by Google Play Console for package name verification.
- * The file ends up at: android/app/src/main/resources/adi-registration.properties
- * which places it at the root of the Java resources inside the final APK.
+ * The file ends up at: android/app/src/main/assets/adi-registration.properties
+ * which places it in the assets folder inside the final APK.
  */
 function withAdiRegistration(config) {
   return withDangerousMod(config, [
@@ -24,7 +24,7 @@ function withAdiRegistration(config) {
         "app",
         "src",
         "main",
-        "resources"
+        "assets"
       );
       const destPath = path.join(destDir, "adi-registration.properties");
 

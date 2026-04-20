@@ -8,7 +8,9 @@ import { ElPipeline } from "./ElPipeline";
 import { FruitStory, FRUIT_STORY_FRAMES } from "./FruitStory";
 import { STORE_INTRO_FRAMES } from "./components/StoreInstallIntro";
 import { LasCoordenadas, LAS_COORDENADAS_FRAMES } from "./LasCoordenadas";
-
+import { DatoHero, DATO_HERO_FRAMES } from "./DatoHero";
+import { OjoSatelite, OJO_SATELITE_FRAMES } from "./OjoSatelite";
+import { Gatekeeping, GATEKEEPING_FRAMES } from "./Gatekeeping";
 // --- Base durations (without intro) ---
 const PARKING_LLENO_FRAMES = 805;
 const NATURA2000_FRAMES = 482;
@@ -397,6 +399,100 @@ export const RemotionRoot: React.FC = () => {
 					defaultProps={{
 						hookVariant: "E3" as const,
 						musicTrack: "spirit-in-the-woods" as const,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ DatoHero (Concepto H) ============ */}
+			<Folder name="DatoHero">
+				<Composition
+					id="DatoHero-H1"
+					component={DatoHero}
+					durationInFrames={DATO_HERO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "H1" as const,
+						musicTrack: "sci-fi-score" as const,
+					}}
+				/>
+				<Composition
+					id="DatoHero-H2"
+					component={DatoHero}
+					durationInFrames={DATO_HERO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "H2" as const,
+						musicTrack: "sci-fi-score" as const,
+					}}
+				/>
+				<Composition
+					id="DatoHero-H3"
+					component={DatoHero}
+					durationInFrames={DATO_HERO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "H3" as const,
+						musicTrack: "sci-fi-score" as const,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ OjoSatelite (Concepto I) ============ */}
+			<Folder name="OjoSatelite">
+				<Composition
+					id="OjoSatelite-I1"
+					component={OjoSatelite}
+					durationInFrames={OJO_SATELITE_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "I1" as const,
+						musicTrack: "sci-fi-score" as const,
+					}}
+				/>
+				<Composition
+					id="OjoSatelite-I2"
+					component={OjoSatelite}
+					durationInFrames={OJO_SATELITE_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "I2" as const,
+						musicTrack: "sci-fi-score" as const,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ Gatekeeping (Concepto K) ============ */}
+			<Folder name="Gatekeeping">
+				<Composition
+					id="Gatekeeping-K1"
+					component={Gatekeeping}
+					durationInFrames={GATEKEEPING_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "K1" as const,
+					}}
+				/>
+				<Composition
+					id="Gatekeeping-K2"
+					component={Gatekeeping}
+					durationInFrames={GATEKEEPING_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "K2" as const,
 					}}
 				/>
 			</Folder>

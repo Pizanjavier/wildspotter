@@ -26,7 +26,7 @@ export const initAnalytics = (): void => {
 
   client = new PostHog(POSTHOG_API_KEY, {
     host: POSTHOG_HOST,
-    captureAppLifecycleEvents: false,
+    captureAppLifecycleEvents: true,
   });
 };
 
