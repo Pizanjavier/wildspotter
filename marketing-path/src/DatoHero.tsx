@@ -1,4 +1,13 @@
-import { AbsoluteFill, Audio, Img, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import {
+	AbsoluteFill,
+	Audio,
+	Img,
+	Sequence,
+	interpolate,
+	staticFile,
+	useCurrentFrame,
+	useVideoConfig,
+} from "remotion";
 import React from "react";
 
 export const DATO_HERO_FRAMES = 450;
@@ -20,7 +29,7 @@ export const DatoHero: React.FC<DatoHeroProps> = ({
 
 	let targetNumber = 0;
 	let text1 = "";
-	
+
 	if (variant === "H1") {
 		targetNumber = 83006;
 		text1 = "spots analizados en España";
@@ -38,7 +47,7 @@ export const DatoHero: React.FC<DatoHeroProps> = ({
 		frame,
 		[counterStart, counterEnd],
 		[0, targetNumber],
-		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" }
+		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" },
 	);
 
 	const displayedNumber = Math.floor(currentNumber).toLocaleString("es-ES");
@@ -47,63 +56,67 @@ export const DatoHero: React.FC<DatoHeroProps> = ({
 	const t2Start = 240;
 	const sloganStart = 330;
 
-	const heroScale = interpolate(
-		frame,
-		[t2Start, t2Start + 20],
-		[1, 0.75],
-		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" }
-	);
-	
-	const heroY = interpolate(
-		frame,
-		[t2Start, t2Start + 20],
-		[0, -100],
-		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" }
-	);
+	const heroScale = interpolate(frame, [t2Start, t2Start + 20], [1, 0.75], {
+		extrapolateRight: "clamp",
+		extrapolateLeft: "clamp",
+	});
 
-	const t1Opacity = interpolate(
-		frame,
-		[t1Start, t1Start + 15],
-		[0, 1],
-		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" }
-	);
+	const heroY = interpolate(frame, [t2Start, t2Start + 20], [0, -100], {
+		extrapolateRight: "clamp",
+		extrapolateLeft: "clamp",
+	});
 
-	const t2Opacity = interpolate(
-		frame,
-		[t2Start, t2Start + 15],
-		[0, 1],
-		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" }
-	);
+	const t1Opacity = interpolate(frame, [t1Start, t1Start + 15], [0, 1], {
+		extrapolateRight: "clamp",
+		extrapolateLeft: "clamp",
+	});
+
+	const t2Opacity = interpolate(frame, [t2Start, t2Start + 15], [0, 1], {
+		extrapolateRight: "clamp",
+		extrapolateLeft: "clamp",
+	});
 
 	const sloganOpacity = interpolate(
 		frame,
 		[sloganStart, sloganStart + 15],
 		[0, 1],
-		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" }
+		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" },
 	);
 
 	const renderText2 = () => {
 		if (variant === "H1") {
 			return (
-				<div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						gap: "10px",
+						alignItems: "center",
+					}}
+				>
 					<span>
-						<span style={{ color: "#4ADE80", fontWeight: 600 }}>393</span> con score {">"} 70
+						<span style={{ color: "#4ADE80", fontWeight: 600 }}>393</span> con
+						score {">"} 70
 					</span>
 					<span>
-						<span style={{ color: "#4ADE80", fontWeight: 600 }}>41</span> con score {">"} 80
+						<span style={{ color: "#4ADE80", fontWeight: 600 }}>41</span> con
+						score {">"} 80
 					</span>
 				</div>
 			);
 		} else if (variant === "H2") {
 			return (
 				<span>
-					De 83.006 candidatos, solo <span style={{ color: "#4ADE80", fontWeight: 600 }}>393</span> pasan el filtro.
+					De 83.006 candidatos, solo{" "}
+					<span style={{ color: "#4ADE80", fontWeight: 600 }}>393</span> pasan
+					el filtro.
 				</span>
 			);
 		} else {
 			return (
 				<span>
-					Radar. Terreno. Satélite. Legal. Contexto. Uso del suelo. <span style={{ color: "#4ADE80", fontWeight: 600 }}>Score</span>.
+					Radar. Terreno. Satélite. Legal. Contexto. Uso del suelo.{" "}
+					<span style={{ color: "#4ADE80", fontWeight: 600 }}>Score</span>.
 				</span>
 			);
 		}
@@ -111,16 +124,17 @@ export const DatoHero: React.FC<DatoHeroProps> = ({
 
 	return (
 		<AbsoluteFill style={{ backgroundColor: "#000000", color: "#FFFFFF" }}>
-			
-			{musicTrack && (
-				<Audio 
-					src={staticFile(`audio/music/${musicTrack}.mp3`)} 
-					volume={(f) => interpolate(f, [400, 450], [0.3, 0], { extrapolateRight: "clamp" })}
+			{/* {musicTrack && (
+				<Audio
+					src={staticFile(`audio/music/${musicTrack}.mp3`)}
+					volume={(f) =>
+						interpolate(f, [400, 450], [0.3, 0], { extrapolateRight: "clamp" })
+					}
 				/>
-			)}
-			
+			)} */}
+
 			<Sequence from={counterEnd}>
-				<Audio src={staticFile("audio/score-reveal.mp3")} volume={0.8} />
+				<Audio src={staticFile("audio/sfx/score-reveal.mp3")} volume={0.8} />
 			</Sequence>
 
 			{frame >= counterStart && (
@@ -180,7 +194,7 @@ export const DatoHero: React.FC<DatoHeroProps> = ({
 					)}
 				</div>
 			)}
-			
+
 			{frame >= sloganStart && (
 				<div
 					style={{
@@ -211,9 +225,9 @@ export const DatoHero: React.FC<DatoHeroProps> = ({
 					</div>
 
 					<div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
-						<Img 
-							src={staticFile("images/app-logo.png")} 
-							style={{ width: "80px", height: "80px", borderRadius: "16px" }} 
+						<Img
+							src={staticFile("images/app-logo.png")}
+							style={{ width: "80px", height: "80px", borderRadius: "16px" }}
 						/>
 						<div
 							style={{
