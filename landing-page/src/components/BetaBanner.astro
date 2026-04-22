@@ -1,0 +1,18 @@
+---
+import type { Dict } from '@/i18n/es';
+
+interface Props {
+  t: Dict;
+  locale?: 'es' | 'en';
+}
+
+const { t, locale = 'es' } = Astro.props;
+// Hardcoded count logic, adjust the second parameter to update the remaining slots
+const slotsText = t.beta.slots.replace('{count}', '11');
+const href = locale === 'es' ? '/beta' : `/${locale}/beta`;
+---
+
+<a href={href} id="beta-banner-trigger" class="w-full bg-[#2F6B4A] text-[#F5EBD8] py-3 px-4 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-6 z-50 relative text-sm md:text-base cursor-pointer hover:bg-[#25563b] transition-colors border-b border-[#F5EBD8]/10 no-underline">
+  <span class="font-medium text-center hover:underline">{t.beta.banner}</span>
+  <span class="bg-[#F5EBD8]/10 px-3 py-1 rounded-full font-mono text-[11px] md:text-xs whitespace-nowrap text-[#F5EBD8]">{slotsText}</span>
+</a>

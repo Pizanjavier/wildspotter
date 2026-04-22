@@ -11,6 +11,7 @@ import { LasCoordenadas, LAS_COORDENADAS_FRAMES } from "./LasCoordenadas";
 import { DatoHero, DATO_HERO_FRAMES } from "./DatoHero";
 import { OjoSatelite, OJO_SATELITE_FRAMES } from "./OjoSatelite";
 import { Gatekeeping, GATEKEEPING_FRAMES } from "./Gatekeeping";
+import { BetaCallout, BETA_CALLOUT_FRAMES } from "./BetaCallout";
 // --- Base durations (without intro) ---
 const PARKING_LLENO_FRAMES = 805;
 const NATURA2000_FRAMES = 482;
@@ -494,6 +495,18 @@ export const RemotionRoot: React.FC = () => {
 					defaultProps={{
 						variant: "K2" as const,
 					}}
+				/>
+			</Folder>
+
+			{/* ============ BetaCallout ============ */}
+			<Folder name="BetaCallout">
+				<Composition
+					id="BetaCallout"
+					component={BetaCallout}
+					durationInFrames={BETA_CALLOUT_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
 				/>
 			</Folder>
 		</>

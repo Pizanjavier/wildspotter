@@ -3,6 +3,19 @@ import type { Dict } from './es';
 export const en: Dict = {
   locale: 'en',
   nav: { skip: 'Skip to content' },
+  beta: {
+    banner: 'Android user? Help us test the Beta and get Lifetime Premium.',
+    cta: 'Learn more',
+    slots: '{count} of 20 spots remaining',
+    modalTitle: 'Lifetime Premium',
+    modalDesc: 'We need 20 Android testers for 14 days to launch the app.',
+    step1: 'Join the',
+    step1Link: 'Google Group',
+    step2: 'Download the Beta at:',
+    step2Link: 'Play Store',
+    step3: 'Use the app and keep it installed for 14 days.',
+    close: 'Close',
+  },
   hero: {
     headline: 'The best wild spots are on no app.',
     subtitle: 'A radar that cross-checks official data to find untouched corners of Spain. No reviews. No crowds. No surprises.',

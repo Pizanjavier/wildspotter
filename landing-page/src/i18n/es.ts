@@ -3,6 +3,19 @@ export const es = {
   nav: {
     skip: 'Saltar al contenido',
   },
+  beta: {
+    banner: '¿Eres usuario de Android? Ayúdanos a testear la Beta y llévate Premium de por vida.',
+    cta: 'Saber más',
+    slots: 'Quedan {count} de 20 plazas',
+    modalTitle: 'Premium de por Vida',
+    modalDesc: 'Necesitamos 20 testers en Android durante 14 días para poder lanzar.',
+    step1: 'Únete al',
+    step1Link: 'Grupo de Google',
+    step2: 'Descarga la Beta en:',
+    step2Link: 'Play Store',
+    step3: 'Usa la app y mantenla instalada 14 días.',
+    close: 'Cerrar',
+  },
   hero: {
     headline: 'Los mejores spots no están en ninguna app.',
     subtitle: 'Un radar que cruza datos oficiales para encontrar rincones salvajes en España. Sin reseñas. Sin multitudes. Sin sorpresas.',
