@@ -13,8 +13,12 @@
       "backgroundColor": "#F7F3EE"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.wildspotter.app"
+      "supportsTablet": false,
+      "bundleIdentifier": "com.wildspotter.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
