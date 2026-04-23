@@ -110,8 +110,8 @@ export const en: Dict = {
     links: [
       { label: 'Privacy', href: '/en/privacy' },
       { label: 'Contact', href: 'mailto:hola@wildspotter.app' },
-      { label: 'Instagram', href: 'https://instagram.com/wildspotter' },
-      { label: 'TikTok', href: 'https://tiktok.com/@wildspotter' },
+      { label: 'Instagram', href: 'https://instagram.com/wildspotter.app' },
+      { label: 'TikTok', href: 'https://tiktok.com/@wildspotter.app' },
     ],
     copyright: '© 2026 WildSpotter',
   },

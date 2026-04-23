@@ -55,7 +55,7 @@
   "private": true,
   "overrides": {
     "handlebars": "^4.7.9",
-    "@xmldom/xmldom": "^0.9.9",
+    "@xmldom/xmldom": "~0.8.10",
     "node-forge": "^1.4.0",
     "picomatch": "^4.0.4"
   }
