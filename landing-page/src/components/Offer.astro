@@ -2,85 +2,27 @@
 import type { Dict } from '@/i18n/es';
 interface Props { t: Dict }
 const { t } = Astro.props;
-const { scout, explorer, pioneer, eyebrow } = t.offer;
 ---
 <section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
   <div class="absolute inset-0" style="background: linear-gradient(180deg, #0F0D0B 0%, #1A130D 100%);"></div>
   <div class="absolute inset-0" style="background: radial-gradient(ellipse 1100px 700px at 50% 30%, rgba(217,119,6,0.18), transparent 65%);"></div>
 
-  <div class="relative max-w-[1280px] mx-auto">
-    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6 text-center">{eyebrow}</p>
-    <h2 class="reveal font-sans font-black text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.03em] display-cream mb-8 text-center max-w-[980px] mx-auto" data-delay="1">
+  <div class="relative max-w-[820px] mx-auto text-center">
+    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">{t.offer.eyebrow}</p>
+    <h2 class="reveal font-sans font-black text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.03em] display-cream mb-8" data-delay="1">
       {t.offer.title}
     </h2>
-    <p class="reveal text-[17px] md:text-[19px] leading-[1.55] text-[#B7A089] text-center mb-20 max-w-[760px] mx-auto" data-delay="2">
+    <p class="reveal text-[17px] md:text-[19px] leading-[1.55] text-[#B7A089] mb-14 max-w-[640px] mx-auto" data-delay="2">
       {t.offer.sub}
     </p>
 
-    <div class="grid md:grid-cols-3 gap-6 md:gap-8 items-stretch">
-      <!-- Scout (free) -->
-      <article class="reveal p-8 md:p-10 rounded-xl bg-[#1A130D]/80 backdrop-blur-sm border border-white/[0.08] flex flex-col" data-delay="1">
-        <div class="font-sans font-black text-[13px] tracking-[0.08em] uppercase text-[#4ADE80] mb-6">{scout.label}</div>
-        <div class="flex items-baseline gap-2 mb-3">
-          <span class="font-sans font-black text-[58px] md:text-[72px] leading-none tracking-[-0.04em] text-[#F5EBD8]">{scout.price}</span>
-          <span class="font-sans text-[14px] text-[#B7A089]">{scout.per}</span>
+    <div class="reveal grid sm:grid-cols-2 gap-6 md:gap-8 max-w-[680px] mx-auto" data-delay="3">
+      {t.offer.highlights.map((item) => (
+        <div class="p-6 md:p-8 rounded-xl bg-[#1A130D]/80 backdrop-blur-sm border border-white/[0.08] text-left">
+          <div class="font-mono text-[11px] tracking-[0.2em] uppercase text-[#D97706] mb-3">{item.label}</div>
+          <p class="text-[15px] text-[#E8D9BF] leading-[1.55]">{item.desc}</p>
         </div>
-        <p class="text-[14px] text-[#B7A089] leading-[1.55] mb-8">{scout.note}</p>
-        <ul class="space-y-3 text-[14px] text-[#E8D9BF] leading-[1.5]">
-          {scout.features.map((f) => (
-            <li class="flex items-start gap-3">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="flex-shrink-0 mt-1">
-                <path d="M5 12.5l4.5 4.5L19 7" stroke="#4ADE80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
-      </article>
-
-      <!-- Explorer -->
-      <article class="reveal p-8 md:p-10 rounded-xl bg-[#1A130D]/90 backdrop-blur-sm border border-white/[0.08] flex flex-col" data-delay="2">
-        <div class="font-sans font-black text-[13px] tracking-[0.08em] uppercase text-[#B7A089] mb-6">{explorer.label}</div>
-        <div class="flex items-baseline gap-2 mb-3">
-          <span class="font-sans font-black text-[58px] md:text-[72px] leading-none tracking-[-0.04em] text-[#F5EBD8]">{explorer.price}</span>
-          <span class="font-sans text-[14px] text-[#B7A089]">{explorer.per}</span>
-        </div>
-        <p class="text-[14px] text-[#B7A089] leading-[1.55] mb-8">{explorer.note}</p>
-        <ul class="space-y-3 text-[14px] text-[#E8D9BF] leading-[1.5]">
-          {explorer.features.map((f) => (
-            <li class="flex items-start gap-3">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="flex-shrink-0 mt-1">
-                <path d="M5 12.5l4.5 4.5L19 7" stroke="#B7A089" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
-      </article>
-
-      <!-- Pioneer -->
-      <article class="reveal relative p-8 md:p-10 rounded-xl bg-gradient-to-b from-[#2A1F15] to-[#1A120B] pioneer-glow flex flex-col" data-delay="3">
-        <div class="absolute -top-3 left-8 md:left-10">
-          <span class="inline-block px-3 py-1.5 rounded-full bg-[#D97706] text-[#0F0D0B] font-sans font-black text-[11px] tracking-[0.08em] uppercase">{pioneer.badge}</span>
-        </div>
-        <div class="font-sans font-black text-[13px] tracking-[0.08em] uppercase text-[#D97706] mb-6 mt-2">{pioneer.label}</div>
-        <div class="flex items-baseline gap-2 mb-3">
-          <span class="font-sans font-black text-[58px] md:text-[72px] leading-none tracking-[-0.04em] text-[#F5EBD8]">{pioneer.price}</span>
-          <span class="font-sans text-[14px] text-[#B7A089]">{pioneer.per}</span>
-        </div>
-        <p class="text-[14px] text-[#E8D9BF] leading-[1.55] mb-8">{pioneer.note}</p>
-        <ul class="space-y-3 text-[14px] text-[#F5EBD8] leading-[1.5] mb-6">
-          {pioneer.features.map((f) => (
-            <li class="flex items-start gap-3">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="flex-shrink-0 mt-1">
-                <path d="M5 12.5l4.5 4.5L19 7" stroke="#D97706" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-              <span>{f}</span>
-            </li>
-          ))}
-        </ul>
-        <p class="mt-auto pt-5 border-t border-[#D97706]/25 text-[14px] leading-[1.55] text-[#F5EBD8] font-black tracking-[-0.005em]">{pioneer.tagline}</p>
-      </article>
+      ))}
     </div>
   </div>
 </section>

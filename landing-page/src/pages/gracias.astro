@@ -2,7 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import Nav from '@/components/Nav.astro';
 ---
-<Base title="Confirmado · WildSpotter" description="Pioneer confirmado." locale="es">
+<Base title="Confirmado · WildSpotter" description="Registro confirmado." locale="es">
   <Nav locale="es" />
   <main class="min-h-screen flex items-center justify-center px-5 contour-bg relative overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
@@ -19,9 +19,9 @@ import Nav from '@/components/Nav.astro';
   </main>
   <script is:inline>
     const pos = new URLSearchParams(location.search).get('pos');
-    if (pos && Number(pos) <= 500) {
-      document.getElementById('ws-title').innerHTML = 'Eres Pioneer <span style="color:#D97706">#' + Number(pos) + '</span>';
-      document.getElementById('ws-sub').textContent = 'Tu precio €24,99/año está bloqueado para siempre. Te avisaremos el día del lanzamiento.';
+    if (pos) {
+      document.getElementById('ws-title').innerHTML = 'Eres el <span style="color:#D97706">#' + Number(pos) + '</span>';
+      document.getElementById('ws-sub').textContent = 'Tu plaza está confirmada. Te avisaremos el día del lanzamiento.';
     }
   </script>
 </Base>

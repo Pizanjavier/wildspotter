@@ -2,10 +2,9 @@ import { useEffect, useState } from 'preact/hooks';
 
 interface Props {
   label: string;
-  cap?: number;
 }
 
-export const PioneerCounter = ({ label, cap = 500 }: Props) => {
+export const PioneerCounter = ({ label }: Props) => {
   const [count, setCount] = useState<number | null>(null);
   const [pulse, setPulse] = useState(false);
 
@@ -32,24 +31,16 @@ export const PioneerCounter = ({ label, cap = 500 }: Props) => {
     return () => clearInterval(id);
   }, []);
 
-  const taken = count ?? 347;
-  const left = Math.max(0, cap - taken);
-  const pct = Math.min(100, Math.round((taken / cap) * 100));
+  const taken = count ?? 0;
+
+  if (taken === 0) return null;
 
   return (
-    <div class="inline-flex flex-col gap-2 max-w-[360px]">
-      <div class="flex items-baseline justify-between gap-4">
-        <span class={`font-sans font-black text-[22px] md:text-[26px] text-[#F5EBD8] ${pulse ? 'pulse-amber' : ''}`}>
-          {left} <span class="ml-2 text-[13px] font-normal text-[#B7A089] uppercase tracking-[0.1em]">{label}</span>
-        </span>
-        <span class="font-mono text-[11px] text-[#B7A089] tabular-nums">{taken}/{cap}</span>
-      </div>
-      <div class="h-[3px] w-full rounded-full bg-white/10 overflow-hidden">
-        <div
-          class="h-full rounded-full bg-gradient-to-r from-[#D97706] to-[#F59E0B] transition-all duration-700"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
+    <div class="inline-flex items-baseline gap-2">
+      <span class={`font-sans font-black text-[22px] md:text-[26px] text-[#F5EBD8] ${pulse ? 'pulse-amber' : ''}`}>
+        {taken}
+      </span>
+      <span class="text-[13px] font-normal text-[#B7A089] uppercase tracking-[0.1em]">{label}</span>
     </div>
   );
 };

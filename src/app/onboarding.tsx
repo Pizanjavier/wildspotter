@@ -6,9 +6,11 @@ import {
 	Pressable,
 	Switch,
 	FlatList,
+	ScrollView,
 	StyleSheet,
 	useWindowDimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
@@ -158,83 +160,101 @@ const GetStartedPage = ({
 	currentPage,
 	onFinish,
 	onNext,
-}: PageProps & { onFinish: () => void; onNext: () => void }) => (
-	<View style={styles.page}>
-		<View style={[styles.pageTop, { gap: 24 }]}>
-			<Image source={appLogo} style={styles.logoImage} />
-			<Text style={[styles.logoTitle, { color: colors.TEXT_PRIMARY }]}>
-				{t("onboarding.getStartedTitle")}
-			</Text>
-			<Text style={[styles.logoSubtitle, { color: colors.TEXT_SECONDARY }]}>
-				{t("onboarding.getStartedSubtitle")}
-			</Text>
-			<View style={styles.bullets}>
-				{(["bullet1", "bullet2", "bullet3"] as const).map((key) => (
-					<View key={key} style={styles.bulletRow}>
-						<View
-							style={[styles.bulletDot, { backgroundColor: colors.ACCENT }]}
-						/>
-						<Text style={[styles.bulletText, { color: colors.TEXT_SECONDARY }]}>
-							{t(`onboarding.${key}`)}
-						</Text>
-					</View>
-				))}
+}: PageProps & { onFinish: () => void; onNext: () => void }) => {
+	const insets = useSafeAreaInsets();
+	return (
+		<ScrollView
+			contentContainerStyle={[
+				styles.pageScroll,
+				{ paddingTop: Math.max(insets.top, SPACING.LG), paddingBottom: Math.max(insets.bottom, SPACING.LG) },
+			]}
+			bounces={false}
+		>
+			<View style={[styles.pageTop, { gap: 24 }]}>
+				<Image source={appLogo} style={styles.logoImage} />
+				<Text style={[styles.logoTitle, { color: colors.TEXT_PRIMARY }]}>
+					{t("onboarding.getStartedTitle")}
+				</Text>
+				<Text style={[styles.logoSubtitle, { color: colors.TEXT_SECONDARY }]}>
+					{t("onboarding.getStartedSubtitle")}
+				</Text>
+				<View style={styles.bullets}>
+					{(["bullet1", "bullet2", "bullet3"] as const).map((key) => (
+						<View key={key} style={styles.bulletRow}>
+							<View
+								style={[styles.bulletDot, { backgroundColor: colors.ACCENT }]}
+							/>
+							<Text style={[styles.bulletText, { color: colors.TEXT_SECONDARY }]}>
+								{t(`onboarding.${key}`)}
+							</Text>
+						</View>
+					))}
+				</View>
 			</View>
-		</View>
-		<View style={styles.pageBottom}>
-			<Dots currentPage={currentPage} colors={colors} />
-			<Pressable
-				style={[styles.nextButton, { backgroundColor: colors.ACCENT }]}
-				onPress={onNext}
-			>
-				<Text style={styles.nextButtonText}>
-					{t("onboarding.getStartedButton")}
-				</Text>
-			</Pressable>
-			<Pressable onPress={onFinish}>
-				<Text style={[styles.skipText, { color: colors.TEXT_MUTED }]}>
-					{t("onboarding.skipLink")}
-				</Text>
-			</Pressable>
-		</View>
-	</View>
-);
+			<View style={styles.pageBottom}>
+				<Dots currentPage={currentPage} colors={colors} />
+				<Pressable
+					style={[styles.nextButton, { backgroundColor: colors.ACCENT }]}
+					onPress={onNext}
+				>
+					<Text style={styles.nextButtonText}>
+						{t("onboarding.getStartedButton")}
+					</Text>
+				</Pressable>
+				<Pressable onPress={onFinish}>
+					<Text style={[styles.skipText, { color: colors.TEXT_MUTED }]}>
+						{t("onboarding.skipLink")}
+					</Text>
+				</Pressable>
+			</View>
+		</ScrollView>
+	);
+};
 
 const DiscoverPage = ({
 	colors,
 	currentPage,
 	onNext,
-}: PageProps & { onNext: () => void }) => (
-	<View style={styles.page}>
-		<View style={styles.pageTop}>
-			<View style={[styles.iconRing, { borderColor: colors.ACCENT + "20" }]}>
-				<View
-					style={[
-						styles.iconRingInner,
-						{ backgroundColor: colors.ACCENT + "15" },
-					]}
-				>
-					<Image source={appLogo} style={styles.iconCircleImage} />
+}: PageProps & { onNext: () => void }) => {
+	const insets = useSafeAreaInsets();
+	return (
+		<ScrollView
+			contentContainerStyle={[
+				styles.pageScroll,
+				{ paddingTop: Math.max(insets.top, SPACING.LG), paddingBottom: Math.max(insets.bottom, SPACING.LG) },
+			]}
+			bounces={false}
+		>
+			<View style={styles.pageTop}>
+				<View style={[styles.iconRing, { borderColor: colors.ACCENT + "20" }]}>
+					<View
+						style={[
+							styles.iconRingInner,
+							{ backgroundColor: colors.ACCENT + "15" },
+						]}
+					>
+						<Image source={appLogo} style={styles.iconCircleImage} />
+					</View>
 				</View>
 			</View>
-		</View>
-		<View style={styles.pageBottom}>
-			<Text style={[styles.pageTitle, { color: colors.TEXT_PRIMARY }]}>
-				{t("onboarding.discoverTitle")}
-			</Text>
-			<Text style={[styles.pageBody, { color: colors.TEXT_SECONDARY }]}>
-				{t("onboarding.discoverBody")}
-			</Text>
-			<Dots currentPage={currentPage} colors={colors} />
-			<Pressable
-				style={[styles.nextButton, { backgroundColor: colors.ACCENT }]}
-				onPress={onNext}
-			>
-				<Text style={styles.nextButtonText}>{t("onboarding.nextButton")}</Text>
-			</Pressable>
-		</View>
-	</View>
-);
+			<View style={styles.pageBottom}>
+				<Text style={[styles.pageTitle, { color: colors.TEXT_PRIMARY }]}>
+					{t("onboarding.discoverTitle")}
+				</Text>
+				<Text style={[styles.pageBody, { color: colors.TEXT_SECONDARY }]}>
+					{t("onboarding.discoverBody")}
+				</Text>
+				<Dots currentPage={currentPage} colors={colors} />
+				<Pressable
+					style={[styles.nextButton, { backgroundColor: colors.ACCENT }]}
+					onPress={onNext}
+				>
+					<Text style={styles.nextButtonText}>{t("onboarding.nextButton")}</Text>
+				</Pressable>
+			</View>
+		</ScrollView>
+	);
+};
 
 const StepRow = ({
 	num,
@@ -275,35 +295,44 @@ const HowItWorksPage = ({
 	colors,
 	currentPage,
 	onNext,
-}: PageProps & { onNext: () => void }) => (
-	<View style={styles.page}>
-		<View
-			style={[
-				styles.pageTop,
-				{ justifyContent: "center", paddingHorizontal: 24 },
+}: PageProps & { onNext: () => void }) => {
+	const insets = useSafeAreaInsets();
+	return (
+		<ScrollView
+			contentContainerStyle={[
+				styles.pageScroll,
+				{ paddingTop: Math.max(insets.top, SPACING.LG), paddingBottom: Math.max(insets.bottom, SPACING.LG) },
 			]}
+			bounces={false}
 		>
-			{STEPS.map((step, i) => (
-				<StepRow
-					key={i}
-					num={i + 1}
-					title={t(step.titleKey)}
-					body={t(step.bodyKey)}
-					colors={colors}
-				/>
-			))}
-		</View>
-		<View style={styles.pageBottom}>
-			<Dots currentPage={currentPage} colors={colors} />
-			<Pressable
-				style={[styles.nextButton, { backgroundColor: colors.ACCENT }]}
-				onPress={onNext}
+			<View
+				style={[
+					styles.pageTop,
+					{ justifyContent: "center", paddingHorizontal: 24 },
+				]}
 			>
-				<Text style={styles.nextButtonText}>{t("onboarding.nextButton")}</Text>
-			</Pressable>
-		</View>
-	</View>
-);
+				{STEPS.map((step, i) => (
+					<StepRow
+						key={i}
+						num={i + 1}
+						title={t(step.titleKey)}
+						body={t(step.bodyKey)}
+						colors={colors}
+					/>
+				))}
+			</View>
+			<View style={styles.pageBottom}>
+				<Dots currentPage={currentPage} colors={colors} />
+				<Pressable
+					style={[styles.nextButton, { backgroundColor: colors.ACCENT }]}
+					onPress={onNext}
+				>
+					<Text style={styles.nextButtonText}>{t("onboarding.nextButton")}</Text>
+				</Pressable>
+			</View>
+		</ScrollView>
+	);
+};
 
 const PrivacyPage = ({
 	colors,
@@ -313,8 +342,16 @@ const PrivacyPage = ({
 	const analyticsEnabled = useSettingsStore((s) => s.analyticsEnabled);
 	const setAnalyticsEnabled = useSettingsStore((s) => s.setAnalyticsEnabled);
 
+	const insets = useSafeAreaInsets();
+
 	return (
-		<View style={styles.page}>
+		<ScrollView
+			contentContainerStyle={[
+				styles.pageScroll,
+				{ paddingTop: Math.max(insets.top, SPACING.LG), paddingBottom: Math.max(insets.bottom, SPACING.LG) },
+			]}
+			bounces={false}
+		>
 			<View style={[styles.pageTop, { paddingHorizontal: 32 }]}>
 				<View
 					style={[
@@ -436,7 +473,7 @@ const PrivacyPage = ({
 					<Text style={styles.nextButtonText}>{t("onboarding.letsGo")}</Text>
 				</Pressable>
 			</View>
-		</View>
+		</ScrollView>
 	);
 };
 
@@ -445,19 +482,24 @@ export default OnboardingScreen;
 const styles = StyleSheet.create({
 	container: { flex: 1 },
 	page: { flex: 1 },
+	pageScroll: {
+		flexGrow: 1,
+		justifyContent: "space-between",
+	},
 	pageTop: {
 		flex: 1,
 		alignItems: "center",
 		justifyContent: "center",
 		gap: 8,
 		paddingHorizontal: 40,
-		paddingTop: 100,
+		paddingTop: 40,
 	},
 	pageBottom: {
 		alignItems: "center",
 		gap: SPACING.MD,
 		paddingHorizontal: 40,
 		paddingBottom: 40,
+		paddingTop: SPACING.LG,
 	},
 	pageTitle: {
 		fontFamily: FONT_FAMILIES.BODY_BOLD,

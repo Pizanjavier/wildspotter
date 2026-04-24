@@ -18,7 +18,7 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "buildNumber": "3"
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
@@ -52,7 +52,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "WildSpotter needs your location to center the map on your position."
+          "locationWhenInUsePermission": "WildSpotter uses your location to show your position on the map with a blue dot and help you find nearby wild camping spots. For example, when you are on the road, you can quickly center the map to see discovered spots around you."
         }
       ],
       [
@@ -63,7 +63,8 @@
           "project": "wildspotter"
         }
       ],
-      "./plugins/withAdiRegistration"
+      "./plugins/withAdiRegistration",
+      "./plugins/withLocalizedInfoPlist"
     ],
     "extra": {
       "router": {
