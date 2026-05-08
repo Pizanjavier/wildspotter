@@ -136,6 +136,10 @@ export const Gatekeeping: React.FC<GatekeepingProps> = ({ variant }) => {
 								¿Gatekeeping o<br/>sentido común?
 							</div>
 
+							<Img
+								src={staticFile("images/app-logo.png")}
+								style={{ width: 80, height: 80, borderRadius: 16 }}
+							/>
 							<div
 								style={{
 									fontFamily: "'Inter', sans-serif",
@@ -144,7 +148,18 @@ export const Gatekeeping: React.FC<GatekeepingProps> = ({ variant }) => {
 									color: "#E2E8F0",
 								}}
 							>
-								wildspotter.app
+								WildSpotter
+							</div>
+							<div
+								style={{
+									fontFamily: "'Inter', sans-serif",
+									fontWeight: 400,
+									fontSize: "22px",
+									color: "rgba(255,255,255,0.5)",
+									letterSpacing: 2,
+								}}
+							>
+								LINK IN BIO
 							</div>
 						</div>
 					)}

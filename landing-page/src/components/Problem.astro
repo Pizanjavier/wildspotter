@@ -2,25 +2,57 @@
 import type { Dict } from '@/i18n/es';
 interface Props { t: Dict }
 const { t } = Astro.props;
+const isEs = t.locale === 'es';
 ---
-<section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
-  <div class="absolute inset-0" style="background: radial-gradient(ellipse 1400px 700px at 20% 0%, #2A1F15 0%, #0F0D0B 60%);"></div>
+<section class="section">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="section-tag">{isEs ? 'El problema' : 'The problem'}</div>
+      <h2 class="h-section">
+        {isEs ? (
+          <Fragment>Cuando un spot<br/>llega a una reseña,<br/><span style="color:var(--ink-3)">deja de ser un spot.</span></Fragment>
+        ) : (
+          <Fragment>When a spot gets<br/>a review,<br/><span style="color:var(--ink-3)">it stops being a spot.</span></Fragment>
+        )}
+      </h2>
+    </div>
 
-  <div class="relative max-w-[1280px] mx-auto">
-    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">El problema</p>
-    <h2 class="reveal font-sans font-black text-[40px] sm:text-[56px] md:text-[84px] leading-[1.02] tracking-[-0.03em] display-cream mb-20 md:mb-28 max-w-[960px]">
-      {t.problem.title}
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
-      {t.problem.stats.map((s, i) => (
-        <article class="reveal relative flex flex-col" data-delay={String(i + 1)}>
-          <div class="amber-rule mb-6"></div>
-          <div class="font-sans font-black text-[56px] md:text-[80px] leading-[0.95] text-[#D97706] tracking-[-0.04em] mb-5">
-            {s.big}
-          </div>
-          <p class="font-sans text-[16px] md:text-[17px] leading-[1.6] text-[#E8D9BF] max-w-[340px]">{s.label}</p>
-        </article>
-      ))}
+    <div class="stat-grid">
+      <div class="stat fade-up">
+        <div class="num">27<span class="unit">%</span></div>
+        <div class="label">{t.problem.stats[0].label}</div>
+        <div class="src">{isEs ? 'Fuente · MITECO 2024' : 'Source · MITECO 2024'}</div>
+      </div>
+      <div class="stat warn fade-up" data-delay="1">
+        <div class="num">600<span class="unit">€</span></div>
+        <div class="label">{t.problem.stats[1].label}</div>
+        <div class="src">{isEs ? 'Ley 22/1988 · de Costas' : 'Law 22/1988 · Coastal Act'}</div>
+      </div>
+      <div class="stat fade-up" data-delay="2">
+        <div class="num">5</div>
+        <div class="label">{t.problem.stats[2].label}</div>
+        <div class="src">MITECO · IGN · Catastro · CLMS · OSM</div>
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border-top: 1px solid var(--line); }
+  .stat { padding: 48px 32px 48px 0; border-right: 1px solid var(--line); position: relative; }
+  .stat:last-child { border-right: 0; padding-right: 0; }
+  .stat:nth-child(2), .stat:nth-child(3) { padding-left: 32px; }
+  .stat .num { font-family: var(--serif); font-size: 96px; line-height: 0.9; letter-spacing: -0.04em; font-weight: 400; color: var(--ink); }
+  .stat .num .unit { font-size: 36px; color: var(--ink-3); margin-left: 4px; }
+  .stat.warn .num { color: var(--red); }
+  .stat .label { margin-top: 18px; font-size: 15px; color: var(--ink-2); line-height: 1.55; max-width: 34ch; }
+  .stat .src { margin-top: 24px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--ink-faint); font-weight: 500; text-transform: uppercase; }
+
+  @media (max-width: 880px) {
+    .stat-grid { grid-template-columns: 1fr; }
+    .stat { border-right: 0; border-bottom: 1px solid var(--line); padding: 28px 0 !important; }
+    .stat:last-child { border-bottom: 0; }
+    .stat .num { font-size: 64px; }
+    .stat .num .unit { font-size: 24px; }
+  }
+</style>

@@ -227,34 +227,34 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           }}
         />
 
-        {showLegalZones && (
-          <VectorSource
-            id={LEGAL_ZONES_SOURCE_ID}
-            tileUrlTemplates={[LEGAL_TILE_URL]}
-            minZoomLevel={4}
-            maxZoomLevel={10}
-          >
-            <FillLayer
-              id={LEGAL_ZONES_FILL_LAYER_ID}
-              sourceLayerID="legal_zones"
-              style={{
-                fillColor: '#EF4444',
-                fillOpacity: 0.15,
-              }}
-              belowLayerID={SPOTS_GLOW_LAYER_ID}
-            />
-            <LineLayer
-              id={LEGAL_ZONES_LINE_LAYER_ID}
-              sourceLayerID="legal_zones"
-              style={{
-                lineColor: '#EF4444',
-                lineOpacity: 0.5,
-                lineWidth: 1,
-              }}
-              belowLayerID={SPOTS_GLOW_LAYER_ID}
-            />
-          </VectorSource>
-        )}
+        <VectorSource
+          id={LEGAL_ZONES_SOURCE_ID}
+          tileUrlTemplates={[LEGAL_TILE_URL]}
+          minZoomLevel={4}
+          maxZoomLevel={10}
+        >
+          <FillLayer
+            id={LEGAL_ZONES_FILL_LAYER_ID}
+            sourceLayerID="legal_zones"
+            style={{
+              visibility: showLegalZones ? 'visible' : 'none',
+              fillColor: '#EF4444',
+              fillOpacity: 0.15,
+            }}
+            belowLayerID={SPOTS_GLOW_LAYER_ID}
+          />
+          <LineLayer
+            id={LEGAL_ZONES_LINE_LAYER_ID}
+            sourceLayerID="legal_zones"
+            style={{
+              visibility: showLegalZones ? 'visible' : 'none',
+              lineColor: '#EF4444',
+              lineOpacity: 0.5,
+              lineWidth: 1,
+            }}
+            belowLayerID={SPOTS_GLOW_LAYER_ID}
+          />
+        </VectorSource>
 
         <ShapeSource id={SPOTS_SOURCE_ID} shape={spotsGeoJSON} onPress={handleSpotPress} hitbox={{ width: 24, height: 24 }}>
           <CircleLayer
@@ -276,30 +276,28 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           />
         </ShapeSource>
 
-        {userLocation && (
-          <ShapeSource id="user-location-source" shape={userLocationGeoJSON}>
-            <CircleLayer
-              id="user-location-glow"
-              style={{
-                circleRadius: 20,
-                circleColor: '#4A90D9',
-                circleOpacity: 0.2,
-                circleBlur: 1,
-              }}
-            />
-            <CircleLayer
-              id="user-location-dot"
-              style={{
-                circleRadius: 8,
-                circleColor: '#4A90D9',
-                circleOpacity: 0.9,
-                circleStrokeWidth: 2,
-                circleStrokeColor: '#FFFFFF',
-                circleStrokeOpacity: 0.8,
-              }}
-            />
-          </ShapeSource>
-        )}
+        <ShapeSource id="user-location-source" shape={userLocationGeoJSON}>
+          <CircleLayer
+            id="user-location-glow"
+            style={{
+              circleRadius: 20,
+              circleColor: '#4A90D9',
+              circleOpacity: 0.2,
+              circleBlur: 1,
+            }}
+          />
+          <CircleLayer
+            id="user-location-dot"
+            style={{
+              circleRadius: 8,
+              circleColor: '#4A90D9',
+              circleOpacity: 0.9,
+              circleStrokeWidth: 2,
+              circleStrokeColor: '#FFFFFF',
+              circleStrokeOpacity: 0.8,
+            }}
+          />
+        </ShapeSource>
       </MLMapView>
     </View>
   );

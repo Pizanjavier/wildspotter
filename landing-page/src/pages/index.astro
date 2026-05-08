@@ -5,6 +5,9 @@ import Hero from '@/components/Hero.astro';
 import Problem from '@/components/Problem.astro';
 import Pipeline from '@/components/Pipeline.astro';
 import LegalTrust from '@/components/LegalTrust.astro';
+import SpotAnatomy from '@/components/SpotAnatomy.astro';
+import Principles from '@/components/Principles.astro';
+import Vibe from '@/components/Vibe.astro';
 import Offer from '@/components/Offer.astro';
 import SecondCTA from '@/components/SecondCTA.astro';
 import Footer from '@/components/Footer.astro';
@@ -12,13 +15,17 @@ import { getDict } from '@/i18n';
 
 const t = getDict('es');
 ---
-<Base title="WildSpotter — Descubre spots que nadie ha compartido" description="Un radar para vanlifers. Procesa datos oficiales y encuentra parkings salvajes en España que no están en ninguna otra app." locale="es">
+<Base title="WildSpotter — Encuentra lo que nadie ha compartido" description="Un radar para vanlifers. Cruza datos oficiales para encontrar parkings salvajes en Espana. Gratis en iOS, pronto en Android." locale="es">
   <Nav locale="es" />
   <main>
     <Hero t={t} locale="es" />
+    <div class="topo"></div>
     <Problem t={t} />
     <Pipeline t={t} />
     <LegalTrust t={t} />
+    <SpotAnatomy t={t} />
+    <Principles t={t} />
+    <Vibe t={t} />
     <Offer t={t} />
     <SecondCTA t={t} locale="es" />
   </main>

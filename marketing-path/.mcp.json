@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "audio-analyzer": {
+      "type": "stdio",
+      "command": "/opt/homebrew/bin/audio-analyzer-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}

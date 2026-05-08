@@ -37,10 +37,10 @@ export const PioneerCounter = ({ label }: Props) => {
 
   return (
     <div class="inline-flex items-baseline gap-2">
-      <span class={`font-sans font-black text-[22px] md:text-[26px] text-[#F5EBD8] ${pulse ? 'pulse-amber' : ''}`}>
+      <span class={`font-sans font-black text-[22px] md:text-[26px] text-[#1F1A12] ${pulse ? 'pulse-amber' : ''}`}>
         {taken}
       </span>
-      <span class="text-[13px] font-normal text-[#B7A089] uppercase tracking-[0.1em]">{label}</span>
+      <span class="text-[13px] font-normal text-[#786E59] uppercase tracking-[0.1em]">{label}</span>
     </div>
   );
 };

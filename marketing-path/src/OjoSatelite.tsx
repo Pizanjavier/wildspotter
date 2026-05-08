@@ -312,20 +312,31 @@ export const OjoSatelite: React.FC<OjoSateliteProps> = ({
 							Cada spot analizado por IA.<br />Ninguno por opinión.
 						</div>
 
-						<div style={{ display: "flex", alignItems: "center", gap: "24px", padding: "20px 40px", backgroundColor: "rgba(0,0,0,0.6)", borderRadius: "24px" }}>
-							<Img 
-								src={staticFile("images/app-logo.png")} 
-								style={{ width: "80px", height: "80px", borderRadius: "16px" }} 
+						<div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px", padding: "20px 40px", backgroundColor: "rgba(0,0,0,0.6)", borderRadius: "24px" }}>
+							<Img
+								src={staticFile("images/app-logo.png")}
+								style={{ width: "80px", height: "80px", borderRadius: "16px" }}
 							/>
 							<div
 								style={{
 									fontFamily: "'JetBrains Mono', monospace",
-									fontWeight: 600,
+									fontWeight: 700,
 									fontSize: "36px",
 									color: "#FFFFFF",
 								}}
 							>
-								wildspotter.app
+								WildSpotter
+							</div>
+							<div
+								style={{
+									fontFamily: "'JetBrains Mono', monospace",
+									fontWeight: 400,
+									fontSize: "22px",
+									color: "rgba(255,255,255,0.5)",
+									letterSpacing: 2,
+								}}
+							>
+								LINK IN BIO
 							</div>
 						</div>
 					</div>

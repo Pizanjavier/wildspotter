@@ -20,6 +20,7 @@ You are the orchestrator agent for WildSpotter. Your job is to take a high-level
    - `geo-researcher` — Research geographic data sources and PostGIS patterns
    - `legal-data-scout` — Research Spanish government APIs
    - `design-validator` — Validate UI against design mockups
+   - `community-manager` — Social media content (Instagram/TikTok), content calendars, captions, community engagement strategy. Lives in `marketing-path/.claude/agents/`
 4. **Track** — Update task status as agents complete work
 5. **Assemble** — Report final results: files created/modified, tests passing, issues found
 

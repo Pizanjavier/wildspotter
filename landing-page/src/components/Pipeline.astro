@@ -2,27 +2,217 @@
 import type { Dict } from '@/i18n/es';
 interface Props { t: Dict }
 const { t } = Astro.props;
+const isEs = t.locale === 'es';
+
+const layers = [
+  { idx: '01', name: isEs ? 'Radar' : 'Radar', desc: t.pipeline.stages[0].d, weight: isEs ? 'DETECCIÓN' : 'DETECTION' },
+  { idx: '02', name: isEs ? 'Terreno' : 'Terrain', desc: t.pipeline.stages[1].d, weight: '10%' },
+  { idx: '03', name: isEs ? 'Estado legal' : 'Legal status', desc: t.pipeline.stages[2].d, weight: isEs ? 'VEREDICTO' : 'VERDICT' },
+  { idx: '04', name: isEs ? 'Ojo satélite' : 'Satellite eye', desc: t.pipeline.stages[3].d, weight: '55%' },
+  { idx: '05', name: isEs ? 'Contexto' : 'Context', desc: t.pipeline.stages[4].d, weight: '15%' },
+  { idx: '06', name: isEs ? 'Uso del suelo' : 'Land cover', desc: t.pipeline.stages[5].d, weight: isEs ? 'FILTRO' : 'FILTER' },
+  { idx: '07', name: isEs ? 'Bonificación salvaje' : 'Wild bonus', desc: t.pipeline.stages[6].d, weight: '+20%' },
+];
 ---
-<section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
-  <div class="absolute inset-0" style="background: linear-gradient(180deg, #0F0D0B 0%, #1A120B 50%, #0F0D0B 100%);"></div>
-  <div class="absolute inset-0 opacity-[0.04]" style="background-image: repeating-linear-gradient(90deg, #D97706 0 1px, transparent 1px 80px), repeating-linear-gradient(0deg, #D97706 0 1px, transparent 1px 80px);"></div>
+<section class="section" id="how">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="section-tag">{isEs ? 'Cómo se calcula' : 'How it works'}</div>
+      <h2 class="h-section">
+        {isEs ? (
+          <Fragment>Siete miradas<br/>sobre un mismo sitio.<br/><span style="color:var(--ink-3)">Una nota de 0 a 100.</span></Fragment>
+        ) : (
+          <Fragment>Seven perspectives<br/>on a single site.<br/><span style="color:var(--ink-3)">One score from 0 to 100.</span></Fragment>
+        )}
+      </h2>
+    </div>
 
-  <div class="relative max-w-[1280px] mx-auto">
-    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">Cómo funciona</p>
-    <h2 class="reveal font-sans font-black text-[40px] sm:text-[56px] md:text-[84px] leading-[1.02] tracking-[-0.03em] display-cream mb-20 md:mb-28 max-w-[900px]" data-delay="1">
-      {t.pipeline.title}
-    </h2>
+    <p class="lede fade-up" data-delay="1" style="margin-bottom:48px;">
+      {isEs
+        ? 'Cada spot mantiene siempre su puntuación. Tú decides desde qué nota mostrarlos en el mapa, igual que en la app. Estos son los siete factores que la componen.'
+        : 'Every spot keeps its score forever. You choose the threshold to show them on the map. These are the seven factors that compose it.'}
+    </p>
 
-    <ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
-      {t.pipeline.stages.map((st, i) => (
-        <li class="reveal group relative pt-8 border-t border-white/8 hover:border-[#D97706]/60 transition-colors" data-delay={String((i % 3) + 1)}>
-          <div class="flex items-center gap-4 mb-5">
-            <span class="inline-flex items-center justify-center w-11 h-11 rounded-full border border-[#D97706]/50 font-mono text-[13px] text-[#D97706] group-hover:bg-[#D97706]/10 transition-colors">{st.n}</span>
-            <h3 class="font-sans font-black text-[28px] md:text-[34px] leading-none display-cream tracking-[-0.02em]">{st.k}</h3>
+    <div class="scoring-wrap fade-up" data-delay="2">
+      <div class="layer-list" id="layerList">
+        {layers.map((l, i) => (
+          <div class={`layer-item ${i === 0 ? 'active' : ''}`} data-layer={String(i)}>
+            <div class="idx">{l.idx}</div>
+            <div><h3>{l.name}</h3><p>{l.desc}</p></div>
+            <div class="weight">{l.weight}</div>
           </div>
-          <p class="text-[15px] md:text-[17px] leading-[1.6] text-[#B7A089] max-w-[360px]">{st.d}</p>
-        </li>
-      ))}
-    </ol>
+        ))}
+      </div>
+
+      <div class="score-stage">
+        <div class="score-stage-head">
+          <span id="layerStageName">{isEs ? 'RADAR · DETECCIÓN' : 'RADAR · DETECTION'}</span>
+          <span>SPOT 087</span>
+        </div>
+
+        <div class="score-ring-wrap">
+          <div class="score-ring">
+            <svg viewBox="0 0 280 280">
+              <circle cx="140" cy="140" r="130" fill="none" stroke="var(--cream-3)" stroke-width="2"/>
+              <circle id="scoreArc" cx="140" cy="140" r="130" fill="none" stroke="var(--orange)" stroke-width="6"
+                stroke-linecap="round" stroke-dasharray="816.8" stroke-dashoffset="816.8" style="transition:stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1);"/>
+            </svg>
+            <div class="score-num" id="scoreNum">—</div>
+            <div class="score-of">{isEs ? 'Puntuacion · 0—100' : 'Score · 0—100'}</div>
+          </div>
+        </div>
+
+        <div class="contributions">
+          <div class="contrib dim" data-key="terreno">
+            <span>{isEs ? 'Terreno' : 'Terrain'}</span>
+            <div class="track"><div class="fill" id="bar-terreno" style="width:0%"></div></div>
+            <span class="v" id="v-terreno">—</span>
+          </div>
+          <div class="contrib dim" data-key="legal">
+            <span>Legal</span>
+            <div class="track"><div class="fill" id="bar-legal" style="width:0%"></div></div>
+            <span class="v" id="v-legal">—</span>
+          </div>
+          <div class="contrib dim" data-key="satelite">
+            <span>{isEs ? 'IA Satelite' : 'AI Satellite'}</span>
+            <div class="track"><div class="fill" id="bar-satelite" style="width:0%"></div></div>
+            <span class="v" id="v-satelite">—</span>
+          </div>
+          <div class="contrib dim" data-key="contexto">
+            <span>{isEs ? 'Contexto' : 'Context'}</span>
+            <div class="track"><div class="fill" id="bar-contexto" style="width:0%"></div></div>
+            <span class="v" id="v-contexto">—</span>
+          </div>
+          <div class="contrib dim" data-key="bonus">
+            <span>{isEs ? 'Salvaje' : 'Wild'}</span>
+            <div class="track"><div class="fill" id="bar-bonus" style="width:0%"></div></div>
+            <span class="v" id="v-bonus">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<style>
+  .scoring-wrap { display: grid; grid-template-columns: 1fr 1.15fr; gap: 80px; align-items: start; }
+  .layer-list { display: flex; flex-direction: column; }
+  .layer-item {
+    display: grid; grid-template-columns: 42px 1fr auto; gap: 18px; align-items: start;
+    padding: 22px 0; border-bottom: 1px solid var(--line); cursor: pointer; transition: all .25s;
+  }
+  .layer-item:first-child { border-top: 1px solid var(--line); }
+  .layer-item:hover { padding-left: 8px; }
+  .layer-item.active { padding-left: 8px; background: linear-gradient(90deg, color-mix(in oklch, var(--orange) 8%, transparent), transparent 60%); }
+  .layer-item .idx { font-family: var(--mono); font-size: 11px; color: var(--ink-3); padding-top: 6px; letter-spacing: .08em; font-weight: 500; }
+  .layer-item.active .idx { color: var(--orange); }
+  .layer-item h3 { font-family: var(--serif); font-size: 26px; font-weight: 400; letter-spacing: -0.015em; margin-bottom: 6px; }
+  .layer-item p { font-size: 14px; color: var(--ink-2); line-height: 1.55; max-width: 42ch; }
+  .layer-item .weight { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); letter-spacing: .08em; padding-top: 8px; text-align: right; font-weight: 500; text-transform: uppercase; }
+  .layer-item.active .weight { color: var(--orange); }
+
+  .score-stage {
+    position: sticky; top: 96px; aspect-ratio: 1/1; border: 1px solid var(--line); border-radius: 24px;
+    overflow: hidden; background: var(--cream-2); padding: 32px;
+    display: flex; flex-direction: column;
+  }
+  .score-stage-head { display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; color: var(--ink-3); text-transform: uppercase; font-weight: 500; }
+  .score-ring-wrap { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; }
+  .score-ring {
+    width: 280px; height: 280px; border-radius: 50%; background: var(--cream);
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    box-shadow: 0 8px 30px rgba(60,40,15,.08), inset 0 0 0 1px var(--line);
+    position: relative;
+  }
+  .score-ring svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .score-num { font-family: var(--serif); font-size: 108px; line-height: 1; letter-spacing: -0.04em; color: var(--ink); font-weight: 400; }
+  .score-of { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; color: var(--ink-3); text-transform: uppercase; margin-top: 4px; }
+  .contributions { display: grid; gap: 8px; margin-top: 24px; }
+  .contrib { display: grid; grid-template-columns: 90px 1fr 36px; gap: 14px; align-items: center; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; color: var(--ink-3); text-transform: uppercase; font-weight: 500; }
+  .contrib .track { height: 6px; background: var(--cream-3); border-radius: 4px; overflow: hidden; }
+  .contrib .fill { height: 100%; background: var(--orange); border-radius: 4px; transition: width .5s cubic-bezier(.2,.8,.2,1); }
+  .contrib.ok .fill { background: var(--green); }
+  .contrib .v { text-align: right; color: var(--ink); font-weight: 500; }
+  .contrib.dim { opacity: .35; }
+
+  @media (max-width: 880px) {
+    .scoring-wrap { grid-template-columns: 1fr; gap: 32px; }
+    .score-stage { position: relative; top: 0; padding: 20px; border-radius: 16px; aspect-ratio: auto; }
+    .score-ring { width: 200px; height: 200px; }
+    .score-num { font-size: 72px; }
+    .layer-item { padding: 18px 0; grid-template-columns: 30px 1fr auto; gap: 12px; }
+    .layer-item h3 { font-size: 20px; }
+    .layer-item p { font-size: 13px; }
+    .layer-item .weight { font-size: 9px; }
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    const layers = document.querySelectorAll('.layer-item');
+    const stageName = document.getElementById('layerStageName');
+    const scoreNum = document.getElementById('scoreNum');
+    const arc = document.getElementById('scoreArc');
+    if (!layers.length || !stageName || !scoreNum || !arc) return;
+
+    const ARC_LEN = 816.8;
+    const keys = ['terreno','legal','satelite','contexto','bonus'];
+
+    const states = [
+      { name:'RADAR · DETECCIÓN', total: null, contrib:{terreno:null,legal:null,satelite:null,contexto:null,bonus:null} },
+      { name:'TERRENO · DEM 30 m', total: 81, contrib:{terreno:81,legal:null,satelite:null,contexto:null,bonus:null} },
+      { name:'LEGAL · CRUCE 4 FUENTES', total: 81, contrib:{terreno:81,legal:100,satelite:null,contexto:null,bonus:null} },
+      { name:'IA SATÉLITE · PNOA', total: 62, contrib:{terreno:81,legal:100,satelite:32,contexto:null,bonus:null} },
+      { name:'CONTEXTO · ENTORNO', total: 71, contrib:{terreno:81,legal:100,satelite:32,contexto:81,bonus:null} },
+      { name:'CORINE · USO DEL SUELO', total: 71, contrib:{terreno:81,legal:100,satelite:32,contexto:81,bonus:null} },
+      { name:'NOTA FINAL · BONIFICACIÓN', total: 87, contrib:{terreno:81,legal:100,satelite:32,contexto:81,bonus:95} },
+    ];
+
+    function applyLayer(i) {
+      const s = states[i];
+      layers.forEach(function(l) { l.classList.toggle('active', +l.dataset.layer === i); });
+      stageName.textContent = s.name;
+
+      if (s.total === null) {
+        scoreNum.textContent = '—';
+        arc.setAttribute('stroke-dashoffset', String(ARC_LEN));
+      } else {
+        scoreNum.textContent = String(s.total);
+        arc.setAttribute('stroke-dashoffset', String(ARC_LEN * (1 - s.total / 100)));
+        arc.setAttribute('stroke', i === 6 ? 'var(--green)' : 'var(--orange)');
+      }
+
+      keys.forEach(function(k) {
+        var v = s.contrib[k];
+        var bar = document.getElementById('bar-' + k);
+        var val = document.getElementById('v-' + k);
+        var row = document.querySelector('.contrib[data-key="' + k + '"]');
+        if (!bar || !val || !row) return;
+        if (v === null || v === undefined) {
+          bar.style.width = '0%';
+          val.textContent = '—';
+          row.classList.add('dim');
+          row.classList.remove('ok');
+        } else {
+          bar.style.width = v + '%';
+          val.textContent = String(v);
+          row.classList.remove('dim');
+          row.classList.toggle('ok', i === 6);
+        }
+      });
+    }
+
+    applyLayer(0);
+    layers.forEach(function(l) {
+      l.addEventListener('mouseenter', function() { interacted = true; applyLayer(+l.dataset.layer); });
+      l.addEventListener('click', function() { interacted = true; applyLayer(+l.dataset.layer); });
+    });
+
+    var auto = 0, interacted = false;
+    setInterval(function() {
+      if (interacted) return;
+      auto = (auto + 1) % states.length;
+      applyLayer(auto);
+    }, 2200);
+  })();
+</script>

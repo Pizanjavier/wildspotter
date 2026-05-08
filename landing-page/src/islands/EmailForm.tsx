@@ -18,7 +18,7 @@ declare global {
 	}
 }
 
-const TURNSTILE_SITE_KEY = "0x4AAAAAAC2SHdkOwzBfIhrn"; // Cloudflare test key — swap in prod via DEPLOY.md DONE
+const TURNSTILE_SITE_KEY = "0x4AAAAAAC2SHdkOwzBfIhrn";
 
 type Copy = {
 	emailPlaceholder: string;
@@ -145,7 +145,6 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 			}
 			setState("success");
 			setMessage(copy.thanks);
-			// Confetti
 			const dots = Array.from({ length: 14 }, (_, i) => ({
 				id: i,
 				cx: `${(Math.random() * 2 - 1) * 140}px`,
@@ -160,51 +159,56 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 	};
 
 	const isHero = variant === "hero";
-	const inputH = isHero
-		? "h-[64px] text-[20px] md:text-[24px]"
-		: "h-[56px] text-[18px]";
+	const h = isHero ? 64 : 56;
 
 	if (state === "success") {
 		const body = copy.successBody.replace(
 			"{email}",
-			`<strong class="text-[#F5EBD8]">${email.replace(/[<>&]/g, "")}</strong>`,
+			`<strong style="color:#1F1A12">${email.replace(/[<>&]/g, "")}</strong>`,
 		);
 		return (
 			<div
 				role="status"
 				aria-live="polite"
-				class="w-full max-w-xl rounded-lg border border-[#D97706]/40 bg-[#221B16]/90 p-6 sm:p-7 shadow-[0_0_40px_rgba(217,119,6,0.15)] animate-[fadeIn_300ms_ease-out]"
+				style={{
+					width: "100%",
+					maxWidth: "580px",
+					borderRadius: "12px",
+					border: "1px solid rgba(224,122,31,0.4)",
+					backgroundColor: "white",
+					padding: "24px",
+					boxShadow: "0 8px 30px rgba(60,40,15,0.10)",
+					animation: "fadeIn 300ms ease-out",
+				}}
 			>
-				<div class="flex items-start gap-4">
-					<div class="flex-shrink-0 w-12 h-12 rounded-full bg-[#D97706] flex items-center justify-center">
-						<svg
-							width="26"
-							height="26"
-							viewBox="0 0 24 24"
-							fill="none"
-							role="img"
-							aria-label="ok"
-						>
+				<div style={{ display: "flex", alignItems: "flex-start", gap: "16px" }}>
+					<div
+						style={{
+							flexShrink: 0,
+							width: "48px",
+							height: "48px",
+							borderRadius: "50%",
+							backgroundColor: "#E07A1F",
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+						}}
+					>
+						<svg width="26" height="26" viewBox="0 0 24 24" fill="none" role="img" aria-label="ok">
 							<title>ok</title>
-							<path
-								d="M4 12.5l5 5L20 6.5"
-								stroke="white"
-								stroke-width="3"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/>
+							<path d="M4 12.5l5 5L20 6.5" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
 						</svg>
 					</div>
-					<div class="flex-1 min-w-0">
-						<h3 class="text-[22px] sm:text-[26px] font-semibold text-[#F5EBD8] leading-tight">
+					<div style={{ flex: 1, minWidth: 0 }}>
+						<h3 style={{ fontSize: "22px", fontWeight: 600, color: "#1F1A12", lineHeight: 1.15 }}>
 							{copy.successTitle}
 						</h3>
 						<p
-							class="mt-2 text-[15px] sm:text-[16px] leading-relaxed text-[#E8D9BF] break-words"
+							style={{ marginTop: "8px", fontSize: "15px", lineHeight: 1.55, color: "#4A4233", wordBreak: "break-word" }}
 							// biome-ignore lint/security/noDangerouslySetInnerHtml: sanitized
 							dangerouslySetInnerHTML={{ __html: body }}
 						/>
-						<p class="mt-3 text-[13px] leading-relaxed text-[#B7A089] font-mono tracking-tight">
+						<p style={{ marginTop: "12px", fontSize: "13px", lineHeight: 1.55, color: "#786E59", fontFamily: "var(--mono)", letterSpacing: "-0.01em" }}>
 							⚠ {copy.successSpam}
 						</p>
 					</div>
@@ -214,11 +218,9 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 	}
 
 	return (
-		<form onSubmit={onSubmit} class="w-full max-w-xl relative" noValidate>
+		<form onSubmit={onSubmit} style={{ width: "100%", maxWidth: "580px", position: "relative" }} noValidate>
 			<div ref={tsRef} aria-hidden="true" />
-			<div
-				class={`relative flex flex-col sm:flex-row gap-3 sm:gap-0 rounded-md overflow-visible`}
-			>
+			<div style={{ position: "relative", display: "flex", flexDirection: "column", gap: "12px" }}>
 				<input
 					type="email"
 					required
@@ -226,15 +228,57 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 					value={email}
 					onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
 					disabled={state === "loading"}
-					class={`min-w-70 ${inputH} px-5 rounded-md sm:rounded-r-none bg-[#221B16] border border-white/10 focus:border-[#D97706] focus:outline-none text-[#F5EBD8] placeholder:text-[#B7A089]/60 font-sans transition-colors`}
+					style={{
+						height: `${h}px`,
+						padding: "0 20px",
+						borderRadius: "8px",
+						backgroundColor: "white",
+						border: "1px solid #DFD6BF",
+						color: "#1F1A12",
+						fontSize: isHero ? "20px" : "18px",
+						fontFamily: "var(--sans)",
+						outline: "none",
+						width: "100%",
+						boxSizing: "border-box",
+					}}
 				/>
 				<button
 					type="submit"
 					disabled={state === "loading"}
-					class={`btn-amber ${inputH} px-6 sm:px-8 rounded-md sm:rounded-l-none font-sans text-[14px] sm:text-[15px] tracking-[-0.005em] sm:whitespace-nowrap text-white font-semibold disabled:opacity-80 flex items-center justify-center gap-2 relative text-center leading-tight`}
+					style={{
+						height: `${h}px`,
+						padding: "0 24px",
+						borderRadius: "8px",
+						backgroundColor: "#E07A1F",
+						color: "white",
+						fontSize: "15px",
+						fontFamily: "var(--sans)",
+						fontWeight: 600,
+						border: "none",
+						cursor: "pointer",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						gap: "8px",
+						whiteSpace: "nowrap",
+						opacity: state === "loading" ? 0.8 : 1,
+						transition: "background-color 0.2s",
+					}}
+					onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#C56612"; }}
+					onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#E07A1F"; }}
 				>
 					{state === "loading" ? (
-						<span class="inline-block w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+						<span
+							style={{
+								display: "inline-block",
+								width: "20px",
+								height: "20px",
+								border: "2px solid rgba(255,255,255,0.4)",
+								borderTopColor: "white",
+								borderRadius: "50%",
+								animation: "spin 1s linear infinite",
+							}}
+						/>
 					) : (
 						<span>{copy.cta}</span>
 					)}
@@ -253,7 +297,7 @@ export const EmailForm = ({ copy, locale, variant = "hero" }: Props) => {
 				))}
 			</div>
 			{message && (
-				<p class="mt-3 font-mono text-[12px] tracking-wider text-[#D97706]">
+				<p style={{ marginTop: "12px", fontFamily: "var(--mono)", fontSize: "12px", letterSpacing: "0.04em", color: "#C9412C" }}>
 					✕ {message}
 				</p>
 			)}

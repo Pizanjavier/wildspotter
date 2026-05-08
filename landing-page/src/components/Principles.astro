@@ -1,0 +1,64 @@
+---
+import type { Dict } from '@/i18n/es';
+interface Props { t: Dict }
+const { t } = Astro.props;
+const isEs = t.locale === 'es';
+---
+<section class="section">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="section-tag">{isEs ? 'Lo que defendemos' : 'What we stand for'}</div>
+      <h2 class="h-section">
+        {isEs ? (
+          <Fragment>Otras apps preguntan<br/>a la gente. Nosotros<br/><em class="italic">preguntamos al territorio.</em></Fragment>
+        ) : (
+          <Fragment>Other apps ask<br/>people. We ask<br/><em class="italic">the land itself.</em></Fragment>
+        )}
+      </h2>
+    </div>
+
+    <div class="principles fade-up" data-delay="1">
+      <div class="principle">
+        <div class="pico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+        </div>
+        <h3>{isEs ? 'Cero reseñas' : 'Zero reviews'}</h3>
+        <p>{isEs ? 'Si un spot necesita una reseña, ya está masificado. Nos saltamos el paso y vamos directos a las fuentes que la administración usa para regular el territorio.' : 'If a spot needs a review, it is already overcrowded. We skip that step and go straight to the sources the government uses to regulate the land.'}</p>
+      </div>
+      <div class="principle">
+        <div class="pico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4 2 8L12 17l-6.5 4 2-8L2 9h7z"/></svg>
+        </div>
+        <h3>{isEs ? 'Una nota, no estrellas' : 'A score, not stars'}</h3>
+        <p>{isEs ? '0 a 100 calculados con cinco factores ponderados. La misma fórmula para todos los spots, sin opiniones, sin sesgos, sin fanboys.' : '0 to 100 computed from five weighted factors. The same formula for every spot, no opinions, no bias, no fanboys.'}</p>
+      </div>
+      <div class="principle">
+        <div class="pico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h3>{isEs ? 'Tu spot es tuyo' : 'Your spot is yours'}</h3>
+        <p>{isEs ? 'No publicamos coordenadas en redes. No vendemos los favoritos. No hay feed social. El secreto sigue siendo secreto.' : 'We do not post coordinates on social media. We do not sell favorites. There is no social feed. The secret stays secret.'}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .principles { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; border-top: 1px solid var(--line); }
+  .principle { padding: 48px 32px 48px 0; border-right: 1px solid var(--line); }
+  .principle:last-child { border-right: 0; padding-right: 0; }
+  .principle:not(:first-child) { padding-left: 32px; }
+  .principle .pico {
+    width: 44px; height: 44px; border-radius: 14px; background: var(--orange-soft); color: var(--orange);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+  }
+  .principle h3 { font-family: var(--serif); font-size: 28px; font-weight: 400; letter-spacing: -0.015em; margin-bottom: 10px; line-height: 1.1; }
+  .principle p { color: var(--ink-2); font-size: 14px; line-height: 1.6; }
+
+  @media (max-width: 880px) {
+    .principles { grid-template-columns: 1fr; }
+    .principle { border-right: 0; border-bottom: 1px solid var(--line); padding: 28px 0 !important; }
+    .principle:last-child { border-bottom: 0; }
+    .principle h3 { font-size: 22px; }
+  }
+</style>

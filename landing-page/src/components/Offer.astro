@@ -2,27 +2,68 @@
 import type { Dict } from '@/i18n/es';
 interface Props { t: Dict }
 const { t } = Astro.props;
+const isEs = t.locale === 'es';
 ---
-<section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
-  <div class="absolute inset-0" style="background: linear-gradient(180deg, #0F0D0B 0%, #1A130D 100%);"></div>
-  <div class="absolute inset-0" style="background: radial-gradient(ellipse 1100px 700px at 50% 30%, rgba(217,119,6,0.18), transparent 65%);"></div>
+<section class="section">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="section-tag">{isEs ? 'Precio' : 'Pricing'}</div>
+      <h2 class="h-section">
+        {isEs ? (
+          <Fragment>Gratis.<br/>Todas las funciones.</Fragment>
+        ) : (
+          <Fragment>Free.<br/>Every feature.</Fragment>
+        )}
+      </h2>
+    </div>
 
-  <div class="relative max-w-[820px] mx-auto text-center">
-    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">{t.offer.eyebrow}</p>
-    <h2 class="reveal font-sans font-black text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.03em] display-cream mb-8" data-delay="1">
-      {t.offer.title}
-    </h2>
-    <p class="reveal text-[17px] md:text-[19px] leading-[1.55] text-[#B7A089] mb-14 max-w-[640px] mx-auto" data-delay="2">
-      {t.offer.sub}
-    </p>
-
-    <div class="reveal grid sm:grid-cols-2 gap-6 md:gap-8 max-w-[680px] mx-auto" data-delay="3">
-      {t.offer.highlights.map((item) => (
-        <div class="p-6 md:p-8 rounded-xl bg-[#1A130D]/80 backdrop-blur-sm border border-white/[0.08] text-left">
-          <div class="font-mono text-[11px] tracking-[0.2em] uppercase text-[#D97706] mb-3">{item.label}</div>
-          <p class="text-[15px] text-[#E8D9BF] leading-[1.55]">{item.desc}</p>
-        </div>
-      ))}
+    <div class="pricing fade-up" data-delay="1">
+      <div class="price-card feat">
+        <div class="tier">{isEs ? 'Disponible · v0.1' : 'Available · v0.1'}</div>
+        <div class="amt">0 €</div>
+        <div class="desc">{isEs ? 'Para siempre. Más de 80 000 spots analizados en toda España. Sin anuncios, sin compras ocultas, sin trucos.' : 'Forever. Over 80,000 spots analyzed across Spain. No ads, no hidden purchases, no catches.'}</div>
+        <ul>
+          <li>{isEs ? 'Mapa completo y radar por zona' : 'Full map and area radar'}</li>
+          <li>{isEs ? 'Puntuación 0-100 por cada spot' : '0-100 score for every spot'}</li>
+          <li>{isEs ? 'Veredicto legal cruzado' : 'Cross-checked legal verdict'}</li>
+          <li>{isEs ? 'Filtros de pendiente y nota mínima' : 'Slope and minimum score filters'}</li>
+          <li>{isEs ? 'Datos de fuentes oficiales' : 'Official source data'}</li>
+        </ul>
+      </div>
+      <div class="price-card coming">
+        <div class="tier">{isEs ? 'Próximamente · Premium' : 'Coming soon · Premium'}</div>
+        <div class="amt" style="color:var(--ink-faint);">—</div>
+        <div class="desc">{isEs ? 'Funciones avanzadas para furgoneteros que viven en ruta. El gratis seguirá siendo gratis.' : 'Advanced features for full-time van dwellers. The free tier will stay free.'}</div>
+        <ul>
+          <li>{isEs ? 'Modo offline por regiones' : 'Offline mode by region'}</li>
+          <li>{isEs ? 'Vista satélite PNOA en alta resolución' : 'High-res PNOA satellite view'}</li>
+          <li>{isEs ? 'Filtros avanzados y rutas guardadas' : 'Advanced filters and saved routes'}</li>
+          <li>{isEs ? 'Alertas de cambios legales' : 'Legal change alerts'}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  .pricing { display: grid; grid-template-columns: 1.15fr 1fr; gap: 32px; align-items: stretch; }
+  .price-card {
+    border: 1px solid var(--line); padding: 40px; border-radius: 24px; background: var(--cream-2);
+    display: flex; flex-direction: column;
+  }
+  .price-card.feat { border-color: var(--orange); background: linear-gradient(180deg, color-mix(in oklch, var(--orange) 10%, transparent), var(--cream) 70%); }
+  .price-card .tier { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .price-card.feat .tier { color: var(--orange); }
+  .price-card .amt { font-family: var(--serif); font-size: 88px; line-height: 1; letter-spacing: -0.04em; margin: 18px 0 6px; font-weight: 400; }
+  .price-card .desc { color: var(--ink-2); font-size: 14px; line-height: 1.55; margin-bottom: 24px; }
+  .price-card ul { list-style: none; display: grid; gap: 10px; flex: 1; padding: 0; }
+  .price-card li { font-size: 14px; color: var(--ink); display: flex; gap: 12px; align-items: flex-start; }
+  .price-card li::before { content: "+"; color: var(--orange); font-family: var(--mono); font-weight: 600; flex-shrink: 0; }
+  .price-card.coming li::before { content: "·"; color: var(--ink-faint); }
+
+  @media (max-width: 880px) {
+    .pricing { grid-template-columns: 1fr; gap: 32px; }
+    .price-card { padding: 24px; border-radius: 18px; }
+    .price-card .amt { font-size: 64px; }
+  }
+</style>

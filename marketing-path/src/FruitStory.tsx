@@ -132,7 +132,7 @@ const SceneCTA = () => {
 				}}
 			/>
 
-			{/* "wildspotter.app" */}
+			{/* WildSpotter brand */}
 			<div
 				style={{
 					position: "absolute",
@@ -150,7 +150,7 @@ const SceneCTA = () => {
 					letterSpacing: 1,
 				}}
 			>
-				wildspotter.app
+				WildSpotter
 			</div>
 
 			{/* "Solo 500 plazas" */}
@@ -316,7 +316,7 @@ export const FruitStory: React.FC<FruitStoryProps> = () => {
 					timing={linearTiming({ durationInFrames: FADE_FRAMES })}
 				/>
 
-				{/* Scene 4: CTA — Logo + wildspotter.app + link en bio */}
+				{/* Scene 4: CTA — Logo + WildSpotter + link in bio */}
 				<TransitionSeries.Sequence durationInFrames={CTA_FRAMES}>
 					<SceneCTA />
 				</TransitionSeries.Sequence>

@@ -1,23 +1,69 @@
 ---
 import type { Dict } from '@/i18n/es';
+import { LAUNCH_CONFIG } from '@/config';
 import { EmailForm } from '@/islands/EmailForm';
+import { PioneerCounter } from '@/islands/PioneerCounter';
 interface Props { t: Dict; locale: 'es' | 'en' }
 const { t, locale } = Astro.props;
+const iosUrl = LAUNCH_CONFIG.IOS_STORE_URL || '#';
+const showAndroidForm = !LAUNCH_CONFIG.ANDROID_LIVE;
+const isEs = locale === 'es';
 ---
-<section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
-  <video class="absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline preload="none" aria-hidden="true">
-    <source src="/videos/cta.mp4" type="video/mp4" />
-  </video>
-  <div class="absolute inset-0 bg-[#0F0D0B]/80"></div>
-  <div class="absolute inset-0" style="background: radial-gradient(ellipse 900px 500px at center, rgba(217,119,6,0.18) 0%, rgba(15,13,11,0) 65%);"></div>
-  <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(180deg, #0F0D0B 0%, transparent 15%, transparent 85%, #0F0D0B 100%);"></div>
-
-  <div class="relative max-w-[820px] mx-auto text-center">
-    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">Waitlist</p>
-    <h2 class="reveal font-sans font-black text-[40px] sm:text-[56px] md:text-[72px] leading-[1.02] tracking-[-0.025em] display-cream mb-8" data-delay="1">{t.cta2.title}</h2>
-    <p class="reveal text-[18px] md:text-[21px] leading-[1.55] text-[#F5EBD8]/85 mb-14" data-delay="2">{t.cta2.sub}</p>
-    <div class="reveal flex justify-center" data-delay="3">
-      <EmailForm client:visible copy={t.hero} locale={locale} variant="footer" />
+<section class="final" id="download">
+  <div class="container">
+    <h2 class="fade-up">
+      {isEs
+        ? <Fragment>Coge la furgo.<br/>El resto <em class="italic">lo hacemos nosotros.</em></Fragment>
+        : <Fragment>Grab your van.<br/>We handle <em class="italic">the rest.</em></Fragment>
+      }
+    </h2>
+    <p class="fade-up" data-delay="1">
+      {isEs
+        ? 'Descárgala gratis en iPhone o déjanos tu correo y te avisamos en cuanto Android esté listo. Sin spam, doble confirmación, baja cuando quieras.'
+        : 'Download free on iPhone or leave your email and we will notify you when Android is ready. No spam, double opt-in, unsubscribe any time.'}
+    </p>
+    <div class="ctas fade-up" data-delay="2">
+      <a href={iosUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <svg width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><path d="M11.5 8.5c0-1.4.7-2.4 1.7-3.1-.6-.9-1.5-1.4-2.7-1.5-1.1-.1-2.3.7-2.9.7-.6 0-1.6-.6-2.6-.6-1.4 0-2.7.8-3.4 2.1-1.5 2.5-.4 6.2 1 8.3.7 1 1.5 2.1 2.6 2.1 1 0 1.4-.6 2.7-.6 1.2 0 1.6.6 2.7.6 1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.2-.8-2.2-3.3zM9.7 2.6c.5-.6.9-1.5.8-2.4-.8 0-1.7.5-2.2 1.1-.5.5-.9 1.4-.8 2.3.9.1 1.7-.4 2.2-1z"/></svg>
+        {isEs ? 'Descargar en App Store' : 'Download on App Store'}
+      </a>
     </div>
+
+    {showAndroidForm && (
+      <div class="android-form-wrap" id="android">
+        <EmailForm client:visible copy={t.hero} locale={locale} variant="footer" />
+        <div style="margin-top:12px;">
+          <PioneerCounter client:visible label={t.hero.counterLabel} />
+        </div>
+      </div>
+    )}
+
+    <div class="promise">{isEs ? '100% gratis · sin anuncios · sin trucos' : '100% free · no ads · no catches'}</div>
   </div>
 </section>
+
+<!-- Mobile sticky CTA -->
+<a href="#download" class="mobile-sticky" id="mobileSticky">
+  <span class="label">WildSpotter<small>{isEs ? 'Gratis · iOS' : 'Free · iOS'}</small></span>
+  <span class="go">{isEs ? 'Descargar' : 'Download'} →</span>
+</a>
+
+<style>
+  .final {
+    text-align: center; padding: 140px 32px; border-top: 1px solid var(--line); position: relative; overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 100%, color-mix(in oklch, var(--orange) 14%, transparent), transparent 70%),
+      var(--cream);
+  }
+  .final h2 { font-family: var(--serif); font-size: clamp(48px,7vw,96px); font-weight: 400; letter-spacing: -0.025em; line-height: 0.96; }
+  .final p { margin: 24px auto; color: var(--ink-2); font-size: 18px; max-width: 54ch; line-height: 1.55; }
+  .final .ctas { display: flex; gap: 16px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
+  .android-form-wrap { margin: 28px auto 0; max-width: 420px; }
+  .final .promise { margin-top: 28px; font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: .16em; text-transform: uppercase; }
+
+  @media (max-width: 880px) {
+    .final { padding: 80px 22px 120px; }
+    .final h2 { font-size: clamp(40px, 10vw, 56px); }
+    .final p { font-size: 16px; }
+  }
+</style>

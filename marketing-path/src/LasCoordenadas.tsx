@@ -287,7 +287,7 @@ const Scene5Final: React.FC = () => {
 				/>
 			</div>
 
-			{/* wildspotter.app — above 250px safe zone */}
+			{/* CTA — above 250px safe zone */}
 			<div
 				style={{
 					position: "absolute",
@@ -296,18 +296,33 @@ const Scene5Final: React.FC = () => {
 					right: 0,
 					textAlign: "center",
 					opacity: ctaOpacity,
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+					gap: 8,
 				}}
 			>
 				<div
 					style={{
 						fontFamily: interFont,
 						fontSize: 36,
-						fontWeight: 400,
-						color: "rgba(255,255,255,0.65)",
-						letterSpacing: 3,
+						fontWeight: 700,
+						color: "#FFFFFF",
+						letterSpacing: 1,
 					}}
 				>
-					wildspotter.app
+					WildSpotter
+				</div>
+				<div
+					style={{
+						fontFamily: interFont,
+						fontSize: 22,
+						fontWeight: 400,
+						color: "rgba(255,255,255,0.5)",
+						letterSpacing: 2,
+					}}
+				>
+					LINK IN BIO
 				</div>
 			</div>
 		</AbsoluteFill>

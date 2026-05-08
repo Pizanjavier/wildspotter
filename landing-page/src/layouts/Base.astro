@@ -15,7 +15,7 @@ const alt = locale === 'es' ? '/en/' : '/';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="theme-color" content="#0F0D0B" />
+    <meta name="theme-color" content="#F4EFE3" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
@@ -25,10 +25,11 @@ const alt = locale === 'es' ? '/en/' : '/';
     <link rel="alternate" hreflang="es" href="https://wildspotter.app/" />
     <link rel="alternate" hreflang="en" href="https://wildspotter.app/en/" />
     <link rel="alternate" hreflang="x-default" href="https://wildspotter.app/" />
-    <link rel="preconnect" href="https://rsms.me/" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Geist+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <script define:vars={{ alt }} is:inline>
-      // Preserve scroll position across language switch
       window.__wsSwitchLang = () => {
         sessionStorage.setItem('ws_scroll', String(window.scrollY));
         window.location.href = alt;
@@ -42,16 +43,35 @@ const alt = locale === 'es' ? '/en/' : '/';
   <body class="min-h-screen antialiased">
     <slot />
     <script is:inline>
-      // Scroll reveal IntersectionObserver
-      const io = new IntersectionObserver((entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-visible');
-            io.unobserve(e.target);
+      function wsInit() {
+        // Scroll reveal — single observer for all fade-up elements
+        var io = new IntersectionObserver(function(entries) {
+          for (var i = 0; i < entries.length; i++) {
+            if (entries[i].isIntersecting) {
+              entries[i].target.classList.add('in');
+              io.unobserve(entries[i].target);
+            }
+          }
+        }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+        document.querySelectorAll('.fade-up').forEach(function(el) { io.observe(el); });
+
+        // Mobile sticky CTA
+        var sticky = document.getElementById('mobileSticky');
+        if (sticky) {
+          var heroEl = document.querySelector('.hero');
+          if (heroEl) {
+            var stickyObs = new IntersectionObserver(function(entries) {
+              entries.forEach(function(e) { sticky.classList.toggle('show', !e.isIntersecting); });
+            }, { threshold: 0 });
+            stickyObs.observe(heroEl);
           }
         }
-      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', wsInit);
+      } else {
+        wsInit();
+      }
     </script>
   </body>
 </html>

@@ -1,0 +1,149 @@
+---
+import type { Dict } from '@/i18n/es';
+interface Props { t: Dict }
+const { t } = Astro.props;
+const isEs = t.locale === 'es';
+---
+<section class="section">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="section-tag">{isEs ? 'Anatomía de un spot' : 'Anatomy of a spot'}</div>
+      <h2 class="h-section">
+        {isEs ? (
+          <Fragment>Lo que ves<br/>antes de ir.</Fragment>
+        ) : (
+          <Fragment>What you see<br/>before you go.</Fragment>
+        )}
+      </h2>
+    </div>
+
+    <div class="anat-wrap">
+      <div class="anat-card fade-up">
+        <div class="anat-img">
+          <span class="tag">{isEs ? 'IA marcado' : 'AI tagged'}</span>
+          <span class="placeholder-note">{isEs ? 'imagen ilustrativa · no es un spot real' : 'illustrative · not a real spot'}</span>
+        </div>
+        <div class="anat-body">
+          <div class="anat-head">
+            <div>
+              <h4>Spot 087</h4>
+              <div class="sub">{isEs ? 'Costa Norte · pista de tierra' : 'North Coast · dirt track'}</div>
+            </div>
+            <div class="anat-score">87</div>
+          </div>
+
+          <div class="anat-stats">
+            <div class="anat-stat">
+              <div class="ico">&#9671;</div>
+              <div class="v">{isEs ? 'Tierra' : 'Dirt'}</div>
+              <div class="l">{isEs ? 'Superficie' : 'Surface'}</div>
+            </div>
+            <div class="anat-stat">
+              <div class="ico">&#9651;</div>
+              <div class="v">1.9 %</div>
+              <div class="l">{isEs ? 'Pendiente' : 'Slope'}</div>
+            </div>
+            <div class="anat-stat">
+              <div class="ico">&#8593;</div>
+              <div class="v">142 m</div>
+              <div class="l">{isEs ? 'Altitud' : 'Altitude'}</div>
+            </div>
+          </div>
+
+          <div class="anat-legal">
+            <div class="legal-row"><span class="ok">&#10003;</span><div><b>Red Natura 2000</b><br/><span>{isEs ? 'Fuera de zona protegida' : 'Outside protected zone'}</span></div></div>
+            <div class="legal-row"><span class="ok">&#10003;</span><div><b>{isEs ? 'Parques Nacionales' : 'National Parks'}</b><br/><span>{isEs ? 'Fuera de cualquier parque protegido' : 'Outside any protected park'}</span></div></div>
+            <div class="legal-row"><span class="ok">&#10003;</span><div><b>{isEs ? 'Ley de Costas' : 'Coastal Law'}</b><br/><span>{isEs ? 'Fuera de zona de protección costera' : 'Outside coastal protection zone'}</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-up" data-delay="1">
+        <p class="lede" style="margin-bottom:24px;">
+          {isEs
+            ? 'Cada spot llega con su nota de 0 a 100, su veredicto legal cruzado con cuatro fuentes y los detalles de terreno calculados con datos topograficos. Tu decides desde el sofa si vale la pena conducir hasta alli.'
+            : 'Every spot comes with a 0-100 score, a legal verdict cross-checked against four sources, and terrain details from topographic data. You decide from your couch if it is worth the drive.'}
+        </p>
+        <div class="anat-callouts">
+          <div class="callout">
+            <span class="num">01</span>
+            <div><b>{isEs ? 'Puntuación honesta' : 'Honest score'}</b><p>{isEs ? 'Una nota reproducible que sale de los datos, no de las estrellas que dejó alguien con prisa.' : 'A reproducible grade from data, not stars left by someone in a hurry.'}</p></div>
+          </div>
+          <div class="callout">
+            <span class="num">02</span>
+            <div><b>{isEs ? 'IA visual' : 'Visual AI'}</b><p>{isEs ? 'Cada imagen aérea se analiza por IA: suelo, vegetación, acceso y espacio para 1-3 vehículos.' : 'Every aerial image is analyzed by AI: ground, vegetation, access and space for 1-3 vehicles.'}</p></div>
+          </div>
+          <div class="callout">
+            <span class="num">03</span>
+            <div><b>{isEs ? 'Veredicto legal' : 'Legal verdict'}</b><p>{isEs ? 'Solo informativo, pero cruzado con las cuatro fuentes que importan antes de pernoctar.' : 'Informational only, but cross-checked against the four sources that matter before staying overnight.'}</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .anat-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .anat-card {
+    background: white; border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+    box-shadow: 0 30px 70px rgba(60,40,15,.10); max-width: 440px;
+  }
+  .anat-img {
+    height: 200px;
+    background: linear-gradient(160deg, #4a6240 0%, #2a3e2a 60%, #1f3038 100%);
+    position: relative;
+  }
+  .anat-img::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(ellipse 30% 30% at 25% 35%, rgba(255,255,255,.06), transparent 60%),
+      radial-gradient(ellipse 40% 25% at 75% 60%, rgba(255,255,255,.04), transparent 60%),
+      repeating-linear-gradient(45deg, transparent 0 6px, rgba(0,0,0,.05) 6px 7px);
+  }
+  .anat-img .tag {
+    position: absolute; top: 14px; right: 14px; background: var(--orange-soft); color: var(--orange-2);
+    border-radius: 999px; padding: 5px 12px; font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .anat-img .tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+  .anat-img .placeholder-note {
+    position: absolute; bottom: 12px; left: 14px; font-family: var(--mono); font-size: 9px; letter-spacing: .14em;
+    color: rgba(255,255,255,.5); text-transform: uppercase;
+  }
+  .anat-body { padding: 22px 24px; }
+  .anat-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+  .anat-head h4 { font-family: var(--serif); font-size: 28px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.05; }
+  .anat-head .sub { font-size: 13px; color: var(--ink-3); margin-top: 4px; }
+  .anat-score {
+    width: 52px; height: 52px; border-radius: 50%; background: var(--green); color: white;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0;
+  }
+  .anat-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 6px; }
+  .anat-stat { background: var(--cream); border-radius: 12px; padding: 14px 12px; text-align: center; }
+  .anat-stat .ico { color: var(--orange); font-size: 16px; margin-bottom: 6px; }
+  .anat-stat .v { font-weight: 700; font-size: 15px; color: var(--ink); }
+  .anat-stat .l { font-family: var(--mono); font-size: 9px; letter-spacing: .14em; color: var(--ink-3); text-transform: uppercase; margin-top: 3px; }
+  .anat-legal { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 10px; }
+  .legal-row { display: flex; align-items: center; gap: 12px; font-size: 13px; }
+  .legal-row .ok {
+    width: 20px; height: 20px; border-radius: 50%; background: var(--green-soft); color: var(--green);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  .legal-row b { font-weight: 600; }
+  .legal-row span { color: var(--ink-3); font-size: 12px; }
+
+  .anat-callouts { display: flex; flex-direction: column; gap: 14px; margin-top: 30px; }
+  .callout { display: flex; gap: 14px; align-items: flex-start; }
+  .callout .num { font-family: var(--mono); font-size: 11px; color: var(--orange); font-weight: 600; letter-spacing: .1em; width: 24px; flex-shrink: 0; padding-top: 3px; }
+  .callout b { display: block; font-weight: 600; margin-bottom: 3px; font-size: 15px; }
+  .callout p { color: var(--ink-2); font-size: 13px; line-height: 1.55; }
+
+  @media (max-width: 880px) {
+    .anat-wrap { grid-template-columns: 1fr; gap: 32px; }
+    .anat-card { max-width: 100%; }
+    .anat-img { height: 160px; }
+    .anat-stat { padding: 12px 6px; }
+    .anat-stat .v { font-size: 13px; }
+  }
+</style>

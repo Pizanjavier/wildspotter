@@ -1,0 +1,43 @@
+---
+import type { Dict } from '@/i18n/es';
+interface Props { t: Dict }
+const { t } = Astro.props;
+const isEs = t.locale === 'es';
+---
+<section class="vibe">
+  <div class="vibe-bg"></div>
+  <div class="container" style="position:relative;z-index:2;">
+    <blockquote class="fade-up">
+      {isEs
+        ? <Fragment>&laquo;El mejor sitio para dormir <em>no</em> está en ninguna app de reseñas. Está en los datos que nadie se molesta en cruzar.&raquo;</Fragment>
+        : <Fragment>&laquo;The best place to sleep <em>isn&apos;t</em> on any review app. It&apos;s in the data nobody bothers to cross-check.&raquo;</Fragment>
+      }
+    </blockquote>
+    <div class="source fade-up" data-delay="1">— {isEs ? 'Manifiesto WildSpotter · 2026' : 'WildSpotter Manifesto · 2026'}</div>
+  </div>
+</section>
+
+<style>
+  .vibe {
+    background: var(--ink); color: var(--cream); padding: 96px 0;
+    position: relative; overflow: hidden;
+  }
+  .vibe-bg {
+    position: absolute; inset: 0; opacity: .12; pointer-events: none;
+    background-image:
+      radial-gradient(circle at 20% 30%, transparent 30%, var(--cream) 30.3%, transparent 30.6%),
+      radial-gradient(circle at 20% 30%, transparent 22%, var(--cream) 22.3%, transparent 22.6%),
+      radial-gradient(circle at 80% 70%, transparent 35%, var(--cream) 35.3%, transparent 35.6%);
+  }
+  .vibe blockquote {
+    font-family: var(--serif); font-size: clamp(32px,4vw,56px); line-height: 1.15; letter-spacing: -0.02em;
+    font-weight: 400; font-style: italic; max-width: 24ch;
+  }
+  .vibe blockquote em { color: var(--orange); font-style: italic; }
+  .vibe .source { margin-top: 32px; font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-faint); }
+
+  @media (max-width: 880px) {
+    .vibe { padding: 60px 0; }
+    .vibe blockquote { font-size: 26px; line-height: 1.2; }
+  }
+</style>

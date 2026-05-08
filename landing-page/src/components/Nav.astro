@@ -1,43 +1,31 @@
 ---
-import type { Locale } from '@/i18n';
-import { getDict } from '@/i18n';
-import BetaBanner from './BetaBanner.astro';
+import { LAUNCH_CONFIG } from '@/config';
 
-interface Props { locale: Locale; hideBanner?: boolean; }
-const { locale, hideBanner = false } = Astro.props;
-const t = getDict(locale);
+const { locale } = Astro.props as { locale: 'es' | 'en' };
+const iosUrl = LAUNCH_CONFIG.IOS_STORE_URL || '#';
 ---
-<div class="fixed top-0 inset-x-0 z-50 flex flex-col pointer-events-none" id="ws-nav-wrapper">
-  {!hideBanner && <div class="pointer-events-auto transition-transform"><BetaBanner t={t} locale={locale} /></div>}
-  <nav id="ws-nav" class="h-16 px-5 md:px-10 flex items-center justify-between pointer-events-auto w-full transition-colors duration-300">
-    <a href={locale === 'es' ? '/' : '/en/'} class="flex items-center gap-3 group">
-      <img src="/logo.png" alt="WildSpotter" width="32" height="32" class="h-8 w-8 object-contain" />
-      <span class="font-sans font-black text-[14px] tracking-[0.02em] text-[#F5EBD8] group-hover:text-[#D97706] transition-colors">WILDSPOTTER</span>
+<nav class="top">
+  <div class="container row">
+    <a href={locale === 'es' ? '/' : '/en/'} class="brand">
+      <img src="/logo.png" alt="WildSpotter" width="26" height="26" style="border-radius:6px;" />
+      WILDSPOTTER
     </a>
-    <div class="flex items-center gap-4 font-sans text-[13px]">
-      <a
-        href="/"
-        class={`transition-colors ${locale === 'es' ? 'text-[#F5EBD8] border-b border-[#D97706] pb-0.5' : 'text-[#B7A089] hover:text-[#F5EBD8]'}`}
-        onclick="if(window.location.pathname!=='/'){sessionStorage.setItem('ws_scroll',String(window.scrollY))}"
-      >ES</a>
-      <span class="text-[#B7A089]/40">·</span>
-      <a
-        href="/en/"
-        class={`transition-colors ${locale === 'en' ? 'text-[#F5EBD8] border-b border-[#D97706] pb-0.5' : 'text-[#B7A089] hover:text-[#F5EBD8]'}`}
-        onclick="if(window.location.pathname==='/'){sessionStorage.setItem('ws_scroll',String(window.scrollY))}"
-      >EN</a>
+    <div style="display:flex;align-items:center;gap:24px">
+      <div class="lang">
+        <a
+          href="/"
+          class={locale === 'es' ? 'on' : ''}
+          onclick="sessionStorage.setItem('ws_scroll',String(window.scrollY))"
+        >ES</a>
+        <a
+          href="/en/"
+          class={locale === 'en' ? 'on' : ''}
+          onclick="sessionStorage.setItem('ws_scroll',String(window.scrollY))"
+        >EN</a>
+      </div>
+      <a href={iosUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-cta">
+        {locale === 'es' ? 'Descargar — iOS' : 'Download — iOS'}
+      </a>
     </div>
-  </nav>
-</div>
-<script is:inline>
-  (function () {
-    const nav = document.getElementById('ws-nav');
-    if (!nav) return;
-    const onScroll = () => {
-      if (window.scrollY > 80) nav.classList.add('nav-scrolled');
-      else nav.classList.remove('nav-scrolled');
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-  })();
-</script>
+  </div>
+</nav>

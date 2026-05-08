@@ -2,32 +2,54 @@
 import type { Dict } from '@/i18n/es';
 interface Props { t: Dict }
 const { t } = Astro.props;
----
-<section class="relative px-5 md:px-10 py-32 md:py-48 overflow-hidden">
-  <video class="absolute inset-0 w-full h-full object-cover" autoplay muted loop playsinline preload="none" aria-hidden="true">
-    <source src="/videos/legal.mp4" type="video/mp4" />
-  </video>
-  <div class="absolute inset-0 bg-[#0F0D0B]/94"></div>
-  <div class="absolute inset-0" style="background: radial-gradient(ellipse at center, transparent 0%, #0F0D0B 75%);"></div>
+const isEs = t.locale === 'es';
 
-  <div class="relative max-w-[1080px] mx-auto text-center">
-    <p class="reveal font-mono text-[11px] tracking-[0.3em] uppercase text-[#D97706] mb-6">Fuentes</p>
-    <h2 class="reveal font-sans font-black text-[38px] sm:text-[54px] md:text-[76px] leading-[1.02] tracking-[-0.025em] display-cream mb-10" data-delay="1">
-      {t.legal.title}
-    </h2>
-    <p class="reveal text-[17px] md:text-[19px] leading-[1.55] text-[#B7A089] max-w-[660px] mx-auto mb-16" data-delay="2">
-      {t.legal.sub}
-    </p>
-    <div class="reveal flex flex-wrap items-center justify-center gap-x-5 gap-y-4 mb-12" data-delay="3">
-      {t.legal.sources.map((src, i) => (
-        <>
-          {i > 0 && <span class="text-[#D97706] text-[22px] leading-none">·</span>}
-          <span class="font-sans font-black text-[18px] md:text-[24px] tracking-[0.01em] text-[#F5EBD8]">{src}</span>
-        </>
+const sources = [
+  { jurisdiction: 'ES · Gobierno', name: 'MITECO', what: isEs ? 'Red Natura 2000, parques nacionales, habitats protegidos.' : 'Natura 2000, national parks, protected habitats.' },
+  { jurisdiction: 'ES · Gobierno', name: 'IGN', what: isEs ? 'Ortofotos PNOA y modelo digital de elevacion.' : 'PNOA orthophotos and digital elevation model.' },
+  { jurisdiction: 'ES · Gobierno', name: 'Catastro', what: isEs ? 'Titularidad y uso de cada parcela. Publica o privada.' : 'Ownership and use of each parcel. Public or private.' },
+  { jurisdiction: 'EU · ESA', name: 'Copernicus', what: isEs ? 'CORINE Land Cover. Clasificacion de uso del suelo.' : 'CORINE Land Cover. Land use classification.' },
+  { jurisdiction: isEs ? 'Comunitario' : 'Community', name: 'OpenStreetMap', what: isEs ? 'Carreteras, pistas, caminos y puntos de interes.' : 'Roads, tracks, paths and points of interest.' },
+];
+---
+<section class="section">
+  <div class="container">
+    <div class="section-head fade-up">
+      <div class="section-tag">{isEs ? 'Fuentes' : 'Sources'}</div>
+      <h2 class="h-section">{t.legal.title}</h2>
+    </div>
+    <p class="lede fade-up" data-delay="1" style="margin-bottom:48px;">{t.legal.sub}</p>
+
+    <div class="sources-grid fade-up" data-delay="2">
+      {sources.map((s) => (
+        <div class="src-cell">
+          <span class="full">{s.jurisdiction}</span>
+          <span class="name">{s.name}</span>
+          <span class="what">{s.what}</span>
+        </div>
       ))}
     </div>
-    <p class="reveal font-sans text-[11px] tracking-wide text-[#B7A089]/60 max-w-[640px] mx-auto" data-delay="4">
-      {t.legal.attribution}
-    </p>
   </div>
 </section>
+
+<style>
+  .sources-grid {
+    display: grid; grid-template-columns: repeat(5,1fr);
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .src-cell { padding: 36px 28px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; background: var(--cream); transition: background .2s; }
+  .src-cell:hover { background: var(--cream-2); }
+  .src-cell:last-child { border-right: 0; }
+  .src-cell .name { font-family: var(--serif); font-size: 26px; letter-spacing: -0.015em; font-weight: 400; }
+  .src-cell .full { font-family: var(--mono); font-size: 10px; color: var(--orange); letter-spacing: .14em; text-transform: uppercase; font-weight: 500; }
+  .src-cell .what { font-size: 13px; color: var(--ink-2); margin-top: 8px; line-height: 1.5; }
+
+  @media (max-width: 880px) {
+    .sources-grid { grid-template-columns: 1fr 1fr; }
+    .src-cell { padding: 22px 16px; border-bottom: 1px solid var(--line); }
+    .src-cell:nth-child(odd) { border-right: 1px solid var(--line); }
+    .src-cell:nth-child(even) { border-right: 0; }
+    .src-cell:last-child { grid-column: 1/-1; }
+    .src-cell .name { font-size: 20px; }
+  }
+</style>
