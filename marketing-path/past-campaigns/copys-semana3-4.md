@@ -18,7 +18,7 @@ WildSpotter procesa terreno, satelite, datos legales y uso del suelo de toda Esp
 
 Tu solo tienes que llegar.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #libertad #furgocamper #espana
 ```
@@ -34,7 +34,7 @@ Solo el cafe. Y lo que sea que hay ahi fuera.
 
 WildSpotter analiza terreno, satelite y datos legales de toda Espana para que tu manana empiece asi.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #cafe #furgocamper #libertad
 ```
@@ -50,7 +50,7 @@ No lo busque. Lo calcule.
 
 WildSpotter analiza terreno, satelite, datos legales y uso del suelo. Tu solo llegas.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #overlanding
 ```
@@ -67,7 +67,7 @@ Solo 393 pasan el filtro.
 
 No buscamos cantidad. Buscamos el spot donde no hay nadie.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```
@@ -86,7 +86,7 @@ AI Score: 61/100. Embalse de Amadorio, Alicante.
 
 Ningun humano ha opinado sobre este spot. Solo datos.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #satelite #espana #alicante
 ```
@@ -104,7 +104,7 @@ Tu: mirando estrellas.
 
 La ventaja no es la furgo. Es el radar.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #overlanding
 ```
@@ -122,7 +122,7 @@ Tu perro lo sabe. Tu tambien.
 
 WildSpotter encuentra los spots donde nadie os va a molestar.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #perro #furgocamper #libertad
 ```
@@ -156,7 +156,7 @@ El olor del cafe. El frio de la manana. La puerta de la furgo abierta a algo que
 
 Nosotros calculamos donde. Tu decides cuando.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #cafe #furgocamper #campinglibre
 ```
@@ -173,7 +173,7 @@ Y llegue a un sitio donde solo estaba yo.
 
 No lo busque. Lo calcule.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #montana
 ```
@@ -191,7 +191,7 @@ Tu: pensando en quedarte un dia mas.
 
 La diferencia es el radar.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #estrellas #furgocamper #espana
 ```
@@ -208,7 +208,7 @@ Noches donde ves la Via Lactea desde tu furgo.
 Nosotros calculamos las coordenadas.
 La historia es tuya.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #estrellas #furgocamper #libertad
 ```
@@ -224,7 +224,7 @@ El sabe que este sitio es distinto. No hay coches. No hay gente. Solo espacio.
 
 WildSpotter analiza terreno, satelite y datos legales. Tu perro hace el resto.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #perro #furgocamper #playa
 ```
@@ -240,7 +240,7 @@ Eso es el 0.47%.
 
 Porque no buscamos parking. Buscamos el sitio donde duermes con el sonido del mar y amaneces sin vecinos.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```
@@ -260,7 +260,7 @@ El atardecer hizo el resto.
 
 No lo busque. Lo calcule.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #atardecer #espana
 ```
@@ -279,7 +279,7 @@ Lo que ve la IA: pinar denso, playa al borde, acceso por carretera terciaria.
 
 AI Score: 62/100. Modelo: Claude Haiku 4.5.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #satelite #huelva #espana
 ```
@@ -295,7 +295,7 @@ El olor del cafe. El frio de la montana. Un camino de tierra que no lleva a ning
 
 Nosotros calculamos las coordenadas. La historia es tuya.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #cafe #montana #furgocamper
 ```
@@ -330,7 +330,7 @@ Un camino de tierra que no lleva a ningun pueblo.
 Nosotros calculamos las coordenadas.
 La historia es tuya.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #libertad #furgocamper #espana
 ```
@@ -358,7 +358,7 @@ Radar. Terreno. Satelite. Legal. Contexto. Uso del suelo. Score.
 
 83.006 spots analizados. 0 opiniones. Solo datos.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```

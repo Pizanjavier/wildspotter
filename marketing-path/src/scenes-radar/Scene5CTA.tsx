@@ -90,7 +90,7 @@ export const Scene5CTA: React.FC<Scene5Props> = ({ videoSrc }) => {
 					alignItems: "center",
 					justifyContent: "center",
 					gap: 28,
-					paddingBottom: 200,
+					paddingBottom: 450,
 				}}
 			>
 				<div

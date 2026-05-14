@@ -909,22 +909,22 @@ const QuizMusic: React.FC<{ variant: string }> = ({ variant }) => {
   // The reveal (Scene 3) starts exactly at frame 118 (90 + 60 - 16 - 16) = 3.93s
   // We offset tracks so their section boundaries hit exactly at this moment.
   let trackPath = "audio/music/dark-verdict.mp3";
-  let startFromFrames = 0;
+  let trimBeforeFrames = 0;
 
   if (variant === "O2") {
     // SÍ (Positive): pulse-reveal.mp3 has a boundary at 41.6s
     trackPath = "audio/music/pulse-reveal.mp3";
-    startFromFrames = Math.round((41.6 - 118 / fps) * fps);
+    trimBeforeFrames = Math.round((41.6 - 118 / fps) * fps);
   } else if (variant === "O3") {
     // DEPENDE (Amber): sci-fi-score.mp3 has a boundary at 14.0s
     trackPath = "audio/music/sci-fi-score.mp3";
-    startFromFrames = Math.round((14.0 - 118 / fps) * fps);
+    trimBeforeFrames = Math.round((14.0 - 118 / fps) * fps);
   }
 
   return (
     <Audio
       src={staticFile(trackPath)}
-      startFrom={startFromFrames}
+      trimBefore={trimBeforeFrames}
       volume={(f) => {
         const fadeIn = interpolate(f, [0, fps], [0, 0.45], {
           extrapolateLeft: "clamp",

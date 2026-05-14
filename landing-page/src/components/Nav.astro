@@ -3,6 +3,7 @@ import { LAUNCH_CONFIG } from '@/config';
 
 const { locale } = Astro.props as { locale: 'es' | 'en' };
 const iosUrl = LAUNCH_CONFIG.IOS_STORE_URL || '#';
+const androidUrl = LAUNCH_CONFIG.ANDROID_STORE_URL || '#';
 ---
 <nav class="top">
   <div class="container row">
@@ -23,8 +24,8 @@ const iosUrl = LAUNCH_CONFIG.IOS_STORE_URL || '#';
           onclick="sessionStorage.setItem('ws_scroll',String(window.scrollY))"
         >EN</a>
       </div>
-      <a href={iosUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-cta">
-        {locale === 'es' ? 'Descargar — iOS' : 'Download — iOS'}
+      <a href={'#download'} class="btn btn-primary nav-cta">
+        {locale === 'es' ? 'Descargar' : 'Download'}
       </a>
     </div>
   </div>

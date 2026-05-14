@@ -58,7 +58,7 @@ export const OjoSatelite: React.FC<OjoSateliteProps> = ({
 
 	const finalScoreScale = spring({ frame: frame - 330, fps, config: { damping: 12 } });
 	const finalScoreOpacity = interpolate(frame, [330, 345], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-	const finalScoreFadeOut = interpolate(frame, [435, 450], [1, 0], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+
 
 	const mapRevealProgress = spring({ frame: frame - 450, fps, config: { damping: 14 } });
 	const baseKenBurns = interpolate(frame, [0, 450], [1, 1.1], { extrapolateRight: "clamp" });

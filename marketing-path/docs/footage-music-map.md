@@ -55,6 +55,57 @@ Which clips and tracks are used in each produced video. Check this before select
 | RD2 (lago) | `a_gravel_road_*.mp4` | `scenic_drive_through_*.mp4` | `dog-beach-happy.mp4` | OSM 71422800, score 83.7 |
 | RD3 (montana) | `scenic_drive_through_*.mp4` | `a_gravel_road_*.mp4` | `rv_mountain_road.mp4` | OSM 5484843145, score 80.7 |
 | RD4 (costa) | `Aerial_Spanish_Mediterranean_coast.mp4` | `cliff_ocean_*.mp4` | `dog-beach-happy.mp4` | OSM 2254888334, score 68.1 |
+| RD5 (costa norte) | `aerial_view_of_forest_path_in_bolu_province_35289213.mp4` | `serene_drive_through_lush_green_forest_34943087.mp4` | `scenic_green_road_surrounded_by_lush_trees_34231319.mp4` | fallback data, score 84.5 |
+| RD6 (interior/dehesa) | `beautiful_forest_in_azad_kashmir_pakistan_27988109.mp4` | `road_among_trees_in_overhead_view_14608460.mp4` | `tranquil_pine_forest_landscape_scene_30667274.mp4` | fallback data, score 86.8 |
+
+### UnNoventa (S3 — score reveal)
+| Scene | Footage | Dim | Role |
+|-------|---------|-----|------|
+| S1 Hero reveal | `waves_rushing_to_the_shore_8045150.mp4` | 20% | Ocean waves — score counter focus |
+| S2 Data cascade | `waves_crashing_the_cliff_coast_5667128.mp4` | 12% | Subtle sea — data cards are focus |
+| S3 Emotional pivot | `top_view_of_a_sea_waves_crashing_on_the_rocks_13869670.mp4` | 22% | Aerial sea/rocks — emotional moment |
+| S4 CTA | `lonely_beach_with_lifeguard_chair_and_waves_36723550.mp4` | 28% | Peaceful lonely beach — engagement CTA |
+
+### ElProblema (S1 — El Problema)
+| Scene | Footage | Dim | Role |
+|-------|---------|-----|------|
+| S1 Hook | `crowded_parking_aerial.mp4` | 52% | Crowded problem — aerial view |
+| S2 Escalation | `rvs_parked_outdoors.mp4` | 65% | More crowded RVs, darker |
+| S3 Pivot | `hippie_van_in_mountains_18444421.mp4` | 45% | Freedom — van in mountains |
+| S4 CTA | `lonely_beach_with_lifeguard_chair_and_waves_36723550.mp4` | 45% | Payoff — lonely beach |
+
+### OchoTresMil (W1 — 83.006)
+| Scene | Footage | Dim | Role |
+|-------|---------|-----|------|
+| S1 Counter | `aerial_view_of_verdant_forest_canopy_in_summer_31620899.mp4` | 72% | Dark forest behind big number |
+| S2 Breakdown | `stunning_aerial_view_of_lush_green_forest_canopy_28870593.mp4` | 80% | Lush canopy — cards are focus |
+| S3 Pivot | `serene_pine_forest_landscape_captured_in_summer_32728427.mp4` | 52% | Peaceful forest — emotional moment |
+| S4 CTA | `aerial_view_of_scenic_forest_road_in_summer_34239173.mp4` | 48% | Forest road — warm payoff |
+
+### ElPeorMomento (S2 — El Peor Momento)
+| Scene | Footage | Dim | Role |
+|-------|---------|-----|------|
+| S1 Night | `view_of_the_horizon_at_dusk_over_cloudy_sky_3052476.mp4` | 52% | Dusk horizon — dramatic night feel |
+| S2 Problem | `driving_car_on_mountain_road_13229471.mp4` | 62% | Night mountain driving — urgency |
+| S3 Pivot | `tranquil_pine_forest_landscape_scene_30667274.mp4` | 50% | Calm forest — resolution |
+| S4 CTA | `couple-cofee-outside-caravan.mp4` | 48% | Couple at caravan — warm payoff |
+
+### Debate (Debate1 + Debate2 — engagement/opinion)
+| Variant | Scene | Footage | Dim | Role |
+|---------|-------|---------|-----|------|
+| D1 (Debate1) | S1 Hook | `couple_sitting_in_van_9354235.mp4` | 50% | Peaceful couple in van — warm hook |
+| D1 (Debate1) | S2 Arguments | same footage | 58% | Darker — text focus |
+| D1 (Debate1) | S3 Question | same footage | 50% | Back to warm — engagement question |
+| D2 (Debate2) | S1 Hook | `couple_in_the_morning_in_a_campervan_9354237.mp4` | 50% | Morning campervan contemplation |
+| D2 (Debate2) | S2 Arguments | same footage | 58% | Darker — text focus |
+| D2 (Debate2) | S3 Question | same footage | 50% | Back to moderate — engagement question |
+
+### MayoMejorMes (V1 + V2 — seasonal / costa norte)
+| Scene | Footage | Dim | Role |
+|-------|---------|-----|------|
+| S1 Hook | `stunning_cliffs_and_turquoise_sea_from_above_34885409.mp4` | 25-30% | Dramatic cliffs — minimal dim for visual impact |
+| S2 Description | same clip continued | 48% | 3 regional lines staggered — green Atlantic |
+| S3 CTA | `stunning_aerial_views_of_rocky_kefalonia_coast_29784774.mp4` | 38% | Rocky coast aerial — fresh angle for CTA |
 
 ## Music Assignments
 
@@ -76,6 +127,14 @@ Which clips and tracks are used in each produced video. Check this before select
 | Dramatic | `rising-tide.mp3` | Mixkit 580 | MientrasTodosBuscan MT1/MT2, NoLoBusque NB3 |
 | Energetic reveal | `pulse-reveal.mp3` | — | PuenteDeMayo |
 | Tense dramatic | `dark-verdict.mp3` | Mixkit 582 | QuizLegal |
+| Data reveal | `data-reveal.mp3` | — | UnNoventa S3 |
+| Contemplative | `quiet-debate.mp3` | Mixkit 591 | Debate1 (D1) |
+| Atlantic | `atlantic-swell.mp3` | Mixkit 595 | MayoMejorMes V1/V2 |
+| Warm dark | `data-truth.mp3` | Mixkit 603 | Debate2 (D2) |
+
+| Tonal dark | `night-drive.mp3` | Mixkit 583 | ElPeorMomento S2/S2b |
+| Calm C-major | `data-reveal.mp3` | Mixkit 590 | OchoTresMil W1/W1b |
+| Unused | `cyber-decrypt.mp3` | — | ElProblema S1/S1b |
 
 ### SFX available
 `radar-ping.mp3`, `score-reveal.mp3`, `whoosh.mp3`

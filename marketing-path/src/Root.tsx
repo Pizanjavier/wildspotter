@@ -27,6 +27,7 @@ import { QuizLegal, QUIZ_LEGAL_FRAMES } from "./QuizLegal";
 import { StoryPoll } from "./StoryPoll";
 import { StoryQuizLegal } from "./StoryQuizLegal";
 import { StoryCountdown } from "./StoryCountdown";
+import { StoryAnticipationMay10 } from "./StoryAnticipationMay10";
 import { StoryBTS } from "./StoryBTS";
 import { PuenteDeMayo, PUENTE_DE_MAYO_FRAMES } from "./PuenteDeMayo";
 import { StoryPuenteUrgencia } from "./StoryPuenteUrgencia";
@@ -36,6 +37,12 @@ import {
 	type SpotData,
 } from "./ElRadarDetecto";
 import { AndroidLaunch, ANDROID_LAUNCH_FRAMES } from "./AndroidLaunch";
+import { UnNoventa, UN_NOVENTA_FRAMES } from "./UnNoventa";
+import { ElProblema, EL_PROBLEMA_FRAMES } from "./ElProblema";
+import { OchoTresMil, OCHO_TRES_MIL_FRAMES } from "./OchoTresMil";
+import { ElPeorMomento, EL_PEOR_MOMENTO_FRAMES } from "./ElPeorMomento";
+import { Debate, DEBATE_FRAMES } from "./Debate";
+import { MayoMejorMes, MAYO_MEJOR_MES_FRAMES } from "./MayoMejorMes";
 // --- Base durations (without intro) ---
 const PARKING_LLENO_FRAMES = 805;
 const NATURA2000_FRAMES = 482;
@@ -286,6 +293,104 @@ const CAROUSEL_MYSTERY: SlideData[] = [
 		total: 5,
 		title: "",
 		body: "Los mejores spots no se comparten. Se calculan.",
+		accentColor: "#D97706",
+	},
+];
+
+const CAROUSEL_T1: SlideData[] = [
+	{
+		number: 1,
+		total: 6,
+		title: "5 señales de que un spot va a ser bueno",
+		body: "El radar lo analiza todo antes de que llegues.",
+		accentColor: "#4ADE80",
+	},
+	{
+		number: 2,
+		total: 6,
+		title: "Final de camino sin salida",
+		body: "Sin tráfico de paso. El radar busca muertos de fondo, pistas sin salida, accesos privados.",
+		accentColor: "#4ADE80",
+		icon: "01",
+	},
+	{
+		number: 3,
+		total: 6,
+		title: "0 edificios en 300m",
+		body: "Sin vecinos = sin quejas. La densidad urbana es uno de los factores con más peso en el score de contexto.",
+		accentColor: "#4ADE80",
+		icon: "02",
+	},
+	{
+		number: 4,
+		total: 6,
+		title: "Pendiente < 5%",
+		body: "Suelo plano. El Topógrafo mide la inclinación con Terrain-RGB. Por encima del 15% tu furgo no descansa.",
+		accentColor: "#4ADE80",
+		icon: "03",
+	},
+	{
+		number: 5,
+		total: 6,
+		title: "Verde en 4 capas legales",
+		body: "Fuera de zonas protegidas. Natura 2000, Parques Nacionales, Ley de Costas y Catastro — los 4 checks legales del radar.",
+		accentColor: "#4ADE80",
+		icon: "04",
+	},
+	{
+		number: 6,
+		total: 6,
+		title: "Score > 70",
+		body: "¿Qué señal es la más importante para ti? WildSpotter las procesa todas. Link en bio.",
+		accentColor: "#4ADE80",
+	},
+];
+
+const CAROUSEL_U1: SlideData[] = [
+	{
+		number: 1,
+		total: 6,
+		title: "Por qué los mejores spots no tienen reviews",
+		body: "La paradoja que destruye los lugares que más quieres.",
+		accentColor: "#D97706",
+	},
+	{
+		number: 2,
+		total: 6,
+		title: "Un spot descubierto",
+		body: "3 reviews: tranquilo, limpio, tuyo.",
+		accentColor: "#D97706",
+		icon: "①",
+	},
+	{
+		number: 3,
+		total: 6,
+		title: "6 meses después",
+		body: "300 reviews. Lleno cada fin de semana. Basura. Ruido. Ya no es tuyo.",
+		accentColor: "#D97706",
+		icon: "②",
+	},
+	{
+		number: 4,
+		total: 6,
+		title: "El problema no es la app",
+		body: "Es la lógica. Cuanto más se comparte, más se arruina. Las apps de reviews tienen ese bucle integrado.",
+		accentColor: "#D97706",
+		icon: "③",
+	},
+	{
+		number: 5,
+		total: 6,
+		title: "WildSpotter no comparte spots",
+		body: "Los calcula. Cada usuario descubre los suyos con datos: terreno, satélite, legal. Tu spot es tuyo porque nadie más lo calculó.",
+		accentColor: "#D97706",
+		icon: "④",
+	},
+	{
+		number: 6,
+		total: 6,
+		title: "",
+		body: "¿De acuerdo? Guárdalo. Envíaselo a tu copiloto. Link en bio.",
 		accentColor: "#D97706",
 	},
 ];
@@ -1165,6 +1270,50 @@ export const RemotionRoot: React.FC = () => {
 						/>
 					))}
 				</Folder>
+				<Folder name="5SenalesBuenSpot">
+					{CAROUSEL_T1.map((slide, i) => (
+						<Still
+							key={`t1-${slide.number}`}
+							id={`Carousel-T1-${i + 1}`}
+							component={CarouselSlide}
+							width={W}
+							height={W}
+							defaultProps={{
+								carouselTitle: "5 señales de que un spot va a ser bueno",
+								slide,
+								variant: (i === 0
+									? "cover"
+									: i === CAROUSEL_T1.length - 1
+										? "cta"
+										: "content") as "cover" | "content" | "cta",
+								theme: "scoring" as const,
+								backgroundImage: "images/carousel-bg-scoring.jpg",
+							}}
+						/>
+					))}
+				</Folder>
+				<Folder name="ReviewsParadox">
+					{CAROUSEL_U1.map((slide, i) => (
+						<Still
+							key={`u1-${slide.number}`}
+							id={`Carousel-U1-${i + 1}`}
+							component={CarouselSlide}
+							width={W}
+							height={W}
+							defaultProps={{
+								carouselTitle: "Por qué los mejores spots no tienen reviews",
+								slide,
+								variant: (i === 0
+									? "cover"
+									: i === CAROUSEL_U1.length - 1
+										? "cta"
+										: "content") as "cover" | "content" | "cta",
+								theme: "mystery" as const,
+								backgroundImage: "images/carousel-bg-mystery.jpg",
+							}}
+						/>
+					))}
+				</Folder>
 			</Folder>
 
 			{/* ============ Stories V3 (Still backgrounds for IG) ============ */}
@@ -1251,6 +1400,14 @@ export const RemotionRoot: React.FC = () => {
 					/>
 				</Folder>
 				<Folder name="Countdowns">
+					<Composition
+						id="Story-Anticipation-May10"
+						component={StoryAnticipationMay10}
+						durationInFrames={450}
+						fps={FPS}
+						width={W}
+						height={H}
+					/>
 					<Still
 						id="Story-Countdown-1"
 						component={StoryCountdown}
@@ -1463,6 +1620,94 @@ export const RemotionRoot: React.FC = () => {
 						} as SpotData,
 					}}
 				/>
+
+				{/* RD5 — Costa norte (Galicia/Asturias): matorral atlántico, final de pista */}
+				<Composition
+					id="ElRadarDetecto-RD5"
+					component={ElRadarDetecto}
+					durationInFrames={EL_RADAR_DETECTO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "RD5" as const,
+						spot: {
+							satelliteImage: "images/satellite-spot-327486586.jpg",
+							score: 84.5,
+							aiScore: 75.0,
+							slope: 0.7,
+							elevation: 464,
+							surface: "Matorral boscoso de transición",
+							buildingsNearby: 0,
+							roadNoise: "Ninguno",
+							scenicFeature: "Final de pista ✓",
+							wildBonus: 21,
+							landcover: "Matorral boscoso de transición",
+							legal: {
+								natura: false,
+								park: false,
+								coastal: false,
+								cadastre: "Rústico",
+							},
+							videoS1:
+								"videos/aerial_view_of_forest_path_in_bolu_province_35289213_2160x3840_35289213.mp4",
+							videoS2:
+								"videos/serene_drive_through_lush_green_forest_34943087_2160x3840_34943087.mp4",
+							videoS5:
+								"videos/scenic_green_road_surrounded_by_lush_trees_34231319_2160x3840_34231319.mp4",
+						} as SpotData,
+					}}
+				/>
+
+				{/* RD6 — Interior (Extremadura/Castilla): bosque de frondosas, agua cerca */}
+				<Composition
+					id="ElRadarDetecto-RD6"
+					component={ElRadarDetecto}
+					durationInFrames={EL_RADAR_DETECTO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "RD6" as const,
+						spot: {
+							satelliteImage: "images/satellite-spot-5484843145.jpg",
+							score: 86.8,
+							aiScore: 78.0,
+							slope: 3.5,
+							elevation: 805,
+							surface: "Bosque de frondosas",
+							buildingsNearby: 0,
+							roadNoise: "Ninguno",
+							scenicFeature: "Agua cerca + final de pista ✓",
+							wildBonus: 22,
+							landcover: "Bosque de frondosas",
+							legal: {
+								natura: false,
+								park: false,
+								coastal: false,
+								cadastre: "Rústico",
+							},
+							videoS1:
+								"videos/beautiful_forest_in_azad_kashmir_pakistan_27988109_1080x1920_27988109.mp4",
+							videoS2:
+								"videos/road_among_trees_in_overhead_view_14608460_2160x3840_14608460.mp4",
+							videoS5:
+								"videos/tranquil_pine_forest_landscape_scene_30667274_1080x1920_30667274.mp4",
+						} as SpotData,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ UnNoventa (S3 — score reveal) ============ */}
+			<Folder name="UnNoventa">
+				<Composition
+					id="UnNoventa-S3"
+					component={UnNoventa}
+					durationInFrames={UN_NOVENTA_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+				/>
 			</Folder>
 
 			{/* ============ AndroidLaunch ============ */}
@@ -1489,6 +1734,142 @@ export const RemotionRoot: React.FC = () => {
 					defaultProps={{
 						hookVariant: "AL2" as const,
 						musicTrack: "warm-launch" as const,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ ElProblema (S1 — El Problema) ============ */}
+			<Folder name="ElProblema">
+				<Composition
+					id="ElProblema-S1"
+					component={ElProblema}
+					durationInFrames={EL_PROBLEMA_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "S1" as const,
+					}}
+				/>
+				<Composition
+					id="ElProblema-S1b"
+					component={ElProblema}
+					durationInFrames={EL_PROBLEMA_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "S1b" as const,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ OchoTresMil (W1 — 83.006) ============ */}
+			<Folder name="OchoTresMil">
+				<Composition
+					id="OchoTresMil-W1"
+					component={OchoTresMil}
+					durationInFrames={OCHO_TRES_MIL_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "W1" as const,
+					}}
+				/>
+				<Composition
+					id="OchoTresMil-W1b"
+					component={OchoTresMil}
+					durationInFrames={OCHO_TRES_MIL_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "W1b" as const,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ ElPeorMomento (S2 — El Peor Momento) ============ */}
+			<Folder name="ElPeorMomento">
+				<Composition
+					id="ElPeorMomento-S2"
+					component={ElPeorMomento}
+					durationInFrames={EL_PEOR_MOMENTO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "S2" as const,
+					}}
+				/>
+				<Composition
+					id="ElPeorMomento-S2b"
+					component={ElPeorMomento}
+					durationInFrames={EL_PEOR_MOMENTO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "S2b" as const,
+					}}
+				/>
+			</Folder>
+
+			{/* ============ Debate (Debate1 + Debate2 — engagement/opinion) ============ */}
+			<Folder name="Debate">
+				{/* Debate1 — ¿Das la ubicación de tu spot favorito? */}
+				<Composition
+					id="Debate1-D1"
+					component={Debate}
+					durationInFrames={DEBATE_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "D1" as const,
+						musicTrack: "quiet-debate",
+					}}
+				/>
+				{/* Debate2 — ¿Merece la pena una review? */}
+				<Composition
+					id="Debate2-D2"
+					component={Debate}
+					durationInFrames={DEBATE_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						variant: "D2" as const,
+						musicTrack: "data-truth",
+					}}
+				/>
+			</Folder>
+
+			{/* ============ MayoMejorMes (V1 — seasonal / costa norte) ============ */}
+			<Folder name="MayoMejorMes">
+				<Composition
+					id="MayoMejorMes-V1"
+					component={MayoMejorMes}
+					durationInFrames={MAYO_MEJOR_MES_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "V1" as const,
+						musicTrack: "atlantic-swell",
+					}}
+				/>
+				<Composition
+					id="MayoMejorMes-V2"
+					component={MayoMejorMes}
+					durationInFrames={MAYO_MEJOR_MES_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+					defaultProps={{
+						hookVariant: "V2" as const,
+						musicTrack: "atlantic-swell",
 					}}
 				/>
 			</Folder>

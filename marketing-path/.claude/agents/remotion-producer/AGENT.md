@@ -51,11 +51,24 @@ If the brief is incomplete, ask for the missing pieces before building.
 
 ## Mandatory Production Rules (Summary — Full Details in CLAUDE.md)
 
-- **Every frame has motion** — Real video backgrounds on every scene, no flat solid frames
+- **Visual variety — NO PowerPoint effect:** A composition must NOT use the same "VideoBg + text overlay" pattern on every scene. That creates a slide-deck feeling. Break the pattern with at least 2 of these techniques across the composition:
+  - **One scene with no video** — Use a stark dark background with a subtle gradient/glow. Great for pivot/reveal moments
+  - **Shared footage across adjacent scenes** — Two related scenes can reuse the same video with `startFrame` offset (feels like one continuous shot, not two slides)
+  - **Data visualizations** — SVG charts, animated counters, radar pulses, progress bars, arc gauges
+  - **UI elements** — Staggered card lists, legal check items, app screenshots via `<Img>`, logo images
+  - **Screen effects** — Shake, flash, pulsing glow, scan lines (not just text fade-in + translateY)
+  - **Count-up numbers** — Animated counters using `interpolate` + `Easing` instead of static text for data points
+  - Every scene needs motion, but motion comes from animations and effects — not just a slow-zooming background video
+- **Standard Brand Close (CTA):** Unless the strategy explicitly dictates an engagement-only close (like `Debate`), EVERY video must end with the standard WildSpotter brand close. This ensures consistent brand recognition across the feed. The CTA scene must include:
+  - Statement or engagement question.
+  - The Logo (`<Img src={staticFile("images/app-logo.png")} />`) centered, size ~120-140px, scaling in via `spring` with a warm glow shadow.
+  - The Brand Name ("WildSpotter") in JetBrains Mono font (`loadMono`), ~52-56px, tracking/letter-spacing 4-5px, translating up.
+  - An Amber divider (animated line width).
+  - The CTA pill (e.g., "Gratis en iOS · link en bio").
 - **All transitions are fades** — 16-20f crossfades, no slides or wipes
 - **Typography & Safe Areas:** 72px+ main, 48px+ secondary, 28px+ labels. Always use `textShadow` or dark overlays. Strictly respect platform UI safe areas (full padding specs in `CLAUDE.md`).
 - **Scene duration:** 1 text block = 3s min, 2 blocks = 4.5s min, CTA = 6s+. Always add 30-50% more frames than feels necessary
-- **Video backgrounds:** Ken Burns zoom (`scale 1.0→1.08-1.12`), dimming via overlay opacity (15-90% depending on content focus)
+- **Video backgrounds:** When used, apply Ken Burns zoom (`scale 1.0→1.08-1.12`), dimming via overlay opacity (15-90% depending on content focus). But NOT every scene needs one — see visual variety rule above
 - **Footage arc:** Problem footage → transition/nature → solution/app → payoff/peaceful
 - **Audio-Visual Sync:** Always verify audio structure. Use `startFrom` to jump to the right musical phrase. Use `volume` interpolation for 1-second fade-ins and 3-second fade-outs. Never hard-cut audio
 - **Real assets over SVG** — PNG images for logos, vans, recognizable objects. CARTO tiles for maps

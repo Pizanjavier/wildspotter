@@ -22,7 +22,7 @@ Desliza para no llevarte una multa de 600€.
 
 Enviale esto a tu copiloto antes del proximo viaje.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #legalidad #espana #furgocamper
 ```
@@ -46,7 +46,7 @@ Radar. Terreno. Legal. Satelite. Contexto. Uso del suelo. Score.
 
 Desliza para ver que hay detras de cada numero.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```
@@ -68,7 +68,7 @@ WildSpotter analiza terreno, zonas legales y satelite para darte spots que nadie
 
 Costa o montana este puente, ¿que es lo tuyo? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #furgonetacamper #puentedemayo #espana #furgo
 ```
@@ -149,7 +149,7 @@ Bonus y penalizaciones: costa, bosque, mirador suman. Industrial, agrícola rest
 
 Sin reviews. Sin opiniones. Solo datos.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```
@@ -217,7 +217,7 @@ Cada usuario descubre los suyos. Sin compartir. Sin masificar.
 
 Los mejores spots no se comparten. Se calculan.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #gatekeeping #furgocamper #espana
 ```
@@ -238,7 +238,7 @@ Score: 82/100. Zona libre.
 
 WildSpotter lo verificó con 4 capas legales antes de que llegues.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #zonalibre
 ```
@@ -258,7 +258,7 @@ Pero esta dentro de una zona Natura 2000. Multa de hasta 600€.
 
 WildSpotter cruza tus spots con Natura 2000, Parques Nacionales, Ley de Costas y Catastro. Antes de que llegues.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #natura2000 #espana #furgocamper
 ```
@@ -277,7 +277,7 @@ Primeros 100m desde la linea de costa = zona regulada.
 
 ¿Legal? Depende del municipio. WildSpotter te avisa antes de llegar.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #leydecostas #espana #furgocamper
 ```
@@ -315,7 +315,7 @@ Si todavia no sabes como funciona el pipeline de WildSpotter, desliza.
 
 7 capas. 83.006 spots. 0 opiniones.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```

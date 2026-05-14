@@ -94,10 +94,11 @@ When asked to create daily engagement lists, produce one markdown file per day i
 
 1. **Search Spanish vanlife hashtags** — Use Chrome browser automation to browse #vanlife, #vidaenfurgo, #furgocamper, #pernoctar, #acampadalibre on Instagram Explore and TikTok
 2. **Select 18 posts** — 9 per platform (5 small, 3 medium, 1 large). Small = under 1K followers, medium = 1K-10K, large = 10K+
-3. **Write a custom comment for each** — Must reference a specific detail from the post content. Include a question to drive reply. Friendly tone, emojis, like talking to a fellow vanlifer
-4. **No profile repetition** — Never repeat a profile within the same day. Across multi-day batches, avoid repeating profiles entirely. If a profile appeared on day N, do not use it on day N+1 through N+4. Same profile on different posts is allowed only if the batch spans 5+ days apart
-5. **No following** — Comments only. Never instruct to follow anyone
-6. **Reference in calendar** — After creating the files, add a `> 📋 Engagement 5-3-1: ver [engagement-list-mayDD.md](engagement-list-mayDD.md)` line under the corresponding day in the copys calendar file
+3. **Select posts NO OLD POSTS** — The posts must be from the last 30 days. Do not select posts older than 30 days
+4. **Write a custom comment for each** — Must reference a specific detail from the post content. Include a question to drive reply. Friendly tone, emojis, like talking to a fellow vanlifer
+5. **No profile repetition** — Never repeat a profile within the same day or different days. Across multi-day batches, avoid repeating profiles entirely. If a profile appeared on day N, do not use it on day N+1 through N+4. Same profile on different posts is allowed only if the batch spans 5+ days apart
+6. **No following** — Comments only. Never instruct to follow anyone
+7. **Reference in calendar** — After creating the files, add a `> 📋 Engagement 5-3-1: ver [engagement-list-mayDD.md](engagement-list-mayDD.md)` line under the corresponding day in the copys calendar file
 
 ### Comment Rules
 

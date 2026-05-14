@@ -5,6 +5,12 @@
       "command": "/opt/homebrew/bin/audio-analyzer-mcp",
       "args": [],
       "env": {}
+    },
+    "ollama-worker": {
+      "command": "/Users/javier/Documents/Proyects/wildspotter/mcp-ollama-worker/.venv/bin/python",
+      "args": [
+        "/Users/javier/Documents/Proyects/wildspotter/mcp-ollama-worker/mcp_server.py"
+      ]
     }
   }
 }

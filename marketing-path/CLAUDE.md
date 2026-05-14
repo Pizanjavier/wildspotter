@@ -158,3 +158,6 @@ community-manager -> content brief -> remotion-producer -> Remotion composition 
 
 ## Spelling mistakes
 No mistakes in the spanish spelling. If you make a mistake, fix it immediately. Special atention with accents.
+
+## Local Ollama MCP Server
+An MCP server is available to delegate simple or repetitive text generation tasks to the local Qwen3 model (via Ollama). This saves cloud tokens and speeds up basic tasks like summarizing or data extraction.

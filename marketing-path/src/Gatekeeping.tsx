@@ -1,4 +1,4 @@
-import { AbsoluteFill, Img, Sequence, Video, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Img, Sequence, Video, interpolate, staticFile, useCurrentFrame } from "remotion";
 import React from "react";
 
 export const GATEKEEPING_FRAMES = 660; // 22s @ 30fps
@@ -9,7 +9,7 @@ type GatekeepingProps = {
 
 export const Gatekeeping: React.FC<GatekeepingProps> = ({ variant }) => {
 	const frame = useCurrentFrame();
-	const { fps } = useVideoConfig();
+
 
 	const textStyle: React.CSSProperties = {
 		fontFamily: "'Inter', sans-serif",

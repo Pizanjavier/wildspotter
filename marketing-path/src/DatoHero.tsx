@@ -6,7 +6,7 @@ import {
 	interpolate,
 	staticFile,
 	useCurrentFrame,
-	useVideoConfig,
+
 } from "remotion";
 import React from "react";
 
@@ -22,7 +22,7 @@ export const DatoHero: React.FC<DatoHeroProps> = ({
 	musicTrack = "sci-fi-score",
 }) => {
 	const frame = useCurrentFrame();
-	const { fps } = useVideoConfig();
+
 
 	const counterStart = 45;
 	const counterEnd = 150;

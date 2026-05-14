@@ -5,6 +5,7 @@ import { EmailForm } from '@/islands/EmailForm';
 interface Props { t: Dict; locale: 'es' | 'en' }
 const { t, locale } = Astro.props;
 const iosUrl = LAUNCH_CONFIG.IOS_STORE_URL || '#';
+const androidUrl = LAUNCH_CONFIG.ANDROID_STORE_URL || '#';
 const showAndroidForm = !LAUNCH_CONFIG.ANDROID_LIVE;
 ---
 <section class="hero" style="position:relative;padding:72px 0 100px;overflow:hidden;" id="hero-section">
@@ -15,7 +16,7 @@ const showAndroidForm = !LAUNCH_CONFIG.ANDROID_LIVE;
     <div class="hero-grid">
       <!-- Text column -->
       <div>
-        <span class="eyebrow"><span class="live-dot"></span>{locale === 'es' ? 'Gratis en iOS · 80 000+ spots analizados' : 'Free on iOS · 80,000+ spots analyzed'}</span>
+        <span class="eyebrow"><span class="live-dot"></span>{locale === 'es' ? 'Gratis en iOS y Android · 80 000+ spots analizados' : 'Free on iOS and Android · 80,000+ spots analyzed'}</span>
         <h1 class="h-display" style="margin:22px 0 26px;">
           {locale === 'es' ? (
             <Fragment>
@@ -36,6 +37,10 @@ const showAndroidForm = !LAUNCH_CONFIG.ANDROID_LIVE;
           <a href={iosUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
             <svg width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><path d="M11.5 8.5c0-1.4.7-2.4 1.7-3.1-.6-.9-1.5-1.4-2.7-1.5-1.1-.1-2.3.7-2.9.7-.6 0-1.6-.6-2.6-.6-1.4 0-2.7.8-3.4 2.1-1.5 2.5-.4 6.2 1 8.3.7 1 1.5 2.1 2.6 2.1 1 0 1.4-.6 2.7-.6 1.2 0 1.6.6 2.7.6 1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.2-.8-2.2-3.3zM9.7 2.6c.5-.6.9-1.5.8-2.4-.8 0-1.7.5-2.2 1.1-.5.5-.9 1.4-.8 2.3.9.1 1.7-.4 2.2-1z"/></svg>
             {locale === 'es' ? 'Descargar gratis · App Store' : 'Download free · App Store'}
+          </a>
+          <a href={androidUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <img src="/google_play.png" alt="Play Store" style="width: 16px;"/>
+            {locale === 'es' ? 'Descargar gratis · Play Store' : 'Download free · Play Store'}
           </a>
           {showAndroidForm && (
             <a href="#android" class="btn btn-dark">{locale === 'es' ? 'Avísame · Android' : 'Notify me · Android'}</a>

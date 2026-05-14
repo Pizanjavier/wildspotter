@@ -12,7 +12,7 @@
 >
 > **Estado de la app:** iOS live (15 descargas reales). Android no lanzado — CTAs incluyen "Android muy pronto".
 >
-> **Destino de todos los CTAs:** `wildspotter.app` — Gratis en iOS. Android muy pronto.
+> **Destino de todos los CTAs:** `wildspotter.app` — Gratis en iOS y Android.
 
 ---
 
@@ -84,7 +84,7 @@ Espana · iOS gratis · Android pronto
 2. TIPO DE PAISAJE — Sin ubicacion
 3. DETALLE ENGANCHA — Sub-score, capa legal, dato de contexto insolito
 4. PREGUNTA REAL — "¿En que region crees que esta? 👇"
-5. CTA DESCARGA — Gratis en iOS. Android muy pronto
+5. CTA DESCARGA — Gratis en iOS y Android
 ```
 
 **Cambio V4:** El "¿Dónde esta? Solo en WildSpotter" del V3 se reemplaza por una pregunta que invite al comentario. La respuesta siempre sera "El radar te lo dice — link en bio", pero la pregunta genera interaccion.

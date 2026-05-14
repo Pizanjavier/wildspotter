@@ -300,7 +300,7 @@ wildspotter.app
 
 **1. Sección hero / badges:**
 - Activar el badge de Google Play. Debe aparecer al lado del badge de App Store ya existente.
-- Texto actual: "Gratis en iOS. Android muy pronto." → Cambiar a: **"Gratis en iOS y Android."**
+- Texto actual: "Gratis en iOS y Android." → Cambiar a: **"Gratis en iOS y Android."**
 - Si hay un countdown o banner de "Android próximamente", eliminarlo.
 
 **2. CTA secundaria:**

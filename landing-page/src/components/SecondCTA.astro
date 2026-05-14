@@ -6,6 +6,7 @@ import { PioneerCounter } from '@/islands/PioneerCounter';
 interface Props { t: Dict; locale: 'es' | 'en' }
 const { t, locale } = Astro.props;
 const iosUrl = LAUNCH_CONFIG.IOS_STORE_URL || '#';
+const androidUrl = LAUNCH_CONFIG.ANDROID_STORE_URL || '#';
 const showAndroidForm = !LAUNCH_CONFIG.ANDROID_LIVE;
 const isEs = locale === 'es';
 ---
@@ -19,13 +20,17 @@ const isEs = locale === 'es';
     </h2>
     <p class="fade-up" data-delay="1">
       {isEs
-        ? 'Descárgala gratis en iPhone o déjanos tu correo y te avisamos en cuanto Android esté listo. Sin spam, doble confirmación, baja cuando quieras.'
-        : 'Download free on iPhone or leave your email and we will notify you when Android is ready. No spam, double opt-in, unsubscribe any time.'}
+        ? 'Descárgala gratis en iPhone y Android.'
+        : 'Download free on iPhone and Android.'}
     </p>
     <div class="ctas fade-up" data-delay="2">
       <a href={iosUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
         <svg width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><path d="M11.5 8.5c0-1.4.7-2.4 1.7-3.1-.6-.9-1.5-1.4-2.7-1.5-1.1-.1-2.3.7-2.9.7-.6 0-1.6-.6-2.6-.6-1.4 0-2.7.8-3.4 2.1-1.5 2.5-.4 6.2 1 8.3.7 1 1.5 2.1 2.6 2.1 1 0 1.4-.6 2.7-.6 1.2 0 1.6.6 2.7.6 1.1 0 1.8-1 2.5-2 .8-1.1 1.1-2.2 1.1-2.3-.1 0-2.2-.8-2.2-3.3zM9.7 2.6c.5-.6.9-1.5.8-2.4-.8 0-1.7.5-2.2 1.1-.5.5-.9 1.4-.8 2.3.9.1 1.7-.4 2.2-1z"/></svg>
         {isEs ? 'Descargar en App Store' : 'Download on App Store'}
+      </a>
+      <a href={androidUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <img src="/google_play.png" alt="Play Store" style="width: 16px;"/>
+        {isEs ? 'Descargar en Play Store' : 'Download on Play Store'}
       </a>
     </div>
 
@@ -44,7 +49,7 @@ const isEs = locale === 'es';
 
 <!-- Mobile sticky CTA -->
 <a href="#download" class="mobile-sticky" id="mobileSticky">
-  <span class="label">WildSpotter<small>{isEs ? 'Gratis · iOS' : 'Free · iOS'}</small></span>
+  <span class="label">WildSpotter<small>{isEs ? 'Gratis · iOS · Android' : 'Free · iOS · Android'}</small></span>
   <span class="go">{isEs ? 'Descargar' : 'Download'} →</span>
 </a>
 

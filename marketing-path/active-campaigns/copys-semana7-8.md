@@ -33,7 +33,7 @@ WildSpotter cruza tus spots con Natura 2000, Parques Nacionales, Ley de Costas y
 
 ¿Alguna vez has aparcado en una zona protegida sin saberlo? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #natura2000 #espana #furgocamper
 ```
@@ -60,7 +60,7 @@ Primeros 100m desde la linea de costa = zona regulada.
 
 ¿Has dormido alguna vez en zona de Ley de Costas? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #leydecostas #espana #furgocamper
 ```
@@ -87,7 +87,7 @@ WildSpotter no comparte. Calcula.
 
 ¿A cuantos sitios "secretos" habeis llegado ya llenos? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #spotsecreto #furgocamper #espana
 ```
@@ -114,7 +114,7 @@ Te da los que nadie mas te va a dar.
 
 ¿Cuántos crees que hay cerca de donde estas ahora? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #datosreales #espana #furgocamper
 ```
@@ -127,7 +127,12 @@ Gratis en iOS. Android muy pronto -> link en bio
 
 ### Lun 11 — S2 "El Peor Momento" — Reel — IG + TikTok
 
-> 📋 Engagement 5-3-1: ver [engagement-list-may11.md](engagement-list-may11.md) — ultimo dia con lista pre-generada, desde el 12 busqueda autonoma (ver instrucciones en el archivo).
+> Android Launch marketing-path/active-campaigns/copys-android-launch.md.
+> Promoted with Instagram and tiktok promotions 10€ each, duration 2 days.
+
+### Mar 12 — S2 "El Peor Momento" — Reel — IG + TikTok (CANCELADO, MAL CONTENIDO - corregir si se quiere usar mas adelante, engagement list pasado al 16, se deja a la promoción actuar sobre el contenido del 11)
+
+> 📋 Engagement 5-3-1: ver [engagement-list-may12.md](engagement-list-may12.md)
 
 > Concepto emoción/problema. Hook de urgencia nocturna.
 > Produccion: Footage de van en carretera de noche, luces de ciudad al fondo. Texto animado.
@@ -145,16 +150,16 @@ Eso no le pasa a quien tiene el radar activo antes de salir.
 
 ¿Os ha pasado quedarse sin sitio de noche? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #furgocamper #vidaenfurgo #espana #furgonetacamper
 ```
 
 ---
 
-### Mar 12 — Story IG
+### Mie 13 — Story IG (PREV MAR 12)
 
-> 📋 Engagement 5-3-1: ver [engagement-list-may12.md](engagement-list-may12.md)
+> 📋 Engagement 5-3-1: ver [engagement-list-may13.md](engagement-list-may13.md)
 
 **Poll:**
 ```
@@ -176,9 +181,9 @@ Cada punto es un candidato. Solo unos pocos pasan los 7 filtros.
 
 ---
 
-### Mie 13 — T1 "5 Señales de Buen Spot" — Carousel 5 slides — IG + TikTok
+### Jue 14 — T1 "5 Señales de Buen Spot" — Carousel 5 slides — IG + TikTok (PREV MIE 13)
 
-> 📋 Engagement 5-3-1: ver [engagement-list-may13.md](engagement-list-may13.md)
+> 📋 Engagement 5-3-1: ver [engagement-list-may14.md](engagement-list-may14.md)
 
 > Carousel educativo saveable. Formato: una señal por slide, icono + dato.
 > Produccion: Remotion Still, tema scoring (verde). 5 slides.
@@ -191,7 +196,7 @@ Lo que busca el radar en cada candidato.
 
 Desliza → guardalo para el proximo viaje.
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```
@@ -206,7 +211,7 @@ Gratis en iOS. Android muy pronto -> link en bio
 
 ---
 
-### Jue 14 — Engagement day (sin post programado)
+### Jue 14 — Engagement day (sin post programado) (CANCELADO)
 
 > 📋 Engagement 5-3-1: ver [engagement-list-may14.md](engagement-list-may14.md)
 
@@ -217,6 +222,7 @@ Gratis en iOS. Android muy pronto -> link en bio
 > Nuevo spot de la serie con datos reales del pipeline. Zona: costa norte (Galicia/Asturias/Cantabria).
 > Produccion: Remotion `ElRadarDetecto-RD5`. Ortofoto PNOA real. Footage stock: costa verde atlantica.
 > [Datos reales del pipeline — completar con el spot de score > 75 en costa norte que mas se adapte]
+> 📋 Engagement 5-3-1: ver [engagement-list-may15.md](engagement-list-may15.md)
 
 ```
 Score: 84.5/100.
@@ -301,7 +307,7 @@ El radar tiene los mejores spots de la costa norte catalogados.
 
 ¿Ya habeis estado por el norte este mes? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #galicia #asturias #furgocamper
 ```
@@ -372,7 +378,7 @@ La paradoja de las apps de reviews en 5 slides.
 
 Desliza. Envíaselo a alguien que siempre publica sus spots. 😏
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #gatekeeping #espana #furgocamper
 ```
@@ -488,7 +494,7 @@ Eso es lo que busca WildSpotter. Cada vez. Sin compartir.
 
 ¿Estais de acuerdo en que los mejores spots no se deben compartir? 👇
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```

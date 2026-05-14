@@ -10,7 +10,7 @@
 
 | Metric | Value |
 |--------|-------|
-| **Followers** | 16 |
+| **Followers** | 16 |  
 | **Following** | 75 |
 | **Posts** | 22 |
 | **Bio** | "Radar de spots salvajes para vanlifers · Datos geográficos + IA, no reviews · España 🇪🇸 · 🍋 Early access" |

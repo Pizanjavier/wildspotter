@@ -206,15 +206,17 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 	})();
 
 	// Music fade out
-	const musicVolume = interpolate(
-		frame,
-		[TOTAL - 90, TOTAL],
-		[0.38, 0],
-		{ extrapolateRight: "clamp", extrapolateLeft: "clamp" },
-	);
+	const musicVolume = interpolate(frame, [TOTAL - 90, TOTAL], [0.38, 0], {
+		extrapolateRight: "clamp",
+		extrapolateLeft: "clamp",
+	});
 
 	// ── Scene 1: Hook animations ─────────────────────────────────────────────
-	const s1LogoScale = spring({ frame, fps, config: { damping: 12, mass: 0.7 } });
+	const s1LogoScale = spring({
+		frame,
+		fps,
+		config: { damping: 12, mass: 0.7 },
+	});
 	const s1LogoOpacity = interpolate(frame, [0, 20], [0, 1], {
 		extrapolateRight: "clamp",
 	});
@@ -233,16 +235,21 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 		fps,
 		config: { damping: 14 },
 	});
-	const appleDelay = 95;
+	const appleDelay = 50;
 	const appleScale = spring({
 		frame: Math.max(0, frame - appleDelay),
 		fps,
 		config: { damping: 11, mass: 0.6 },
 	});
-	const appleOpacity = interpolate(frame, [appleDelay, appleDelay + 20], [0, 1], {
-		extrapolateRight: "clamp",
-	});
-	const androidDelay = 130;
+	const appleOpacity = interpolate(
+		frame,
+		[appleDelay, appleDelay + 20],
+		[0, 1],
+		{
+			extrapolateRight: "clamp",
+		},
+	);
+	const androidDelay = 60;
 	const androidScale = spring({
 		frame: Math.max(0, frame - androidDelay),
 		fps,
@@ -261,13 +268,13 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 		fps,
 		config: { damping: 14, mass: 0.9 },
 	});
-	const s1AL2SubDelay = 60;
+	const s1AL2SubDelay = 30;
 	const s1AL2SubProgress = spring({
 		frame: Math.max(0, frame - s1AL2SubDelay),
 		fps,
 		config: { damping: 14 },
 	});
-	const s1AL2PlayDelay = 100;
+	const s1AL2PlayDelay = 50;
 	const s1AL2PlayScale = spring({
 		frame: Math.max(0, frame - s1AL2PlayDelay),
 		fps,
@@ -293,7 +300,7 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 		"Datos legales reales",
 		"IA satelital — 25cm/px",
 	];
-	const DATA_STAGGER = 38;
+	const DATA_STAGGER = 28;
 	const DATA_START = S1_END + 20;
 
 	const payoffDelay = DATA_START + dataItems.length * DATA_STAGGER + 25;
@@ -311,9 +318,9 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 	// ── Scene 3: Universality ────────────────────────────────────────────────
 	const S3_START = S2_END + 18;
 	const line1Delay = S3_START;
-	const line2Delay = S3_START + 40;
-	const line3Delay = S3_START + 72;
-	const taglineDelay = S3_START + 115;
+	const line2Delay = S3_START + 20;
+	const line3Delay = S3_START + 40;
+	const taglineDelay = S3_START + 60;
 
 	const makeLine = (delay: number) =>
 		spring({
@@ -339,12 +346,9 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 		fps,
 		config: { damping: 12, mass: 0.8 },
 	});
-	const ctaLogoOpacity = interpolate(
-		frame,
-		[S4_START, S4_START + 25],
-		[0, 1],
-		{ extrapolateRight: "clamp" },
-	);
+	const ctaLogoOpacity = interpolate(frame, [S4_START, S4_START + 25], [0, 1], {
+		extrapolateRight: "clamp",
+	});
 	const ctaBadgeDelay = S4_START + 35;
 	const ctaBadgeScale = spring({
 		frame: Math.max(0, frame - ctaBadgeDelay),
@@ -379,8 +383,9 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 	const textShadow = "0 2px 24px rgba(0,0,0,0.9), 0 0 60px rgba(0,0,0,0.5)";
 
 	return (
-		<AbsoluteFill style={{ backgroundColor: "#0F0D0B", fontFamily: "'Inter', sans-serif" }}>
-
+		<AbsoluteFill
+			style={{ backgroundColor: "#0F0D0B", fontFamily: "'Inter', sans-serif" }}
+		>
 			{/* ═══ CLIP A: hippie van in mountains — S1 + S2 (0 -> crossfade) ═══ */}
 			<Sequence from={0} durationInFrames={CLIP_CROSSFADE + FADE_DUR}>
 				<Video
@@ -401,7 +406,10 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 			</Sequence>
 
 			{/* ═══ CLIP B: stunning cliffs + turquoise sea — S3 + S4 (crossfade -> end) ═══ */}
-			<Sequence from={CLIP_CROSSFADE - FADE_DUR} durationInFrames={TOTAL - CLIP_CROSSFADE + FADE_DUR * 2}>
+			<Sequence
+				from={CLIP_CROSSFADE - FADE_DUR}
+				durationInFrames={TOTAL - CLIP_CROSSFADE + FADE_DUR * 2}
+			>
 				<Video
 					src={staticFile(
 						"videos/stunning_cliffs_and_turquoise_sea_from_above_34885409_2160x3840_34885409.mp4",
@@ -634,7 +642,8 @@ export const AndroidLaunch: React.FC<AndroidLaunchProps> = ({
 								color: "#D97706",
 								letterSpacing: "-2px",
 								lineHeight: 1.1,
-								textShadow: "0 2px 28px rgba(0,0,0,0.9), 0 0 50px rgba(217,119,6,0.2)",
+								textShadow:
+									"0 2px 28px rgba(0,0,0,0.9), 0 0 50px rgba(217,119,6,0.2)",
 							}}
 						>
 							Gratis.

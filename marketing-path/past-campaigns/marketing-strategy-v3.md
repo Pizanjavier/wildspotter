@@ -10,7 +10,7 @@
 >
 > **Datos reales del pipeline:** 83.006 spots procesados en toda Espana. 393 con score >= 70. 41 con score >= 80. Media: 21.7.
 >
-> **Destino de todos los CTAs:** `wildspotter.app` — Gratis en iOS. Android muy pronto.
+> **Destino de todos los CTAs:** `wildspotter.app` — Gratis en iOS y Android.
 
 ---
 
@@ -112,7 +112,7 @@ Vegetacion esclerofila. Zona NO protegida.
 
 ¿Donde crees que esta?
 
-Gratis en iOS. Android muy pronto -> link en bio
+Gratis en iOS y Android -> link en bio
 ```
 
 **Reglas del misterio:**

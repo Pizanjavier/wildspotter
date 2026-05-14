@@ -48,7 +48,7 @@ export type SpotData = {
 };
 
 export type ElRadarDetectoProps = {
-	hookVariant: "RD1" | "RD2" | "RD3" | "RD4";
+	hookVariant: "RD1" | "RD2" | "RD3" | "RD4" | "RD5" | "RD6";
 	spot: SpotData;
 };
 
