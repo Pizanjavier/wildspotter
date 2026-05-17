@@ -8,7 +8,7 @@ const DICTIONARIES: Record<Locale, TranslationDictionary> = {
   en,
 };
 
-const DEFAULT_LOCALE: Locale = 'en';
+const DEFAULT_LOCALE: Locale = 'es';
 
 const readRawLocale = (): string | null => {
   try {

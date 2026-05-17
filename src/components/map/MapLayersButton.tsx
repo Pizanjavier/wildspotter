@@ -3,25 +3,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSettingsStore } from '@/stores/settings-store';
-import { DRAG_ZONE_HEIGHT, COLLAPSED_PEEK } from '@/hooks/useBottomSheetGesture';
+import { useBottomSheetTop } from '@/hooks/useBottomSheetTop';
+import { LOCATION_BUTTON_SIZE } from '@/components/map/MyLocationButton';
 
-const BASE_MARGIN = 20;
 const BUTTON_SIZE = 48;
-const BUTTON_GAP = 10;
+const BUTTON_GAP = 8;
 
-/**
- * Floating map button that toggles the legal-zones overlay.
- * Positioned above MyLocationButton so users can surface the
- * protected-areas layer without digging into Config.
- */
 export const MapLayersButton = () => {
   const colors = useThemeColors();
   const showLegalZones = useSettingsStore((s) => s.showLegalZones);
   const setShowLegalZones = useSettingsStore((s) => s.setShowLegalZones);
+  const sheetTop = useBottomSheetTop();
 
-  const collapsedSheetHeight = DRAG_ZONE_HEIGHT + COLLAPSED_PEEK;
-  const bottomOffset =
-    collapsedSheetHeight + BASE_MARGIN + BUTTON_SIZE + BUTTON_GAP;
+  const bottomOffset = sheetTop + BUTTON_GAP + LOCATION_BUTTON_SIZE + BUTTON_GAP;
 
   const webShadow =
     Platform.OS === 'web'

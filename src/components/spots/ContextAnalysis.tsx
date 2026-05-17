@@ -34,74 +34,87 @@ type FactorConfig = {
 const FACTORS: FactorConfig[] = [
   {
     key: 'road_noise',
-    label: 'Road noise',
+    label: t('context.roadNoise'),
     icon: 'car-outline',
     getDetail: (s) => {
-      const road = s.nearest_road ?? 'unknown';
+      const road = s.nearest_road ?? '?';
       const dist = s.distance_m != null ? `${s.distance_m}m` : '--';
       return `${road} · ${dist}`;
     },
   },
   {
     key: 'urban_density',
-    label: 'Urban density',
+    label: t('context.urbanDensity'),
     icon: 'business-outline',
-    getDetail: (s) => `${s.building_count ?? 0} buildings`,
+    getDetail: (s) => {
+      const count = s.building_count ?? 0;
+      return count === 1
+        ? t('context.buildingsSingular', { count })
+        : t('context.buildings', { count });
+    },
   },
   {
     key: 'scenic_value',
-    label: 'Scenic value',
+    label: t('context.scenicValue'),
     icon: 'leaf-outline',
     getDetail: (s) => {
       const features = s.features ?? [];
-      return features.length > 0
-        ? features.map((f) => f.replace(/_/g, ' ')).join(', ')
-        : 'none nearby';
+      if (features.length === 0) return t('context.noneNearby');
+      return features
+        .map((f) => {
+          const key = `scenicFeatures.${f}`;
+          const translated = t(key);
+          return translated !== key ? translated : f.replace(/_/g, ' ');
+        })
+        .join(', ');
     },
   },
   {
     key: 'privacy',
-    label: 'Privacy',
+    label: t('context.privacy'),
     icon: 'eye-off-outline',
     getDetail: (s) => {
       const parts: string[] = [];
-      if (s.is_dead_end) parts.push('Dead end');
+      if (s.is_dead_end) parts.push(t('context.deadEnd'));
       if (s.place_distance_m != null) parts.push(`${(s.place_distance_m / 1000).toFixed(1)} km`);
       return parts.length > 0 ? parts.join(' · ') : '--';
     },
   },
   {
     key: 'industrial',
-    label: 'Industrial',
+    label: t('context.industrial'),
     icon: 'construct-outline',
-    getDetail: (s) => s.nearby ? 'Near nearby' : 'None nearby',
+    getDetail: (s) => s.nearby ? t('context.nearbyIndustrial') : t('context.noneNearby'),
   },
   {
     key: 'railway',
-    label: 'Railway',
+    label: t('context.railway'),
     icon: 'train-outline',
-    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : 'No railway',
+    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : t('context.noRailway'),
   },
   {
     key: 'van_community',
-    label: 'Van community',
+    label: t('context.vanCommunity'),
     icon: 'people-outline',
     getDetail: (s) => {
       const count = s.caravan_sites_5km ?? 0;
-      return count > 0 ? `${count} site within 5km` : 'No sites nearby';
+      if (count === 0) return t('context.noSitesNearby');
+      return count === 1
+        ? t('context.siteSingularWithin5km', { count })
+        : t('context.sitesWithin5km', { count });
     },
   },
   {
     key: 'drinking_water',
-    label: 'Drinking water',
+    label: t('context.drinkingWater'),
     icon: 'water-outline',
-    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : 'None nearby',
+    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : t('context.noneNearby'),
   },
   {
     key: 'dog_friendly',
-    label: 'Dog friendly',
+    label: t('context.dogFriendly'),
     icon: 'paw-outline',
-    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : 'None nearby',
+    getDetail: (s) => s.distance_m != null ? `${s.distance_m}m` : t('context.noneNearby'),
   },
 ];
 

@@ -50,6 +50,10 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      IMAP_USER: ${IMAP_USER:-}
+      IMAP_PASSWORD: ${IMAP_PASSWORD:-}
+      IMAP_HOST: ${IMAP_HOST:-imap.gmail.com}
+      IMAP_PORT: ${IMAP_PORT:-993}
     volumes:
       - ./workers:/app
       - ./models:/models
@@ -61,6 +65,30 @@ services:
     networks:
       - wildspotter-net
     command: ["python", "api.py"]
+
+  legal-watcher:
+    build:
+      context: ./workers
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      AEMET_API_KEY: ${AEMET_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - ./workers:/app
+      - ./data:/data
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wildspotter-net
+    command: ["python", "-m", "legal.scheduler"]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+    restart: unless-stopped
 
   n8n:
     image: n8nio/n8n

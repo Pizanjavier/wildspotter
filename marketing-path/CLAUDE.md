@@ -159,5 +159,11 @@ community-manager -> content brief -> remotion-producer -> Remotion composition 
 ## Spelling mistakes
 No mistakes in the spanish spelling. If you make a mistake, fix it immediately. Special atention with accents.
 
-## Local Ollama MCP Server
-An MCP server is available to delegate simple or repetitive text generation tasks to the local Qwen3 model (via Ollama). This saves cloud tokens and speeds up basic tasks like summarizing or data extraction.
+## Token Budget - Local MCP Server Ollama to avoid reach claude subscription limit
+
+An MCP server configured at mcp-ollama-worker is available to delegate simple or repetitive tasks to the local Qwen3.6 and Gemma4 model (via Ollama). This saves cloud tokens and speeds up basic tasks like summarizing or data extraction.
+
+Use it whever you think it can save tokens or speed up the task. Saving tokens is the priority if you suspect the task is too much for ollama models and you'll need to review a lot of code that wouldn't imply any saving in tokens. Always review but avoid large reviews. Ollama is prefered over user manual work if it is obvious.
+
+**SAVE CLAUDE TOKENS**
+**This is a continuation and complementary of the Token Budget — User Runs Heavy Tasks**

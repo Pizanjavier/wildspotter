@@ -10,9 +10,11 @@
 >
 > **Datos reales:** 83.006 spots procesados en toda Espana. 393 con score >= 70. 41 con score >= 80. Media: 21.7.
 >
-> **Estado de la app:** iOS live (15 descargas reales). Android no lanzado — CTAs incluyen "Android muy pronto".
+> **Estado de la app:** iOS live + Android lanzado 11 Mayo 2026. Ambas plataformas disponibles.
 >
 > **Destino de todos los CTAs:** `wildspotter.app` — Gratis en iOS y Android.
+>
+> **Promotion insight (mid-mayo audit):** TikTok promotion es 8,5x mas eficiente que Instagram en CPM. Futuro presupuesto de paid solo en TikTok. Solo promover videos con >5% watch completion a 3s medido organicamente.
 
 ---
 
@@ -292,7 +294,7 @@ Solo en estos casos:
 - **Frecuencia:** 5 posts/semana (bajar de 7 para mantener calidad)
 - **Formato:** Reels (Lun, Jue, Dom) + Carousel (Mie) + Libre o Stories (Mar)
 - **Longitud Reels:** 15-25 segundos para discovery. No superar 30s por ahora
-- **Stories:** Diarias con polls y quizzes. Son la herramienta de engagement mas rapida
+- **Stories:** Maximo 2/semana — solo para amplificar Reels recientes o BTS ligero. Las polls/quizzes no generan interaccion con 83 seguidores (2-3 votos visibles = prueba social negativa). Retomar formato interactivo cuando la cuenta llegue a 300+ seguidores.
 - **Carousels:** 1/semana, miercoles. Formato educativo saveable
 
 **Parar:** Seguir cuentas masivamente. El ratio siguiendo/seguidores es daños para la percepcion de la cuenta.
@@ -328,17 +330,33 @@ Mayo en España:
 
 ## 8. KPIs V4 (Semanas 7-8, 11-24 Mayo)
 
-| Metrica | Objetivo sem 7 | Objetivo sem 8 | Como medirlo |
-|---------|----------------|----------------|--------------|
-| **Comentarios por post (IG)** | 2+ | 5+ | Instagram Insights |
-| **Comentarios por video (TikTok)** | 1+ | 3+ | TikTok Analytics |
-| **Seguidores IG** | 90 (+25) | 115 (+25) | IG Insights |
-| **Seguidores TikTok** | 40 (+11) | 55 (+15) | TikTok Analytics |
-| **Vistas promedio/video TikTok** | 700+ | 800+ | TikTok Analytics |
-| **Rutina 5-3-1** | 7/7 dias | 14/14 dias | Auto-reporte |
-| **Descargas iOS** | 20 (+5) | 25 (+5) | PostHog |
+| Metrica | Objetivo sem 7 | Real sem 7 (14 May) | Objetivo sem 8 | Como medirlo |
+|---------|----------------|---------------------|----------------|--------------|
+| **Comentarios por post (IG)** | 2+ | ~1-2 (mejora) | 5+ | Instagram Insights |
+| **Comentarios por video (TikTok)** | 1+ | 8 total (+300%) | 3+ por video | TikTok Analytics |
+| **Seguidores IG** | 90 | 83 (parcial) | 100+ | IG Insights |
+| **Seguidores TikTok** | 40 | 33 (parcial) | 45+ | TikTok Analytics |
+| **Vistas promedio/video TikTok** | 700+ | ~800 organico | 800+ | TikTok Analytics |
+| **Rutina 5-3-1** | 7/7 dias | ~5/7 (Ollama) | 14/14 dias | Auto-reporte |
+| **Descargas iOS+Android** | 20 (+5) | Pendiente PostHog | 30+ | PostHog |
+| **Toques enlace IG** | N/A | 30 (nuevo KPI) | 50+ | IG Insights |
+| **Watch completion >3s (TikTok)** | N/A | 3,3% (paid) | >5% organico | TikTok Analytics |
 
-**KPI estrella de V4:** Los comentarios. Si los posts empiezan a generar comentarios, todo lo demas mejora (algoritmo, engagement rate, comunidad). Si en 2 semanas siguen en cero, el problema es estructural en los copys y hay que revisar.
+**KPI estrella de V4:** Sigue siendo los comentarios — y por primera vez hay progreso real (8 en TikTok, +300%). El siguiente KPI critico es el watch completion a 3 segundos: el 0,1% de complete view en el video promovido indica un problema de hook que limita el ROI de toda la estrategia.
+
+### Mid-Mayo Audit: Lo que cambio
+- **Comentarios en TikTok pasaron de 0 a 8** — primer progreso real en engagement
+- **El following masivo se paro** — ratio 3,4:1 (mejora desde 4,4:1)
+- **30 toques al enlace externo en IG** — primera evidencia de download intent
+- **Stories no generan interaccion** — reducir a 2/semana como amplificacion de Reels
+- **TikTok promotion: 8,5x mas eficiente que IG** — futuro paid solo en TikTok
+- **Ollama engagement lists funcionan** — mantener y optimizar especificidad de comentarios
+
+### Promotion Strategy (nuevo, post-audit mid-mayo)
+- **Solo TikTok** para paid promotion (CPM 0,41€ vs 3,48€ en IG)
+- **Requisito para promover:** video debe tener >500 vistas organicas y >5% watch completion a 3s antes de gastar
+- **Presupuesto:** 10€ por video promovido, maximo 2 promotions/mes
+- **Candidatos ideales:** Debate1/Debate2 (alto retention por estructura opinion) o S3 "Un 91" (curiosidad por score alto)
 
 ---
 
@@ -379,8 +397,10 @@ Todo el contenido de semanas 7-8 se produce con:
 - Datos reales del pipeline (83.006 spots ya procesados)
 - PostHog para tracking de descargas (ya configurado)
 
-No se requiere gasto adicional.
+Gasto adicional: maximo 20€/mes en TikTok promotions (2 videos x 10€). Solo videos que cumplan el requisito de watch completion organico.
+
+**Gasto acumulado Mayo 2026:** 21,74€ (10€ TikTok + 11,74€ IG — la promo de IG no se repite).
 
 ---
 
-*Estrategia V4 creada el 7 Mayo 2026. Cubre semanas 7-8 (11-24 Mayo 2026). Reemplaza estrategia V3 que cubre semanas 5-6.*
+*Estrategia V4 creada el 7 Mayo 2026. Actualizada el 14 Mayo 2026 con datos del audit mid-mayo. Cubre semanas 7-8 (11-24 Mayo 2026). Reemplaza estrategia V3 que cubre semanas 5-6.*

@@ -15,7 +15,7 @@ import argparse
 import json
 from typing import Any, Dict
 
-import scoring_v3
+from pipeline import scoring_v3
 from utils import get_db_connection, setup_logging
 
 logger = setup_logging("scoring")

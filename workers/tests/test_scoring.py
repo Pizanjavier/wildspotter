@@ -9,7 +9,7 @@ independence.
 
 import pytest
 
-from scoring_v3 import (
+from pipeline.scoring_v3 import (
     compute_ai_gate_v4,
     compute_ai_weight,
     compute_composite,

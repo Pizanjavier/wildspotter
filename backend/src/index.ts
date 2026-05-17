@@ -8,6 +8,7 @@ import { spotsRoutes } from './routes/spots.js';
 import { satelliteRoutes } from './routes/satellite.js';
 import { legalTilesRoutes } from './routes/legal-tiles.js';
 import { reportsRoutes } from './routes/reports.js';
+import { legalDocumentsRoutes } from './routes/legal-documents.js';
 
 const { Pool } = pg;
 
@@ -78,6 +79,7 @@ const start = async (): Promise<void> => {
   await app.register(satelliteRoutes);
   await app.register(legalTilesRoutes);
   await app.register(reportsRoutes(pool));
+  await app.register(legalDocumentsRoutes(pool));
 
   try {
     await app.listen({ port: CONFIG.PORT, host: CONFIG.HOST });

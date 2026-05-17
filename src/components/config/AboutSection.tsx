@@ -14,6 +14,8 @@ const DATA_SOURCES: ReadonlyArray<{ label: string; url: string }> = [
   { label: 'MITECO', url: 'https://www.miteco.gob.es/' },
   { label: 'Catastro', url: 'https://www.sedecatastro.gob.es/' },
   { label: 'Copernicus', url: 'https://land.copernicus.eu/en/products/corine-land-cover' },
+  { label: 'BOE', url: 'https://www.boe.es/' },
+  { label: 'AEMET', url: 'https://www.aemet.es/' },
 ];
 
 const FEEDBACK_EMAIL = 'feedback@wildspotter.app';
@@ -64,6 +66,9 @@ export const AboutSection = () => {
             </Pressable>
           ))}
         </View>
+        <Text style={[styles.sourcesHint, { color: colors.TEXT_MUTED }]}>
+          {t('guide.legalSourcesMonitored')}
+        </Text>
       </View>
 
       <Pressable
@@ -134,12 +139,18 @@ const styles = StyleSheet.create({
   },
   sourcesRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: SPACING.SM + 4,
   },
   sourceLabel: {
     fontFamily: FONT_FAMILIES.DATA_BOLD,
     fontSize: 12,
     letterSpacing: 1,
+  },
+  sourcesHint: {
+    fontFamily: FONT_FAMILIES.DATA,
+    fontSize: 10,
+    marginTop: SPACING.XS,
   },
   feedbackCard: {
     flexDirection: 'row',

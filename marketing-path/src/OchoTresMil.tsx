@@ -554,7 +554,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 490,
+					bottom: 760,
 					left: 60,
 					right: 160,
 					opacity: engIn,
@@ -582,7 +582,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 270,
+					bottom: 620,
 					left: "50%",
 					transform: `translate(-50%, 0) scale(${interpolate(logoIn, [0, 1], [0.5, 1])})`,
 					opacity: logoIn,
@@ -603,7 +603,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 190,
+					bottom: 540,
 					left: 0,
 					right: 0,
 					textAlign: "center",
@@ -629,7 +629,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 160,
+					bottom: 510,
 					left: "50%",
 					transform: "translateX(-50%)",
 					width: lineWidth,
@@ -644,7 +644,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 80,
+					bottom: 460,
 					left: "50%",
 					transform: `translate(-50%, ${ctaY}px)`,
 					opacity: ctaIn,
@@ -687,19 +687,19 @@ const MusicTrack: React.FC = () => {
 			src={staticFile("audio/music/data-reveal.mp3")}
 			trimBefore={8 * fps}
 			volume={(f) => {
-				const fadeIn = interpolate(f, [0, 1.2 * fps], [0, 0.16], {
+				const fadeIn = interpolate(f, [0, 1.2 * fps], [0, 0.28], {
 					extrapolateLeft: "clamp",
 					extrapolateRight: "clamp",
 				});
 				const fadeOut = interpolate(
 					f,
 					[durationInFrames - 3 * fps, durationInFrames],
-					[0.16, 0],
+					[0.28, 0],
 					{ extrapolateLeft: "clamp", extrapolateRight: "clamp" },
 				);
 				if (f < 1.2 * fps) return fadeIn;
 				if (f > durationInFrames - 3 * fps) return fadeOut;
-				return 0.16;
+				return 0.28;
 			}}
 		/>
 	);

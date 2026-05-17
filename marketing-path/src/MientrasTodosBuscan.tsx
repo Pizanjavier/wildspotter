@@ -46,7 +46,7 @@ const LabelBar: React.FC<{
 	<div
 		style={{
 			position: "absolute",
-			top: 160,
+			top: 264,
 			left: 0,
 			right: 0,
 			display: "flex",
@@ -261,7 +261,7 @@ export const MientrasTodosBuscan: React.FC<MientrasTodosBuscanProps> = ({
 			<div
 				style={{
 					position: "absolute",
-					bottom: 450,
+					bottom: 480,
 					left: 50,
 					right: 50,
 					textAlign: "center",
@@ -278,7 +278,7 @@ export const MientrasTodosBuscan: React.FC<MientrasTodosBuscanProps> = ({
 			<div
 				style={{
 					position: "absolute",
-					bottom: 450,
+					bottom: 480,
 					left: 50,
 					right: 50,
 					textAlign: "center",
@@ -295,7 +295,7 @@ export const MientrasTodosBuscan: React.FC<MientrasTodosBuscanProps> = ({
 			<div
 				style={{
 					position: "absolute",
-					bottom: 450,
+					bottom: 480,
 					left: 50,
 					right: 50,
 					textAlign: "center",
@@ -312,7 +312,7 @@ export const MientrasTodosBuscan: React.FC<MientrasTodosBuscanProps> = ({
 			<div
 				style={{
 					position: "absolute",
-					bottom: 450,
+					bottom: 480,
 					left: 50,
 					right: 50,
 					textAlign: "center",
@@ -362,7 +362,7 @@ export const MientrasTodosBuscan: React.FC<MientrasTodosBuscanProps> = ({
 			<div
 				style={{
 					position: "absolute",
-					bottom: 340,
+					bottom: 510,
 					left: "50%",
 					transform: "translateX(-50%)",
 					display: "flex",

@@ -9,33 +9,38 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SPACING } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSpotsStore } from '@/stores/spots-store';
 import { ScoreBadge } from '@/components/spots/ScoreBadge';
-import { ActionButtons } from '@/components/spots/ActionButtons';
 import { SpotDetailHeader } from '@/components/spots/SpotDetailHeader';
-import { LegalChecklist } from '@/components/legal/LegalChecklist';
-import { MetricsRow } from '@/components/spots/MetricsRow';
+import { LegalSituation } from '@/components/legal/LegalSituation';
 import { LandcoverCard } from '@/components/spots/LandcoverCard';
 import { AiAnalysis } from '@/components/spots/AiAnalysis';
 import { ContextAnalysis } from '@/components/spots/ContextAnalysis';
 import { ScoreBreakdown } from '@/components/spots/ScoreBreakdown';
+import { SpotHighlights } from '@/components/spots/SpotHighlights';
+import { ExpandableSection } from '@/components/spots/ExpandableSection';
 import { ReportModal } from '@/components/spots/ReportModal';
 import { getSpotDetail, ApiError, buildSatelliteUrl } from '@/services/api';
-import type { SpotDetail } from '@/services/api/types';
+import { getLegalDocuments } from '@/services/api/spots';
+import { openNavigate, openInspect } from '@/services/navigation';
+import type { SpotDetail, LegalDocument } from '@/services/api/types';
 import { t } from '@/i18n';
+import { getSpotDisplayName, getTranslatedSurface } from '@/utils/spot-display-name';
 import { trackEvent } from '@/services/analytics';
 
-const capitalize = (s: string): string =>
-  s.charAt(0).toUpperCase() + s.slice(1);
 
 export const SpotDetailScreen = () => {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, origin } = useLocalSearchParams<{ id: string; origin?: string }>();
   const router = useRouter();
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const [spot, setSpot] = useState<SpotDetail | null>(null);
+  const [legalDocs, setLegalDocs] = useState<LegalDocument[]>([]);
+  const [legalDocsLoading, setLegalDocsLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,6 +54,16 @@ export const SpotDetailScreen = () => {
   const inFlightIdRef = useRef<string | null>(null);
   const activeIdRef = useRef<string | null>(null);
 
+  const handleBack = useCallback(() => {
+    if (origin === 'spots') {
+      router.navigate('/(tabs)/spots');
+    } else if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)/map');
+    }
+  }, [origin, router]);
+
   useEffect(() => {
     if (!id) return;
     activeIdRef.current = id;
@@ -58,12 +73,22 @@ export const SpotDetailScreen = () => {
     const fetchDetail = async () => {
       setLoading(true);
       setError(null);
+      setLegalDocsLoading(true);
       try {
         const detail = await getSpotDetail(id);
         if (activeIdRef.current !== id) return;
         setSpot(detail);
+        getLegalDocuments(detail.coordinates.lat, detail.coordinates.lon)
+          .then((docs) => {
+            if (activeIdRef.current === id) setLegalDocs(docs);
+          })
+          .catch(() => {})
+          .finally(() => {
+            if (activeIdRef.current === id) setLegalDocsLoading(false);
+          });
       } catch (err: unknown) {
         if (activeIdRef.current !== id) return;
+        setLegalDocsLoading(false);
         if (
           err instanceof ApiError &&
           (err.status === 400 || err.status === 404)
@@ -95,10 +120,22 @@ export const SpotDetailScreen = () => {
     else addSpot(spot);
   };
 
+  const handleInspect = () => {
+    if (!spot) return;
+    trackEvent('spot_inspected', { lat: spot.coordinates.lat, lon: spot.coordinates.lon });
+    openInspect(spot.coordinates.lat, spot.coordinates.lon);
+  };
+
+  const handleNavigate = () => {
+    if (!spot) return;
+    trackEvent('spot_navigated', { lat: spot.coordinates.lat, lon: spot.coordinates.lon });
+    openNavigate(spot.coordinates.lat, spot.coordinates.lon);
+  };
+
   if (loading) {
     return (
       <View style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <Pressable style={styles.backButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={colors.ACCENT} />
         </Pressable>
         <View style={styles.centered}>
@@ -114,7 +151,7 @@ export const SpotDetailScreen = () => {
   if (error || !spot) {
     return (
       <View style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
-        <Pressable style={styles.backButton} onPress={() => router.back()}>
+        <Pressable style={styles.backButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={colors.ACCENT} />
         </Pressable>
         <View style={styles.centered}>
@@ -130,17 +167,21 @@ export const SpotDetailScreen = () => {
   const satelliteImageUrl = spot.satellite_image_path
     ? buildSatelliteUrl(spot.satellite_image_path)
     : null;
+  const locationParts = [spot.municipality, spot.province].filter(Boolean);
+  const locationLabel = locationParts.length > 0
+    ? locationParts.join(', ')
+    : null;
   const subtitle = [
-    spot.spot_type?.replace('_', ' '),
-    spot.surface_type !== 'unknown' ? capitalize(spot.surface_type) : null,
+    locationLabel,
+    getTranslatedSurface(spot.surface_type),
   ]
     .filter(Boolean)
-    .join(' \u00B7 ');
+    .join(' · ');
 
   return (
     <View style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
       <SpotDetailHeader
-        onBack={() => router.back()}
+        onBack={handleBack}
         onSave={handleToggleSave}
         isSaved={isSaved}
         aiScore={spot.ai_score}
@@ -156,7 +197,7 @@ export const SpotDetailScreen = () => {
         <View style={styles.titleRow}>
           <View style={styles.titleCol}>
             <Text style={[styles.spotName, { color: colors.TEXT_PRIMARY }]}>
-              {spot.name || t('spots.unnamedSpot')}
+              {getSpotDisplayName(spot)}
             </Text>
             {subtitle ? (
               <Text style={[styles.subtitle, { color: colors.TEXT_SECONDARY }]}>
@@ -167,48 +208,40 @@ export const SpotDetailScreen = () => {
           <ScoreBadge score={score} variant="circle" size="lg" />
         </View>
 
-        <MetricsRow
-          surface={capitalize(spot.surface_type)}
-          slope={spot.slope_pct !== null ? `${spot.slope_pct.toFixed(1)}%` : null}
-          elevation={
-            spot.elevation !== null ? `${Math.round(spot.elevation)}m` : null
-          }
+        <LegalSituation legalStatus={spot.legal_status} documents={legalDocs} loading={legalDocsLoading} />
+
+        <SpotHighlights
+          contextDetails={spot.context_details}
+          surface={getTranslatedSurface(spot.surface_type)}
+          slopePct={spot.slope_pct}
+          elevation={spot.elevation}
         />
 
-        <LandcoverCard
-          landcoverClass={spot.landcover_class}
-          landcoverLabel={spot.landcover_label}
-        />
+        <ExpandableSection icon="eye-outline" title={t('deepDive.satelliteAnalysis')}>
+          <AiAnalysis aiScore={spot.ai_score} aiDetails={spot.ai_details} />
+        </ExpandableSection>
 
-        <LegalChecklist legalStatus={spot.legal_status} />
+        <ExpandableSection icon="analytics-outline" title={t('deepDive.contextBreakdown')}>
+          <ContextAnalysis contextScore={spot.context_score} contextDetails={spot.context_details} />
+        </ExpandableSection>
 
-        {spot.ai_details && (
-          <AiAnalysis
+        <ExpandableSection icon="speedometer-outline" title={t('deepDive.scoreFormula')}>
+          <ScoreBreakdown
+            terrainScore={spot.terrain_score}
             aiScore={spot.ai_score}
-            aiDetails={spot.ai_details}
-          />
-        )}
-
-        {spot.context_details && (
-          <ContextAnalysis
             contextScore={spot.context_score}
-            contextDetails={spot.context_details}
+            compositeScore={spot.composite_score}
+            wildBonus={spot.context_details?.wild_bonus ?? null}
+            landcoverPenalty={spot.context_details?.landcover_penalty ?? null}
           />
-        )}
+        </ExpandableSection>
 
-        <ScoreBreakdown
-          terrainScore={spot.terrain_score}
-          aiScore={spot.ai_score}
-          contextScore={spot.context_score}
-          compositeScore={spot.composite_score}
-          wildBonus={spot.context_details?.wild_bonus ?? null}
-          landcoverPenalty={spot.context_details?.landcover_penalty ?? null}
-        />
-
-        <ActionButtons
-          lat={spot.coordinates.lat}
-          lon={spot.coordinates.lon}
-        />
+        <ExpandableSection icon="leaf-outline" title={t('deepDive.landCover')}>
+          <LandcoverCard
+            landcoverClass={spot.landcover_class}
+            landcoverLabel={spot.landcover_label}
+          />
+        </ExpandableSection>
 
         <Pressable style={styles.reportLink} onPress={openReport}>
           <Ionicons name="flag-outline" size={16} color={colors.TEXT_MUTED} />
@@ -220,36 +253,57 @@ export const SpotDetailScreen = () => {
 
       <View
         style={[
-          styles.saveBar,
+          styles.bottomBar,
           {
             backgroundColor: colors.BACKGROUND,
             borderTopColor: colors.BORDER,
+            paddingBottom: Math.max(insets.bottom, SPACING.MD),
           },
         ]}
       >
         <Pressable
           onPress={handleToggleSave}
           style={[
-            styles.saveButton,
-            {
-              backgroundColor: isSaved ? colors.CARD : colors.ACCENT,
-              borderColor: isSaved ? colors.BORDER : colors.ACCENT,
-            },
+            styles.iconBtn,
+            isSaved
+              ? { backgroundColor: `${colors.ACCENT}15`, borderColor: colors.ACCENT, borderWidth: 1 }
+              : { backgroundColor: 'transparent', borderColor: colors.BORDER, borderWidth: 1 },
           ]}
           accessibilityRole="button"
+          accessibilityLabel={isSaved ? t('spotDetail.saved') : t('spotDetail.save')}
         >
           <Ionicons
             name={isSaved ? 'bookmark' : 'bookmark-outline'}
             size={20}
-            color={isSaved ? colors.ACCENT : colors.BACKGROUND}
+            color={isSaved ? colors.ACCENT : colors.TEXT_PRIMARY}
           />
-          <Text
-            style={[
-              styles.saveButtonText,
-              { color: isSaved ? colors.ACCENT : colors.BACKGROUND },
-            ]}
-          >
-            {isSaved ? t('spotDetail.unsaveSpot') : t('spotDetail.saveSpot')}
+        </Pressable>
+
+        <Pressable
+          onPress={handleInspect}
+          style={[
+            styles.actionBtn,
+            { backgroundColor: 'transparent', borderColor: colors.BORDER, borderWidth: 1 },
+          ]}
+          accessibilityRole="button"
+        >
+          <Ionicons name="grid-outline" size={18} color={colors.TEXT_PRIMARY} />
+          <Text style={[styles.actionBtnText, { color: colors.TEXT_PRIMARY }]} numberOfLines={1}>
+            {t('spotDetail.inspect')}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          onPress={handleNavigate}
+          style={[
+            styles.actionBtn,
+            { backgroundColor: colors.ACCENT, borderWidth: 0 },
+          ]}
+          accessibilityRole="button"
+        >
+          <Ionicons name="navigate" size={18} color={colors.BACKGROUND} />
+          <Text style={[styles.actionBtnText, { color: colors.BACKGROUND }]} numberOfLines={1}>
+            {t('spotDetail.navigate')}
           </Text>
         </Pressable>
       </View>
@@ -273,28 +327,36 @@ const styles = StyleSheet.create({
     gap: SPACING.LG,
     paddingBottom: SPACING.XL * 3,
   },
-  saveBar: {
+  bottomBar: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
+    flexDirection: 'row',
+    gap: 8,
     paddingHorizontal: SPACING.LG,
     paddingTop: SPACING.MD,
-    paddingBottom: SPACING.LG + 8,
     borderTopWidth: 1,
   },
-  saveButton: {
+  iconBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionBtn: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: SPACING.SM,
-    paddingVertical: SPACING.MD,
-    borderRadius: 14,
-    borderWidth: 1,
+    height: 44,
+    borderRadius: 12,
+    gap: 6,
   },
-  saveButtonText: {
+  actionBtnText: {
     fontFamily: FONT_FAMILIES.BODY_BOLD,
-    fontSize: 16,
+    fontSize: 13,
   },
   backButton: { padding: SPACING.MD },
   centered: {

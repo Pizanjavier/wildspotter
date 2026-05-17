@@ -270,6 +270,8 @@ INSERT INTO sync_state (last_sequence, last_sync_at) VALUES (0, NULL);
  | satellite_image_path| VARCHAR           | Relative path to cached JPEG             |
  |---------------------|-------------------|------------------------------------------|
  | composite_score     | FLOAT             | 0-100: weighted final score              |
+ | municipality        | VARCHAR           | Reverse-geocoded municipality name       |
+ | province            | VARCHAR           | Reverse-geocoded province name           |
  | status              | VARCHAR           | Pipeline stage (state machine)           |
  | rejection_reason    | VARCHAR           | Manual flag reason (nullable)            |
  | created_at          | TIMESTAMPTZ       | Ingestion timestamp                      |
@@ -326,6 +328,10 @@ INSERT INTO sync_state (last_sequence, last_sync_at) VALUES (0, NULL);
 | `legal_done` | legal.py | legal_status (JSONB) | ai_inference.py |
 | `ai_done` | ai_inference.py | ai_score, satellite_image_path | scoring.py |
 | `completed` | scoring.py | composite_score | -- (ready for app) |
+
+#### Location Enrichment (Non-Pipeline)
+
+`workers/pipeline/location.py` reverse-geocodes spots by joining against the `municipalities` PostGIS table (`ST_Contains`). It populates `municipality` and `province` columns for geographic disambiguation in the app UI. This runs independently of the main pipeline (not gated by status) — it processes any spot where `municipality IS NULL`. Migration: `db/migrations/005_spot_location.sql`.
 
 ### 3.5. Index Usage Map
 
@@ -394,7 +400,8 @@ This is the primary endpoint. Called when the user pans the map or taps "SCAN TH
 SELECT id, osm_id, name,
        ST_X(geom) AS lon, ST_Y(geom) AS lat,
        spot_type, surface_type, slope_pct, elevation,
-       legal_status, composite_score, status
+       legal_status, composite_score, status,
+       municipality, province
 FROM spots
 WHERE status = 'completed'
   AND geom && ST_MakeEnvelope($1, $2, $3, $4, 4326)   -- spatial bbox filter
@@ -417,6 +424,7 @@ SELECT id, osm_id, name,
        elevation, slope_pct, terrain_score,
        legal_status, ai_score, composite_score,
        satellite_image_path, status, rejection_reason,
+       municipality, province,
        created_at, updated_at
 FROM spots
 WHERE id = $1

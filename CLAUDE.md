@@ -21,14 +21,16 @@ src/
 │   ├── (tabs)/              # Tab-based navigation
 │   │   ├── map.tsx          # Map view with scanner
 │   │   ├── spots.tsx        # Saved/discovered spots list
-│   │   ├── legal.tsx        # Legal layer browser
+│   │   ├── legal.tsx        # Guide hub (pipeline explainer, overnight tips, legal card)
 │   │   └── config.tsx       # Settings screen
 │   ├── spot/[id].tsx        # Spot detail screen
+│   ├── legal-detail.tsx     # Legal sources detail (pipeline flow, data sources, disclaimer)
 │   └── _layout.tsx          # Root layout
 ├── components/              # Reusable UI components
 │   ├── map/                 # Map-specific (markers, overlays, scanner)
 │   ├── spots/               # Spot cards, lists, badges
-│   ├── legal/               # Legal status indicators
+│   ├── legal/               # Legal status indicators, LegalSituation verdict
+│   ├── guide/               # Guide hub sections (pipeline, overnight tips, sources)
 │   └── ui/                  # Generic (buttons, cards, sheets)
 ├── services/                # Business logic & API clients
 │   ├── api/                 # Typed API client for Fastify backend
@@ -37,6 +39,10 @@ src/
 ├── stores/                  # Zustand state management
 ├── types/                   # Shared TypeScript types & interfaces
 ├── utils/                   # Pure utility functions
+├── i18n/                    # Internationalization (es/en)
+│   ├── index.ts             # t() helper, locale detection, DEFAULT_LOCALE='es'
+│   ├── types.ts             # TranslationKeys type (enforces key completeness)
+│   └── locales/             # es.ts (default), en.ts
 └── constants/               # App-wide constants & config
 backend/                     # Fastify API (TypeScript)
 ├── src/
@@ -49,18 +55,52 @@ backend/                     # Fastify API (TypeScript)
 ├── package.json
 └── tsconfig.json
 workers/                     # Processing scripts (Python)
-├── terrain.py               # Terrain-RGB slope/elevation
-├── legal.py                 # WMS queries (MITECO, Catastro, IGN)
-├── ai_inference.py          # ONNX/PyTorch satellite analysis
-├── landcover.py             # CORINE Land Cover classification
-├── scoring.py               # Composite score calculation (V4)
+├── api.py                   # Flask API server
+├── utils.py                 # Shared utilities (DB connection, logging)
+├── run_all.py               # Pipeline orchestrator
+├── pipeline/                # Spot processing pipeline
+│   ├── terrain.py           # Terrain-RGB slope/elevation
+│   ├── legal.py             # PostGIS spatial legal checks
+│   ├── ai_inference.py      # ONNX/PyTorch satellite analysis
+│   ├── ai_vision_labeler.py # Claude Vision enrichment
+│   ├── context_scoring.py   # Spatial context scoring
+│   ├── amenities_scoring.py # Amenities bonus scoring
+│   ├── landcover.py         # CORINE Land Cover classification
+│   ├── scoring.py           # Composite score calculation (V4)
+│   ├── extract_candidates.py # OSM candidate extraction
+│   └── location.py          # Reverse geocode municipality/province via PostGIS
+├── legal/                   # Legal monitoring pipeline
+│   ├── source_monitor.py    # Hash-based change detection
+│   ├── scheduler.py         # Polling scheduler (long-running)
+│   ├── classifier.py        # Keyword gate + LLM classification
+│   ├── llm.py               # Ollama/Haiku LLM abstraction
+│   ├── bootstrap.py         # Initial data load orchestrator
+│   ├── dedup.py             # Cross-source deduplication
+│   ├── expiration.py        # Document expiration + seasonal
+│   ├── notifications.py     # ntfy.sh push alerts
+│   └── ...                  # geocoder, health_monitor, pdf_*, etc.
+├── watchers/                # Legal bulletin source watchers
+│   ├── boe_watcher.py       # BOE national gazette
+│   ├── aemet_watcher.py     # AEMET fire risk API
+│   ├── rss_watcher.py       # Generic RSS (8 CCAA)
+│   ├── html_scraper.py      # Generic HTML (6 CCAA)
+│   └── bop_scraper.py       # 50 provincial BOPs
 ├── Dockerfile
 └── requirements.txt
+n8n/                         # n8n workflow definitions
+├── pipeline-workflow.json   # Spot processing pipeline
+└── legal-email-workflow.json # Gov email ingestion
 db/                          # Database initialization
-└── init.sql                 # PostGIS extension + table creation
+├── init.sql                 # PostGIS extension + table creation
+└── migrations/              # Schema migrations
 data/                        # Data volumes (gitignored)
 ├── spain-latest.osm.pbf     # Pre-downloaded Geofabrik extract
-└── satellite_tiles/         # Cached satellite imagery
+├── satellite_tiles/         # Cached satellite imagery
+└── legal/                   # Legal pipeline data
+    ├── decrees/             # 17 CCAA tourism decree JSONs
+    ├── ine_municipios.xlsx  # INE municipality codes
+    └── cnig_municipios/     # CNIG municipal boundary shapefiles
+assets/store/                # App store & signing assets
 models/                      # ML model files (.onnx)
 design/                      # Mockups (.pen) and exported PNGs
 docker-compose.yml           # Stack orchestration
@@ -70,7 +110,7 @@ docker-compose.yml           # Stack orchestration
 
 The processing pipeline has 7 stages: **Radar → Terrain → Legal → Satellite Eye → Context → Landcover → Score**.
 
-- **Landcover** (`workers/landcover.py`): Classifies each spot against CORINE Land Cover 2018 (44 classes, EU-wide). Stores `landcover_class` (e.g. "323") and `landcover_label` (e.g. "Vegetación esclerófila"). Source: Copernicus Land Monitoring Service.
+- **Landcover** (`workers/pipeline/landcover.py`): Classifies each spot against CORINE Land Cover 2018 (44 classes, EU-wide). Stores `landcover_class` (e.g. "323") and `landcover_label` (e.g. "Vegetación esclerófila"). Source: Copernicus Land Monitoring Service.
 - **Scoring formula (V4):** `Terrain × 10% + AI × 55% + Context × 15% + wild_bonus − landcover_penalty`
   - **Wild bonus** (up to +30): awarded for wild archetypes (coastal, alpine, water, forest dead-end, scenic viewpoint). Gated by Claude Vision AI sub-scores (surface_quality, open_space, obstruction_absence ≥ 6/10 each).
   - **Landcover penalty**: deducted when CORINE class indicates agricultural, urban, or industrial land.
@@ -199,6 +239,15 @@ Claude's token consumption is a hard constraint. Long-running, large-output, or 
 - **Definitions of done must specify the minimal output to paste back** (e.g., "paste the count + the false-positive osm_ids with one-word descriptors"). Never ask the user to paste full tables, log files, or directory listings.
 - **Never read large files / tile folders / log dumps into context** — ask the user to grep, sample, or summarise first.
 - For visual audits: the user does the looking; Claude only sees the verdict and the IDs that need attention.
+
+## Token Budget - Local MCP Server Ollama to avoid reach claude subscription limit
+
+An MCP server configured at mcp-ollama-worker is available to delegate simple or repetitive tasks to the local Qwen3.6 and Gemma4 model (via Ollama). This saves cloud tokens and speeds up basic tasks like summarizing or data extraction.
+
+Use it whever you think it can save tokens or speed up the task. Saving tokens is the priority if you suspect the task is too much for ollama models and you'll need to review a lot of code that wouldn't imply any saving in tokens. Always review but avoid large reviews. Ollama is prefered over user manual work if it is obvious.
+
+**SAVE CLAUDE TOKENS**
+**This is a continuation and complementary of the Token Budget — User Runs Heavy Tasks**
 
 ## Protected Files
 

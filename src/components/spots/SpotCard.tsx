@@ -1,52 +1,52 @@
 import { View, Text, Pressable, StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useSpotsStore } from '@/stores/spots-store';
 import { getScoreColor } from '@/components/spots/ScoreBadge';
+import { getOvernightLevel } from '@/utils/legal-verdict';
+import { getSpotDisplayName, getTranslatedSurface } from '@/utils/spot-display-name';
 import type { SpotSummary } from '@/services/api/types';
+import type { ThemeColors } from '@/constants/theme';
+import { useSpotNavigation } from '@/hooks/useSpotNavigation';
 import { t } from '@/i18n';
 
 type SpotCardProps = {
   spot: SpotSummary;
 };
 
-const capitalize = (s: string): string =>
-  s.charAt(0).toUpperCase() + s.slice(1);
+type LegalIndicator = { color: string; icon: string } | null;
 
-const isRestricted = (spot: SpotSummary): boolean => {
-  const ls = spot.legal_status;
-  if (!ls) return false;
-  return Boolean(
-    ls.natura2000?.inside ||
-      ls.national_park?.inside ||
-      ls.coastal_law?.inside,
-  );
+const getLegalIndicator = (spot: SpotSummary, colors: ThemeColors): LegalIndicator => {
+  const level = getOvernightLevel(spot.legal_status);
+  if (level === 'prohibited') return { color: colors.DANGER, icon: 'X' };
+  if (level === 'restricted') return { color: colors.SCORE_LOW, icon: '!' };
+  return null;
 };
 
 const formatSubtitle = (spot: SpotSummary): string => {
   const parts: string[] = [];
-  if (spot.spot_type) parts.push(capitalize(spot.spot_type.replace(/_/g, ' ')));
-  if (spot.surface_type && spot.surface_type !== 'unknown') {
-    parts.push(capitalize(spot.surface_type));
-  }
-  if (spot.slope_pct !== null) parts.push(`${spot.slope_pct.toFixed(1)}% slope`);
+  if (spot.province) parts.push(spot.province);
+  const surfaceLabel = getTranslatedSurface(spot.surface_type);
+  if (surfaceLabel) parts.push(surfaceLabel);
+  if (spot.slope_pct !== null) parts.push(t('spots.slope', { value: spot.slope_pct.toFixed(1) }));
   return parts.join(' \u00B7 ');
 };
 
 export const SpotCard = ({ spot }: SpotCardProps) => {
   const colors = useThemeColors();
   const score = spot.composite_score ?? null;
-  const router = useRouter();
+  const { navigateToSpot } = useSpotNavigation();
+  const isSaved = useSpotsStore((s) => s.isSaved(spot.id));
 
   const handlePress = () => {
-    router.push(`/spot/${spot.id}`);
+    navigateToSpot(spot.id);
   };
 
   const scoreColor = getScoreColor(score, colors);
   const subtitle = formatSubtitle(spot);
-  const restricted = isRestricted(spot);
+  const legal = getLegalIndicator(spot, colors);
 
   return (
     <Pressable
@@ -54,9 +54,9 @@ export const SpotCard = ({ spot }: SpotCardProps) => {
       style={({ pressed }) => [
         styles.container,
         { backgroundColor: colors.CARD },
-        restricted && {
+        legal !== null && {
           borderWidth: 1.5,
-          borderColor: colors.DANGER,
+          borderColor: legal.color,
         },
         pressed && styles.pressed,
       ]}
@@ -65,9 +65,9 @@ export const SpotCard = ({ spot }: SpotCardProps) => {
         style={[
           styles.scoreBadge,
           { backgroundColor: scoreColor },
-          restricted && {
+          legal !== null && {
             borderWidth: 2,
-            borderColor: colors.DANGER,
+            borderColor: legal.color,
           },
         ]}
       >
@@ -76,9 +76,19 @@ export const SpotCard = ({ spot }: SpotCardProps) => {
         </Text>
       </View>
       <View style={styles.textArea}>
-        <Text style={[styles.name, { color: colors.TEXT_PRIMARY }]} numberOfLines={1}>
-          {spot.name || t('spots.unnamedSpot')}
-        </Text>
+        <View style={styles.nameRow}>
+          {isSaved && (
+            <Ionicons name="bookmark" size={14} color={colors.ACCENT} />
+          )}
+          <Text style={[styles.name, { color: colors.TEXT_PRIMARY }]} numberOfLines={1}>
+            {getSpotDisplayName(spot)}
+          </Text>
+          {legal && (
+            <Text style={[styles.legalIcon, { color: legal.color }]}>
+              {legal.icon}
+            </Text>
+          )}
+        </View>
         {subtitle ? (
           <Text
             style={[styles.subtitle, { color: colors.TEXT_SECONDARY }]}
@@ -122,9 +132,19 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 3,
   },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   name: {
     fontFamily: FONT_FAMILIES.BODY_BOLD,
     fontSize: 16,
+    flexShrink: 1,
+  },
+  legalIcon: {
+    fontFamily: FONT_FAMILIES.DATA,
+    fontSize: 13,
   },
   subtitle: {
     fontFamily: FONT_FAMILIES.BODY,

@@ -58,6 +58,8 @@ export interface SpotSummary {
   legal_status: LegalStatus | null;
   composite_score: number | null;
   status: SpotStatus;
+  municipality: string | null;
+  province: string | null;
 }
 
 /** Full spot detail including all processing results */
@@ -84,6 +86,8 @@ export interface SpotDetail {
   satellite_image_path: string | null;
   status: SpotStatus;
   rejection_reason: string | null;
+  municipality: string | null;
+  province: string | null;
   created_at: string;
   updated_at: string;
 }

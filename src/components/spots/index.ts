@@ -7,3 +7,6 @@ export { SpotDetailHeader } from '@/components/spots/SpotDetailHeader';
 export { AiAnalysis } from '@/components/spots/AiAnalysis';
 export { ContextAnalysis } from '@/components/spots/ContextAnalysis';
 export { ScoreBreakdown } from '@/components/spots/ScoreBreakdown';
+export { ExpandableSection } from '@/components/spots/ExpandableSection';
+export { SpotHighlights } from '@/components/spots/SpotHighlights';
+export { KeyDataStrip } from '@/components/spots/KeyDataStrip';

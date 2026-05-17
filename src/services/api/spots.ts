@@ -1,5 +1,5 @@
 import { get } from '@/services/api/client';
-import type { BoundingBox, SpotSummary, SpotDetail } from '@/services/api/types';
+import type { BoundingBox, SpotSummary, SpotDetail, LegalDocument } from '@/services/api/types';
 
 export type SpotFilters = {
   minScore?: number;
@@ -28,4 +28,16 @@ export const getSpotDetail = async (
   id: string,
 ): Promise<SpotDetail> => {
   return get<SpotDetail>(`/spots/${id}`);
+};
+
+export const getLegalDocuments = async (
+  lat: number,
+  lon: number,
+  radiusKm: number = 50,
+): Promise<LegalDocument[]> => {
+  const response = await get<{ documents: LegalDocument[]; count: number }>(
+    '/legal/documents',
+    { lat, lon, radius: radiusKm },
+  );
+  return response.documents;
 };

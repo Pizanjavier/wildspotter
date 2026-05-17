@@ -37,8 +37,17 @@ export const useMapStore = create<MapState>((set) => ({
   setCenter: (center) => set({ center }),
   setZoom: (zoom) => set({ zoom }),
   updateBounds: (bounds) => set({ bounds }),
-  flyTo: (target) =>
-    set({ flyToTarget: target, center: target.center, zoom: target.zoom }),
+  flyTo: (target) => {
+    const latDelta = 360 / Math.pow(2, target.zoom + 1);
+    const lngDelta = 360 / Math.pow(2, target.zoom);
+    const bounds: BoundingBox = {
+      north: target.center[1] + latDelta / 2,
+      south: target.center[1] - latDelta / 2,
+      east: target.center[0] + lngDelta / 2,
+      west: target.center[0] - lngDelta / 2,
+    };
+    set({ flyToTarget: target, center: target.center, zoom: target.zoom, bounds });
+  },
   clearFlyTo: () => set({ flyToTarget: null }),
   toggleSelectionMode: () =>
     set((state) => ({

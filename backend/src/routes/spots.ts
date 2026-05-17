@@ -61,6 +61,8 @@ const spotSummarySchema = {
     legal_status: { type: ['object', 'null'], additionalProperties: true },
     composite_score: { type: ['number', 'null'] },
     status: { type: 'string' },
+    municipality: { type: ['string', 'null'] },
+    province: { type: ['string', 'null'] },
   },
 };
 
@@ -89,6 +91,8 @@ const spotDetailSchema = {
     satellite_image_path: { type: ['string', 'null'] },
     status: { type: 'string' },
     rejection_reason: { type: ['string', 'null'] },
+    municipality: { type: ['string', 'null'] },
+    province: { type: ['string', 'null'] },
     created_at: { type: 'string' },
     updated_at: { type: 'string' },
   },

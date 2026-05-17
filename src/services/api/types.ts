@@ -30,6 +30,8 @@ export type SpotSummary = {
   legal_status: LegalStatus | null;
   composite_score: number;
   status: string;
+  municipality: string | null;
+  province: string | null;
 };
 
 export type ContextSubScore = {
@@ -99,4 +101,37 @@ export type BoundingBox = {
   min_lon: number;
   max_lat: number;
   max_lon: number;
+};
+
+export type ConfidenceTier = 'verified' | 'automated' | 'unverified';
+
+export type DecreeArticle = {
+  title: string;
+  number: string;
+  text_verbatim: string;
+  restrictions: string[];
+  exceptions: string[];
+  max_stay_hours: number | null;
+  legal_distinction: string | null;
+};
+
+export type LegalDocument = {
+  id: string;
+  source_id: string;
+  title: string;
+  restriction_type: string;
+  affected_municipality: string | null;
+  affected_province: string | null;
+  affected_ccaa: string | null;
+  confidence_tier: ConfidenceTier;
+  effective_from: string | null;
+  effective_until: string | null;
+  seasonal: boolean;
+  season_start_month: number | null;
+  season_end_month: number | null;
+  decree_ref: string | null;
+  source_url: string | null;
+  status: string;
+  created_at: string;
+  decree_articles?: DecreeArticle[] | null;
 };

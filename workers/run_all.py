@@ -72,7 +72,7 @@ def format_progress(counts: dict[str, int]) -> str:
 
 def terrain_worker_loop(worker_id: int, batch_size: int) -> None:
     """Run terrain processing in a loop until shutdown or no work left."""
-    import terrain
+    from pipeline import terrain
 
     idle = 0
     max_idle = 5
@@ -101,12 +101,12 @@ def terrain_worker_loop(worker_id: int, batch_size: int) -> None:
 
 def pipeline_loop(batch_size: int) -> None:
     """Run the post-terrain pipeline stages in order, looping until shutdown."""
-    import legal
-    import ai_inference
-    import context_scoring
-    import amenities_scoring
-    import landcover
-    import scoring
+    from pipeline import legal
+    from pipeline import ai_inference
+    from pipeline import context_scoring
+    from pipeline import amenities_scoring
+    from pipeline import landcover
+    from pipeline import scoring
 
     idle = 0
     max_idle = 10  # more patience since terrain feeds us

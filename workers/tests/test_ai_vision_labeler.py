@@ -1,6 +1,6 @@
 """Tests for the AI Vision Labeler worker."""
 
-from ai_vision_labeler import compute_ai_score, parse_response, WEIGHTS
+from pipeline.ai_vision_labeler import compute_ai_score, parse_response, WEIGHTS
 
 
 class TestComputeAiScore:

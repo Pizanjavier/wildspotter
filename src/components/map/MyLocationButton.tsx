@@ -3,14 +3,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useUserLocation } from '@/hooks/useUserLocation';
-import { DRAG_ZONE_HEIGHT, COLLAPSED_PEEK } from '@/hooks/useBottomSheetGesture';
+import { useBottomSheetTop } from '@/hooks/useBottomSheetTop';
 
-/** Match ScanButton vertical position: SCAN_BUTTON_MARGIN(20) */
-const SCAN_BUTTON_MARGIN = 20;
+const BUTTON_GAP = 8;
 
 export const MyLocationButton = () => {
   const colors = useThemeColors();
   const { status, locate, openSettings } = useUserLocation();
+  const sheetTop = useBottomSheetTop();
 
   const isLocating = status === 'requesting' || status === 'locating';
   const isDenied = status === 'denied';
@@ -25,10 +25,7 @@ export const MyLocationButton = () => {
   };
 
   const iconColor = isDenied ? colors.TEXT_MUTED : colors.ACCENT;
-
-  const collapsedSheetHeight = DRAG_ZONE_HEIGHT + COLLAPSED_PEEK;
-  // Align vertically with ScanButton (same bottom offset)
-  const bottomOffset = collapsedSheetHeight + SCAN_BUTTON_MARGIN;
+  const bottomOffset = sheetTop + BUTTON_GAP;
 
   const webShadow = Platform.OS === 'web'
     ? { boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.3)' }
@@ -61,13 +58,15 @@ export const MyLocationButton = () => {
   );
 };
 
+export const LOCATION_BUTTON_SIZE = 48;
+
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     right: SPACING.MD,
     zIndex: 10,
-    width: 48,
-    height: 48,
+    width: LOCATION_BUTTON_SIZE,
+    height: LOCATION_BUTTON_SIZE,
     borderRadius: RADIUS.PILL,
     borderWidth: 1.5,
     alignItems: 'center',

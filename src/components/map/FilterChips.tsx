@@ -45,7 +45,7 @@ export const FilterChips = () => {
             ]}
           >
             <Text style={[styles.chipText, { color: colors.TEXT_PRIMARY }]}>
-              {'\u2264'}{slopeThreshold}% slope
+              {t('map.slopeChip', { value: slopeThreshold })}
             </Text>
           </View>
         )}

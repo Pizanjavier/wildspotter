@@ -15,7 +15,7 @@ const { fontFamily: interFont } = loadInter("normal", {
 	subsets: ["latin"],
 });
 
-export const TU_PERRO_LO_SABE_FRAMES = 540;
+export const TU_PERRO_LO_SABE_FRAMES = 590;
 
 export type TuPerroLoSabeProps = {
 	hookVariant: "P1" | "P2";

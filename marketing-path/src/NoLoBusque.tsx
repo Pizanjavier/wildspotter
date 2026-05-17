@@ -15,7 +15,7 @@ const { fontFamily: interFont } = loadInter("normal", {
 	subsets: ["latin"],
 });
 
-export const NO_LO_BUSQUE_FRAMES = 540;
+export const NO_LO_BUSQUE_FRAMES = 580;
 
 export type NoLoBusqueProps = {
 	hookVariant: "NB1" | "NB2" | "NB3";
@@ -138,7 +138,7 @@ export const NoLoBusque: React.FC<NoLoBusqueProps> = ({
 	};
 
 	return (
-		<AbsoluteFill style={{ backgroundColor: "#000" }}>
+		<AbsoluteFill style={{ backgroundColor: "#0F0D0B" }}>
 			{/* Music */}
 			<Audio
 				src={staticFile(`audio/music/${musicTrack}.mp3`)}
@@ -190,7 +190,7 @@ export const NoLoBusque: React.FC<NoLoBusqueProps> = ({
 					position: "absolute",
 					bottom: 500,
 					left: 60,
-					right: 60,
+					right: 150,
 					opacity: Math.min(t1In, t1Out),
 				}}
 			>
@@ -205,7 +205,7 @@ export const NoLoBusque: React.FC<NoLoBusqueProps> = ({
 					position: "absolute",
 					bottom: 500,
 					left: 60,
-					right: 60,
+					right: 150,
 					opacity: Math.min(t2In, t2Out),
 				}}
 			>
@@ -220,7 +220,7 @@ export const NoLoBusque: React.FC<NoLoBusqueProps> = ({
 					position: "absolute",
 					bottom: 480,
 					left: 60,
-					right: 60,
+					right: 150,
 					opacity: Math.min(t3In, t3Out),
 				}}
 			>
@@ -241,7 +241,7 @@ export const NoLoBusque: React.FC<NoLoBusqueProps> = ({
 					position: "absolute",
 					bottom: 480,
 					left: 60,
-					right: 60,
+					right: 150,
 					opacity: Math.min(t4In, t4Out),
 					transform: `translateY(${t4Y}px)`,
 				}}
@@ -272,7 +272,7 @@ export const NoLoBusque: React.FC<NoLoBusqueProps> = ({
 			<div
 				style={{
 					position: "absolute",
-					bottom: 380,
+					bottom: 680,
 					left: "50%",
 					transform: "translateX(-50%)",
 					display: "flex",
@@ -306,7 +306,7 @@ export const NoLoBusque: React.FC<NoLoBusqueProps> = ({
 			<div
 				style={{
 					position: "absolute",
-					bottom: 280,
+					bottom: 510,
 					left: 0,
 					right: 0,
 					textAlign: "center",

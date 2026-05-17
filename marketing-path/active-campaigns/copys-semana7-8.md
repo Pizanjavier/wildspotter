@@ -1,17 +1,17 @@
 # WildSpotter — Copys para TikTok/Reels/IG (Semana 7-8 + Final Semana 6)
 
-> Copys listos para copiar y pegar. Continuacion de `past-campaigns/copys-semana5-6.md`.
+> Copys listos para copiar y pegar. Continuación de `past-campaigns/copys-semana5-6.md`.
 > Estrategia completa en [`marketing-strategy-current.md`](marketing-strategy-current.md).
-> **Regla: maximo 5 hashtags por post.**
-> **Formula V4: dato real + tipo de paisaje + pregunta de engagement. NUNCA revelar ubicacion.**
-> **Cambio clave V4:** Todo post termina con una pregunta real que invite al comentario, no con "¿Dónde esta? Solo en WildSpotter."
+> **Regla: máximo 5 hashtags por post.**
+> **Fórmula V4: dato real + tipo de paisaje + pregunta de engagement. NUNCA revelar ubicación.**
+> **Cambio clave V4:** Todo post termina con una pregunta real que invite al comentario, no con "¿Dónde está? Solo en WildSpotter."
 
 ---
 
 ## Final Semana 6 (May 7-10) — Decisión y Copys
 
 > O1 y O3 se publican como estaban planificados (completan la serie legal).
-> K1 "Gatekeeping" se sustituye por S1 "El Problema" — mas emoción y menos repeticion.
+> K1 "Gatekeeping" se sustituye por S1 "El Problema" — más emoción y menos repetición.
 > El repost del domingo se sustituye por un nuevo Reel con datos actualizados.
 
 ---
@@ -77,15 +77,15 @@ Gratis en iOS y Android -> link en bio
 ```
 Guardaste ese spot hace 3 meses.
 
-Llegas. Hay 11 furgos aparcadas. El suelo esta destrozado.
+Llegas. Hay 11 furgos aparcadas. El suelo está destrozado.
 
 Eso es lo que pasa cuando un spot tiene 400 reviews en otras apps.
 
 WildSpotter no comparte. Calcula.
 
-83.006 spots procesados. Tu encuentras el que nadie ha compartido todavia.
+83.006 spots procesados. Tú encuentras el que nadie ha compartido todavía.
 
-¿A cuantos sitios "secretos" habeis llegado ya llenos? 👇
+¿A cuántos sitios "secretos" habéis llegado ya llenos? 👇
 
 Gratis en iOS y Android -> link en bio
 
@@ -102,7 +102,7 @@ Gratis en iOS y Android -> link en bio
 > Produccion: Remotion counter animation sobre mapa borroso de España. 15 segundos.
 
 ```
-83.006 spots analizados en toda Espana.
+83.006 spots analizados en toda España.
 
 Media de score: 21,7.
 
@@ -110,9 +110,9 @@ Con score mayor de 70: 393.
 Con score mayor de 80: 41.
 
 El radar no te da los mejores sitios del mundo.
-Te da los que nadie mas te va a dar.
+Te da los que nadie más te va a dar.
 
-¿Cuántos crees que hay cerca de donde estas ahora? 👇
+¿Cuántos crees que hay cerca de donde estás ahora? 👇
 
 Gratis en iOS y Android -> link en bio
 
@@ -130,23 +130,23 @@ Gratis en iOS y Android -> link en bio
 > Android Launch marketing-path/active-campaigns/copys-android-launch.md.
 > Promoted with Instagram and tiktok promotions 10€ each, duration 2 days.
 
-### Mar 12 — S2 "El Peor Momento" — Reel — IG + TikTok (CANCELADO, MAL CONTENIDO - corregir si se quiere usar mas adelante, engagement list pasado al 16, se deja a la promoción actuar sobre el contenido del 11)
+### Mar 12 — S2 "El Peor Momento" — Reel — IG + TikTok (CANCELADO, MAL CONTENIDO - corregir si se quiere usar más adelante, engagement list pasado al 16, se deja a la promoción actuar sobre el contenido del 11)
 
-> 📋 Engagement 5-3-1: ver [engagement-list-may12.md](engagement-list-may12.md)
+> 📋 Engagement 5-3-1: ver [engagement-list-may12.md](engagement-list-may12.md) (no hecho, movido al 16)
 
 > Concepto emoción/problema. Hook de urgencia nocturna.
-> Produccion: Footage de van en carretera de noche, luces de ciudad al fondo. Texto animado.
+> Producción: Footage de van en carretera de noche, luces de ciudad al fondo. Texto animado.
 
 ```
 Las 11 de la noche.
 
-Llevas 4 horas conduciendo. El sitio que tenias guardado ya no existe.
+Llevas 4 horas conduciendo. El sitio que tenías guardado ya no existe.
 Las apps de siempre te dan sitios llenos o cerrados.
-No tienes cobertura para buscar mas.
+No tienes cobertura para buscar más.
 
 Eso no le pasa a quien tiene el radar activo antes de salir.
 
-83.006 spots analizados. Descargalo antes de necesitarlo.
+83.006 spots analizados. Descárgalo antes de necesitarlo.
 
 ¿Os ha pasado quedarse sin sitio de noche? 👇
 
@@ -159,13 +159,13 @@ Gratis en iOS y Android -> link en bio
 
 ### Mie 13 — Story IG (PREV MAR 12)
 
-> 📋 Engagement 5-3-1: ver [engagement-list-may13.md](engagement-list-may13.md)
+> 📋 Engagement 5-3-1: ver [engagement-list-may13.md](engagement-list-may13.md) (no hecho, movido al 17)
 
 **Poll:**
 ```
-Cuando planeas el proximo viaje...
+Cuando planeas el próximo viaje...
 
-[A] Con semanas de antelacion
+[A] Con semanas de antelación
 [B] La noche antes
 [C] Ya estoy en ruta
 ```
@@ -186,7 +186,7 @@ Cada punto es un candidato. Solo unos pocos pasan los 7 filtros.
 > 📋 Engagement 5-3-1: ver [engagement-list-may14.md](engagement-list-may14.md)
 
 > Carousel educativo saveable. Formato: una señal por slide, icono + dato.
-> Produccion: Remotion Still, tema scoring (verde). 5 slides.
+> Producción: Remotion Still, tema scoring (verde). 5 slides.
 
 **Caption IG + TikTok:**
 ```
@@ -194,20 +194,20 @@ Cada punto es un candidato. Solo unos pocos pasan los 7 filtros.
 
 Lo que busca el radar en cada candidato.
 
-Desliza → guardalo para el proximo viaje.
+Desliza → guárdalo para el próximo viaje.
 
 Gratis en iOS y Android -> link en bio
 
 #vanlife #vidaenfurgo #furgocamper #espana #datosreales
 ```
 
-**Slides (guion para produccion):**
+**Slides (guion para producción):**
 - **Slide 1 (cover):** "5 señales de que un spot va a ser bueno" — fondo oscuro, icono radar
-- **Slide 2:** Final de camino sin salida + "Sin trafico de paso. El radar busca muertos de fondo, pistas sin salida, accesos privados."
-- **Slide 3:** 0 edificios en 300m + "Sin vecinos = sin quejas. La densidad urbana es uno de los factores con mas peso en el score de contexto."
-- **Slide 4:** Pendiente < 5% + "Suelo plano. El Topografo mide la inclinacion con Terrain-RGB. Por encima del 15% tu furgo no descansa."
+- **Slide 2:** Final de camino sin salida + "Sin tráfico de paso. El radar busca finales de camino y pistas sin salida."
+- **Slide 3:** 0 edificios en 300m + "Sin vecinos = sin quejas. La densidad urbana es uno de los factores con más peso en el score de contexto."
+- **Slide 4:** Pendiente < 5% + "Suelo plano. El Topógrafo mide la inclinación con Terrain-RGB. Por encima del 15% tu furgo no descansa."
 - **Slide 5:** Verde en 4 capas legales + "Fuera de zonas protegidas. Natura 2000, Parques Nacionales, Ley de Costas y Catastro — los 4 checks legales del radar."
-- **Slide 5 (ultimo):** Score > 70 + CTA "¿Qué señal es la mas importante para ti? WildSpotter las procesa todas. Link en bio."
+- **Slide 5 (ultimo):** Score > 70 + CTA "¿Qué señal es la más importante para ti? WildSpotter las procesa todas. Link en bio."
 
 ---
 
@@ -217,7 +217,7 @@ Gratis en iOS y Android -> link en bio
 
 ---
 
-### Jue 15 — RD5 "El Radar Detecto" (costa norte) — Reel — IG + TikTok
+### Vie 15 — RD5 "El Radar Detecto" (costa norte) — Reel — IG + TikTok
 
 > Nuevo spot de la serie con datos reales del pipeline. Zona: costa norte (Galicia/Asturias/Cantabria).
 > Produccion: Remotion `ElRadarDetecto-RD5`. Ortofoto PNOA real. Footage stock: costa verde atlantica.
@@ -245,67 +245,54 @@ Gratis en App Store -> link en bio
 
 ---
 
-### Vie 16 — Debate1 "¿Se Comparten Los Spots?" — Reel — TikTok (primero) + IG
+### Sab 16 — Debate1 "¿Se Comparten Los Spots?" — Reel — TikTok (primero) + IG
 
 > Formato debate/opinion. TikTok primero porque el debate funciona mejor ahi.
-> Produccion: Texto animado sobre footage de van en spot solitario. 15 segundos.
+> Produccion: Texto animado sobre footage de van en spot solitario. 18 segundos.
 
 ```
-¿Das la ubicacion de tu spot favorito?
+¿Publicas la ubicación de tu spot favorito?
 
-Si lo compartes: das un regalo a alguien.
-Si lo guardas: proteges el sitio para la proxima vez.
+Compartirlo es generoso. Alguien va a flipar.
 
-El problema es que la proxima vez llegan 300 personas mas pensando lo mismo.
+Pero en las apps de reviews los mejores spots se extienden como la pólvora.
 
-Los mejores spots no se comparten. Se descubren con datos.
+Vuelves en junio. Hay 15 furgos, basura en el suelo y alguien con un altavoz.
 
-¿Dar ubicacion o guardar el secreto? Comenta 👇
+¿Publicar o guardar el secreto? Comenta 👇
 
 #vanlife #vidaenfurgo #gatekeeping #furgocamper #debate
 ```
 
 ---
 
-### Sab 17 — Story IG
+### Dom 17 — Story IG (REDUCIDA — solo 1 story de amplificacion)
 
-**Quiz legal:**
+> **Cambio mid-mayo audit:** Stories no generan interacción con 83 seguidores. Las polls con 2-3 votos crean prueba social negativa. Reducir a amplificación de Reels hasta 300+ seguidores.
+
+**Story única — Amplificación del Debate1 (Sab 16):**
 ```
-¿Cuántos Parques Nacionales hay en Espana?
-
-[A] 9
-[B] 16
-[C] 23
-
-[Respuesta: B — 16 Parques Nacionales. Mas 1.788 Parques y Reservas Naturales. WildSpotter los tiene todos catalogados.]
-```
-
-**Story 2 — Poll estacional:**
-```
-Mayo es el mejor mes para...
-
-[A] Costa norte (Galicia, Asturias, Cantabria)
-[B] Interior (Extremadura, Castilla)
-[C] Costa sur (Andalucia, Almeria)
+¿Habéis visto el debate de ayer? 👇
+[Compartir el Reel de Debate1 en Story con sticker de enlace]
 ```
 
 ---
 
 ### Dom 17 — V1 "Mayo es el Mejor Mes" — Reel — IG + TikTok
 
-> Contenido estacional. La costa norte de España en mayo esta vacia antes del turismo masivo.
-> Produccion: Stock footage de costa verde. Texto simple. Musica ambient.
+> Contenido estacional. La costa norte de España en mayo está vacía antes del turismo masivo.
+> Producción: Stock footage de costa verde. Texto simple. Música ambient.
 
 ```
 Mayo.
 
-La costa cantabrica todavia sin turistas.
-Galicia con hierba verde y playas vacias.
+La costa cantábrica todavía sin turistas.
+Galicia con hierba verde y playas vacías.
 Asturias sin los coches del agosto.
 
 El radar tiene los mejores spots de la costa norte catalogados.
 
-¿Ya habeis estado por el norte este mes? 👇
+¿Ya habéis estado por el norte este mes? 👇
 
 Gratis en iOS y Android -> link en bio
 
@@ -321,7 +308,7 @@ Gratis en iOS y Android -> link en bio
 ### Lun 18 — RD6 "El Radar Detecto" (interior) — Reel — IG + TikTok
 
 > Spot nuevo, zona interior — Extremadura, La Mancha o Castilla. Dehesa o embalse.
-> Produccion: Remotion `ElRadarDetecto-RD6`. Ortofoto PNOA real. Footage stock: dehesa con encinas.
+> Producción: Remotion `ElRadarDetecto-RD6`. Ortofoto PNOA real. Footage stock: dehesa con encinas.
 > [Rellenar con datos reales del pipeline — spot > 70 en zona interior]
 
 ```
@@ -343,36 +330,26 @@ Gratis en App Store -> link en bio
 
 ---
 
-### Mar 19 — Story IG
+### Mar 19 — Story IG (REDUCIDA — solo amplificación)
 
-**Behind the scenes:**
+> **Cambio mid-mayo audit:** Sin polls hasta 300+ seguidores. Solo amplificación de Reels.
+
+**Story única — Amplificación del RD6 (Lun 18):**
 ```
-Esto es lo que ocurre cuando el radar escanea una zona de la Meseta.
-
-[Captura pixelada del mapa con cluster de puntos en zona interior — sin ubicaciones identificables]
-
-Miles de candidatos. Solo los que pasan terreno + legal + IA satelital + contexto llegan a tu pantalla.
-```
-
-**Poll:**
-```
-¿Dónde estais ahora mismo?
-
-[A] En ruta
-[B] En casa preparando el proximo viaje
-[C] Ya en el sur
+Nuevo spot del radar. Interior de España.
+[Compartir el Reel de RD6 en Story]
 ```
 
 ---
 
-### Mie 20 — U1 "Por Que Los Mejores Spots No Tienen Reviews" — Carousel 5 slides — IG + TikTok
+### Mie 20 — U1 "Por Qué Los Mejores Spots No Tienen Reviews" — Carousel 5 slides — IG + TikTok
 
 > Carousel anti-masificación. Saveable y shareable.
-> Produccion: Remotion Still, tema mystery (amber). 5 slides.
+> Producción: Remotion Still, tema mystery (amber). 5 slides.
 
 **Caption IG + TikTok:**
 ```
-Por que los mejores spots no tienen reviews.
+Por qué los mejores spots no tienen reviews.
 
 La paradoja de las apps de reviews en 5 slides.
 
@@ -383,20 +360,20 @@ Gratis en iOS y Android -> link en bio
 #vanlife #vidaenfurgo #gatekeeping #espana #furgocamper
 ```
 
-**Slides (guion para produccion):**
-- **Slide 1 (cover):** "Por que los mejores spots no tienen reviews" — fondo oscuro, icono de review tachado
+**Slides (guion para producción):**
+- **Slide 1 (cover):** "Por qué los mejores spots no tienen reviews" — fondo oscuro, icono de review tachado
 - **Slide 2:** "Un spot descubierto. 3 reviews: tranquilo, limpio, tuyo."
 - **Slide 3:** "6 meses después. 300 reviews. Lleno cada fin de semana. Basura. Ruido. Ya no es tuyo."
-- **Slide 4:** "El problema no es la app. Es la logica. Cuanto mas se comparte, mas se arruina. Las apps de reviews tienen ese bucle integrado."
-- **Slide 5:** "WildSpotter no comparte spots. Los calcula. Cada usuario descubre los suyos con datos: terreno, satelite, legal. Tu spot es tuyo porque nadie mas lo calculo."
-- **Slide 6 (ultimo):** CTA — "¿De acuerdo? Guardalo. Envíaselo a tu copiloto. Link en bio."
+- **Slide 4:** "El problema no es la app. Es la lógica. Cuanto más se comparte, más se arruina. Las apps de reviews tienen ese bucle integrado."
+- **Slide 5:** "WildSpotter no comparte spots. Los calcula. Cada usuario descubre los suyos con datos: terreno, satélite, legal. Tu spot es tuyo porque nadie más lo calculó."
+- **Slide 6 (ultimo):** CTA — "¿De acuerdo? Guárdalo. Envíaselo a tu copiloto. Link en bio."
 
 ---
 
 ### Jue 21 — S3 "Un 91" — Reel — IG + TikTok
 
-> Formato misterio/emoción. El mejor score del periodo, presentado con mas emoción que los RD.
-> Produccion: Remotion, score reveal + datos + footage stock de costa con acantilado.
+> Formato misterio/emoción. El mejor score del periodo, presentado con más emoción que los RD.
+> Producción: Remotion, score reveal + datos + footage stock de costa con acantilado.
 
 ```
 Un 91 sobre 100.
@@ -406,7 +383,7 @@ Vista al mar desde 120m de altura.
 Suelo plano. Fuera de zonas protegidas.
 Acceso por pista sin salida.
 
-El radar lo encontro antes de que nadie lo compartiera.
+El radar lo encontró antes de que nadie lo compartiera.
 
 ¿Costa del norte o del sur? ¿Qué crees? 👇
 
@@ -417,20 +394,20 @@ Solo en WildSpotter. Gratis en iOS -> link en bio
 
 ---
 
-### Vie 22 — Debate2 "¿Merece La Pena Una Review?" — Reel — TikTok (primero) + IG
+### Vie 22 — Debate2 "¿Merece La Pena Una Reseña?" — Reel — TikTok (primero) + IG
 
-> Segunda iteracion del formato debate. Mas especifica que Debate1.
-> Produccion: Texto animado sobre footage de van aparcada. 12 segundos.
+> Segunda iteración del formato debate. Más específica que Debate1.
+> Producción: Texto animado sobre footage de van aparcada. 12 segundos.
 
 ```
-Una resena de 5 estrellas en un spot significa que 200 personas mas llegaran el proximo finde.
+Una reseña de 5 estrellas en un spot significa que 200 personas más llegarán el próximo finde.
 
 ¿Merece la pena?
 
 Las reviews funcionan cuando eres el primero en leerlas.
-Cuando eres el numero 300, ya no.
+Cuando eres el número 300, ya no.
 
-WildSpotter no tiene resenas. Tiene datos.
+WildSpotter no tiene reseñas. Tiene datos.
 
 ¿Has dejado de usar reviews para buscar spots? 👇
 
@@ -439,25 +416,14 @@ WildSpotter no tiene resenas. Tiene datos.
 
 ---
 
-### Sab 23 — Story IG
+### Sab 23 — Story IG (REDUCIDA — solo amplificación)
 
-**Poll estacional:**
+> **Cambio mid-mayo audit:** Sin polls hasta 300+ seguidores.
+
+**Story única — Amplificación del Debate2 (Vie 22):**
 ```
-Mayo en Espana...
-
-[A] Playa (empezando la temporada)
-[B] Bosque/montana (antes de que llegue el calor)
-[C] Interior (la meseta en silencio)
-```
-
-**Story 2:**
-```
-83.006 spots procesados.
-
-[Captura borrosa del mapa de España con distribucion de puntos — sin zoom que permita identificar ubicaciones]
-
-¿Cuántos cerca de ti? Solo el radar lo sabe.
-Descargalo gratis en iOS.
+¿Las reseñas sirven para algo?
+[Compartir el Reel de Debate2 en Story]
 ```
 
 ---
@@ -475,7 +441,7 @@ Score: [X]/100.
 
 [Capa legal destacada]. Bonus salvaje: [X].
 
-¿En que region de Espana crees que esta? 👇
+¿En qué región de España crees que está? 👇
 
 Gratis en App Store -> link en bio
 
@@ -486,13 +452,13 @@ Gratis en App Store -> link en bio
 ```
 2 semanas de radar activo.
 
-Los 5 spots mas interesantes que hemos encontrado tienen esto en comun:
+Los 5 spots más interesantes que hemos encontrado tienen esto en común:
 Final de camino. Sin edificios en 300m. Suelo plano.
-Que no esten en ninguna otra app.
+Que no estén en ninguna otra app.
 
 Eso es lo que busca WildSpotter. Cada vez. Sin compartir.
 
-¿Estais de acuerdo en que los mejores spots no se deben compartir? 👇
+¿Estáis de acuerdo en que los mejores spots no se deben compartir? 👇
 
 Gratis en iOS y Android -> link en bio
 
@@ -501,87 +467,57 @@ Gratis en iOS y Android -> link en bio
 
 ---
 
-## Stories — Guia Semanal V4
+## Stories — Guía Semanal V4 (Actualizada mid-mayo audit)
 
-### Polls (3x/semana)
+> **CAMBIO CRÍTICO:** Con 83 seguidores, las Stories interactivas (polls, quizzes) generan 0 respuestas y crean prueba social negativa (2-3 votos visibles). Hasta que la cuenta llegue a 300+ seguidores, las Stories se usan SOLO para amplificar Reels recientes.
 
+### Formato único hasta 300 seguidores: Amplificación de Reels (2x/semana máx)
+
+Compartir el Reel más reciente en Story con un texto corto que genere curiosidad:
 ```
-¿Dónde dormis este finde?
-[A] Costa
-[B] Montana
-[C] Interior
-[D] Todavia no lo se — buscando
-```
-```
-¿Cuántos dias maximo sin moverse del mismo spot?
-[A] 1 noche
-[B] 2-3 noches
-[C] Una semana o mas
-```
-```
-¿Antes de llegar a un spot, como comprobais si es legal?
-[A] No compruebes — suerte
-[B] Google Maps satelite
-[C] Una app de reviews
-[D] WildSpotter
+¿Habéis visto esto? 👇
+[Compartir Reel en Story]
 ```
 
-### Quizzes legales (2x/semana)
-
-```
-¿Puedes dormir en tu furgoneta dentro de un Parque Natural (no Parque Nacional)?
-[A] Si, si no despliegas nada fuera
-[B] No, esta prohibido igual
-[C] Depende del parque y la comunidad autonoma
-[Respuesta: C — Los Parques Naturales tienen regulacion autonomica. Algunos permiten pernocta en vias publicas, otros no. WildSpotter te muestra el estado legal antes de llegar.]
-```
-```
-¿Qué zona costera esta siempre regulada independientemente del municipio?
-[A] Los primeros 20m desde el mar (DPMT)
-[B] Los primeros 100m (Servidumbre de Proteccion)
-[C] Los primeros 500m
-[Respuesta: La Ley de Costas marca tanto el DPMT (20m) como la Servidumbre de Proteccion (100-200m segun tramo). WildSpotter los croza todos.]
-```
-
-### Behind the scenes (2x/semana)
-
-- Captura borrosa del pipeline corriendo — terminal con logs parciales y datos de progreso
-- Screenshot pixelado del mapa de España con distribucion de scores (sin ubicaciones identificables)
-
-### Countdown / anticipacion (1x/semana)
-
-```
-Manana nuevo spot. Score por encima de 80.
-[Sticker countdown 24h]
-```
+### Cuando reactivar polls/quizzes
+- A partir de 300 seguidores (estimado: ~20-30 respuestas por poll = prueba social positiva)
+- Los copys de polls y quizzes de arriba quedan guardados para entonces
 
 ---
 
-## Notas de Produccion V4
+## Notas de Producción V4
 
 ### Cambio clave en copys respecto a V3
 
-Todos los copys de RD series añaden ahora una pregunta especifica de engagement antes del CTA:
-- "¿En que region crees que esta? 👇"
+Todos los copys de RD series añaden ahora una pregunta específica de engagement antes del CTA:
+- "¿En qué región crees que está? 👇"
 - "¿Dehesa o costa? ¿Qué prefieres? 👇"
 - "¿Costa del norte o del sur? ¿Qué crees? 👇"
 
-Esta pregunta es fundamental para activar comentarios. Sin ella, el formato genera vistas pero no interaccion.
+Esta pregunta es fundamental para activar comentarios. Sin ella, el formato genera vistas pero no interacción.
 
-### Primer comentario propio
+### Primer comentario propio (OBLIGATORIO — mid-mayo audit)
 
-En los 5-10 minutos después de publicar cualquier video en TikTok, publicar el primer comentario de WildSpotter:
-```
-¿Ya habeis estado en un spot así? ¿De que zona es?
-```
-Esto activa la seccion de comentarios antes de la primera evaluacion del algoritmo.
+En los 5 minutos después de publicar cualquier video en TikTok, publicar el primer comentario de WildSpotter. **No genérico** — adaptado al video concreto:
+
+| Video | Primer comentario |
+|-------|------------------|
+| RD5 costa norte | "¿Alguien adivina la comunidad? Una pista: hierba verde todo el año 🌿" |
+| Debate1 spots | "Yo siempre guardo el secreto. ¿Y vosotros? 👇" |
+| V1 mayo | "¿Ya habéis subido al norte este mes? El cambio de verde es brutal" |
+| RD6 interior | "La dehesa en mayo es otro planeta. ¿Habéis estado por Extremadura? 🌳" |
+| U1 reviews | "Las apps de reviews son el problema. Cambiad mi opinión 👇" |
+| S3 un 91 | "Un 91 sobre 100. ¿Qué zona de España creéis que puede tener este score? 🤔" |
+| Debate2 reviews | "Ya no uso reseñas para buscar spots. ¿Vosotros? 👇" |
+
+Esto activa la sección de comentarios antes de la primera evaluación del algoritmo (~30 min post-publicación). Los 8 comentarios en TikTok esta semana (+300%) confirman que la estrategia funciona.
 
 ### Videos a producir con Remotion (para el remotion-producer)
 
 Prioridad alta:
 1. `S1` — "El Problema" (Sab 9) — Stock parking lleno → spot solitario. Texto animado.
 2. `W1` — "83.006" (Dom 10) — Counter animation sobre mapa de España.
-3. `RD5` — Costa norte (Jue 15) — Actualizar datos reales del pipeline antes de producir.
+3. `RD5` — Costa norte (Vie 15) — Actualizar datos reales del pipeline antes de producir.
 4. `T1` — Carousel "5 señales" (Mie 13) — 5 slides Remotion Still.
 
 Prioridad media:
@@ -604,11 +540,11 @@ for i in $(seq 1 6); do npx remotion still Carousel-Mystery-$i --image-format=pn
 ### Datos del pipeline (para rellenar RD5, RD6, RD7)
 
 Antes de producir cada RD, obtener del pipeline:
-- Un spot con score > 75 en la zona geografica correspondiente
-- Sus sub-scores reales: pendiente, edificios, elevacion, bonus salvaje, uso del suelo, capa legal
+- Un spot con score > 75 en la zona geográfica correspondiente
+- Sus sub-scores reales: pendiente, edificios, elevación, bonus salvaje, uso del suelo, capa legal
 - La ortofoto PNOA correspondiente
 - NUNCA inventar datos — siempre datos reales del pipeline
 
 ---
 
-*Copys V4 creados el 7 Mayo 2026. Cubren final semana 6 (May 7-10) y semanas 7-8 (11-24 Mayo 2026). Reemplaza plan V3 semana 5-6.*
+*Copys V4 creados el 7 Mayo 2026. Actualizados el 14 Mayo 2026 con datos del audit mid-mayo (Stories reducidas, primer comentario obligatorio, S2 cancelado). Cubren final semana 6 (May 7-10) y semanas 7-8 (11-24 Mayo 2026). Reemplaza plan V3 semana 5-6.*

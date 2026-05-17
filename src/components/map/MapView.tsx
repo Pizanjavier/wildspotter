@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import {
   MapView as MLMapView,
@@ -13,13 +13,28 @@ import {
   type CameraRef,
   type RegionPayload,
 } from '@maplibre/maplibre-react-native';
-import { COLORS } from '@/constants/theme';
+import { Ionicons } from '@expo/vector-icons';
+import { COLORS, SPACING } from '@/constants/theme';
+import { FONT_FAMILIES } from '@/constants/fonts';
 import { API_BASE_URL } from '@/constants/config';
 import { useMapStore } from '@/stores/map-store';
 import { useSettingsStore } from '@/stores/settings-store';
+import { useSpotsStore } from '@/stores/spots-store';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { t } from '@/i18n';
 import { getMapStyle } from '@/components/map/map-style';
 import type { SpotSummary } from '@/services/api/types';
+import { getOvernightLevel } from '@/utils/legal-verdict';
+import type { OvernightLevel } from '@/utils/legal-verdict';
+import { LegalLegend } from '@/components/map/LegalLegend';
+
+/** Numeric encoding: 0=unknown, 1=allowed, 3=restricted, 4=prohibited */
+const OVERNIGHT_LEVEL_NUM: Record<OvernightLevel, number> = {
+  unknown: 0,
+  allowed: 1,
+  restricted: 3,
+  prohibited: 4,
+};
 
 const SPOTS_SOURCE_ID = 'spots-source';
 const SPOTS_LAYER_ID = 'spots-layer';
@@ -36,57 +51,87 @@ type MapViewProps = {
   spots?: SpotSummary[];
 };
 
-const isRestricted = (spot: SpotSummary): boolean => {
-  const ls = spot.legal_status;
-  if (!ls) return false;
-  return Boolean(
-    ls.natura2000?.inside ||
-      ls.national_park?.inside ||
-      ls.coastal_law?.inside,
-  );
-};
-
 const spotsToGeoJSON = (
   spots: SpotSummary[],
+  savedIds: Set<string>,
 ): GeoJSON.FeatureCollection => ({
   type: 'FeatureCollection',
-  features: spots.map((spot) => ({
-    type: 'Feature' as const,
-    geometry: {
-      type: 'Point' as const,
-      coordinates: [spot.coordinates.lon, spot.coordinates.lat],
-    },
-    properties: {
-      id: spot.id,
-      name: spot.name,
-      spot_type: spot.spot_type,
-      surface_type: spot.surface_type,
-      composite_score: spot.composite_score ?? 0,
-      score_label: String(Math.round(spot.composite_score ?? 0)),
-      restricted: isRestricted(spot) ? 1 : 0,
-    },
-  })),
+  features: spots.map((spot) => {
+    const level = getOvernightLevel(spot.legal_status);
+    const levelNum = OVERNIGHT_LEVEL_NUM[level];
+    return {
+      type: 'Feature' as const,
+      geometry: {
+        type: 'Point' as const,
+        coordinates: [spot.coordinates.lon, spot.coordinates.lat],
+      },
+      properties: {
+        id: spot.id,
+        name: spot.name,
+        spot_type: spot.spot_type,
+        surface_type: spot.surface_type,
+        composite_score: spot.composite_score ?? 0,
+        score_label: String(Math.round(spot.composite_score ?? 0)),
+        restricted: levelNum,
+        overnight_level: levelNum,
+        saved: savedIds.has(spot.id) ? 1 : 0,
+      },
+    };
+  }),
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const strokeColorExpr: any = [
   'case',
-  ['==', ['get', 'restricted'], 1], '#EF4444',
+  ['==', ['get', 'restricted'], 4], '#EF4444',
+  ['>=', ['get', 'restricted'], 3], '#FBBF24',
   '#FFFFFF',
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const strokeWidthExpr: any = [
   'case',
-  ['==', ['get', 'restricted'], 1], 2.5,
+  ['>=', ['get', 'restricted'], 3], 2.5,
   1.5,
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const strokeOpacityExpr: any = [
   'case',
-  ['==', ['get', 'restricted'], 1], 0.95,
+  ['>=', ['get', 'restricted'], 3], 0.95,
   0.3,
+];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const badgeTextExpr: any = [
+  'case',
+  ['==', ['get', 'overnight_level'], 3], '!',
+  ['==', ['get', 'overnight_level'], 4], 'X',
+  '',
+];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const badgeColorExpr: any = [
+  'case',
+  ['==', ['get', 'overnight_level'], 3], '#FBBF24',
+  ['==', ['get', 'overnight_level'], 4], '#EF4444',
+  'rgba(0,0,0,0)',
+];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const zoomRadiusExpr: any = [
+  'interpolate', ['linear'], ['zoom'],
+  8, 10,
+  12, 14,
+  15, 18,
+];
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const glowRadiusExpr: any = [
+  'interpolate', ['linear'], ['zoom'],
+  8, 13,
+  12, 18,
+  15, 24,
 ];
 
 /**
@@ -115,7 +160,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
 
   const glowStyle = useMemo(
     () => ({
-      circleRadius: 20,
+      circleRadius: glowRadiusExpr,
       circleColor: scoreColorExpr,
       circleOpacity: 0.15,
       circleBlur: 1,
@@ -125,7 +170,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
 
   const dotStyle = useMemo(
     () => ({
-      circleRadius: 16,
+      circleRadius: zoomRadiusExpr,
       circleColor: scoreColorExpr,
       circleOpacity: 0.9,
       circleStrokeWidth: strokeWidthExpr,
@@ -144,9 +189,20 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
     clearFlyTo,
   } = useMapStore();
 
+  const initialCameraSettings = useRef({
+    centerCoordinate: [center[0], center[1]] as [number, number],
+    zoomLevel: zoom,
+  });
+
   const userLocation = useMapStore((s) => s.userLocation);
 
-  const spotsGeoJSON = useMemo(() => spotsToGeoJSON(spots), [spots]);
+  const savedSpots = useSpotsStore((s) => s.savedSpots);
+  const savedIds = useMemo(
+    () => new Set(savedSpots.map((sp) => sp.id)),
+    [savedSpots],
+  );
+
+  const spotsGeoJSON = useMemo(() => spotsToGeoJSON(spots, savedIds), [spots, savedIds]);
 
   const userLocationGeoJSON = useMemo(
     (): GeoJSON.FeatureCollection => ({
@@ -221,10 +277,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
       >
         <Camera
           ref={cameraRef}
-          defaultSettings={{
-            centerCoordinate: [center[0], center[1]],
-            zoomLevel: zoom,
-          }}
+          defaultSettings={initialCameraSettings.current}
         />
 
         <VectorSource
@@ -269,9 +322,54 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             id="spots-text-layer"
             style={{
               textField: ['get', 'score_label'],
-              textSize: 11,
+              textSize: 12,
               textColor: '#FFFFFF',
               textAllowOverlap: true,
+            }}
+          />
+          {/* Legal badge background circle (top-right) */}
+          <CircleLayer
+            id="spots-badge-bg"
+            filter={['>=', ['get', 'overnight_level'], 3]}
+            style={{
+              circleRadius: 7,
+              circleColor: badgeColorExpr,
+              circleTranslate: [11, -11],
+              circleOpacity: 0.95,
+            }}
+          />
+          <SymbolLayer
+            id="spots-badge-layer"
+            filter={['>=', ['get', 'overnight_level'], 3]}
+            style={{
+              textField: badgeTextExpr,
+              textSize: 9,
+              textColor: '#FFFFFF',
+              textAllowOverlap: true,
+              textOffset: [0.9, -0.9],
+            }}
+          />
+          {/* Saved spot indicator (top-left white dot) */}
+          <CircleLayer
+            id="spots-saved-bg"
+            filter={['==', ['get', 'saved'], 1]}
+            style={{
+              circleRadius: 6,
+              circleColor: '#FFFFFF',
+              circleStrokeWidth: 1.5,
+              circleStrokeColor: themeColors.ACCENT,
+              circleTranslate: [-10, -10],
+            }}
+          />
+          <SymbolLayer
+            id="spots-saved-icon"
+            filter={['==', ['get', 'saved'], 1]}
+            style={{
+              textField: 'S',
+              textSize: 7,
+              textColor: themeColors.ACCENT,
+              textAllowOverlap: true,
+              textOffset: [-0.7, -0.7],
             }}
           />
         </ShapeSource>
@@ -299,6 +397,15 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           />
         </ShapeSource>
       </MLMapView>
+      {showLegalZones && (
+        <View style={[styles.legalBanner, { backgroundColor: themeColors.CARD_SURFACE }]}>
+          <Ionicons name="shield-outline" size={14} color={themeColors.SCORE_LOW} />
+          <Text style={[styles.legalBannerText, { color: themeColors.SCORE_LOW }]}>
+            {t('legal.legalOverlayBanner')}
+          </Text>
+        </View>
+      )}
+      <LegalLegend />
     </View>
   );
 };
@@ -310,5 +417,24 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
+  },
+  legalBanner: {
+    position: 'absolute',
+    top: SPACING.SM,
+    left: SPACING.MD,
+    right: SPACING.MD,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: SPACING.XS + 2,
+    paddingHorizontal: SPACING.MD,
+    borderRadius: 8,
+    opacity: 0.92,
+  },
+  legalBannerText: {
+    fontFamily: FONT_FAMILIES.DATA,
+    fontSize: 11,
+    letterSpacing: 0.3,
   },
 });

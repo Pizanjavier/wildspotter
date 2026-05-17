@@ -13,7 +13,9 @@ const SUMMARY_COLUMNS = `
   elevation,
   legal_status,
   composite_score,
-  status
+  status,
+  municipality,
+  province
 `;
 
 const DETAIL_COLUMNS = `
@@ -40,6 +42,8 @@ const DETAIL_COLUMNS = `
   satellite_image_path,
   status,
   rejection_reason,
+  municipality,
+  province,
   created_at,
   updated_at
 `;
@@ -57,6 +61,8 @@ interface SummaryRow {
   legal_status: Record<string, unknown> | null;
   composite_score: number | null;
   status: string;
+  municipality: string | null;
+  province: string | null;
 }
 
 interface DetailRow extends SummaryRow {
@@ -90,6 +96,8 @@ const mapSummaryRow = (row: SummaryRow): SpotSummary => ({
   legal_status: row.legal_status as SpotSummary['legal_status'],
   composite_score: row.composite_score,
   status: row.status as SpotSummary['status'],
+  municipality: row.municipality,
+  province: row.province,
 });
 
 const mapDetailRow = (row: DetailRow): SpotDetail => ({
@@ -115,6 +123,8 @@ const mapDetailRow = (row: DetailRow): SpotDetail => ({
   satellite_image_path: row.satellite_image_path,
   status: row.status as SpotDetail['status'],
   rejection_reason: row.rejection_reason,
+  municipality: row.municipality,
+  province: row.province,
   created_at: row.created_at.toISOString(),
   updated_at: row.updated_at.toISOString(),
 });

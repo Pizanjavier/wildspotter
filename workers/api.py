@@ -180,7 +180,7 @@ def get_progress() -> dict[str, Any]:
 
 def run_terrain_batch(batch_size: int, limit: int) -> int:
     """Run one terrain batch. Returns count processed."""
-    import terrain
+    from pipeline import terrain
     return terrain.process_batch(batch_size=batch_size, limit=limit)
 
 
@@ -193,35 +193,35 @@ def run_pipeline_pass(
     """Run one pass of legal → AI → context → scoring. Returns counts per stage."""
     results: dict[str, int] = {}
     try:
-        import legal
+        from pipeline import legal
         results["legal"] = legal.process_batch(batch_size=legal_batch)
     except Exception as e:
         logger.error("Legal failed: %s", e)
         results["legal"] = 0
 
     try:
-        import ai_inference
+        from pipeline import ai_inference
         results["ai"] = ai_inference.process_batch(batch_size=ai_batch)
     except Exception as e:
         logger.error("AI failed: %s", e)
         results["ai"] = 0
 
     try:
-        import context_scoring
+        from pipeline import context_scoring
         results["context"] = context_scoring.process_batch(batch_size=context_batch)
     except Exception as e:
         logger.error("Context scoring failed: %s", e)
         results["context"] = 0
 
     try:
-        import amenities_scoring
+        from pipeline import amenities_scoring
         results["amenities"] = amenities_scoring.process_batch(batch_size=scoring_batch)
     except Exception as e:
         logger.error("Amenities scoring failed: %s", e)
         results["amenities"] = 0
 
     try:
-        import scoring
+        from pipeline import scoring
         results["scoring"] = scoring.process_batch(batch_size=scoring_batch)
     except Exception as e:
         logger.error("Scoring failed: %s", e)
@@ -246,7 +246,7 @@ def run_parallel_pass(
 
     def _terrain():
         try:
-            import terrain
+            from pipeline import terrain
             return terrain.process_batch(batch_size=terrain_batch, limit=terrain_limit)
         except Exception as e:
             logger.error("Terrain failed: %s", e)
@@ -254,7 +254,7 @@ def run_parallel_pass(
 
     def _legal():
         try:
-            import legal
+            from pipeline import legal
             return legal.process_batch(batch_size=legal_batch)
         except Exception as e:
             logger.error("Legal failed: %s", e)
@@ -262,7 +262,7 @@ def run_parallel_pass(
 
     def _ai():
         try:
-            import ai_inference
+            from pipeline import ai_inference
             return ai_inference.process_batch(batch_size=ai_batch)
         except Exception as e:
             logger.error("AI failed: %s", e)
@@ -279,7 +279,7 @@ def run_parallel_pass(
 
     # Context scoring runs after the parallel stage
     try:
-        import context_scoring
+        from pipeline import context_scoring
         results["context"] = context_scoring.process_batch(batch_size=context_batch)
     except Exception as e:
         logger.error("Context scoring failed: %s", e)
@@ -287,7 +287,7 @@ def run_parallel_pass(
 
     # Amenities scoring
     try:
-        import amenities_scoring
+        from pipeline import amenities_scoring
         results["amenities"] = amenities_scoring.process_batch(batch_size=amenities_batch)
     except Exception as e:
         logger.error("Amenities scoring failed: %s", e)
@@ -295,7 +295,7 @@ def run_parallel_pass(
 
     # Final scoring runs last
     try:
-        import scoring
+        from pipeline import scoring
         results["scoring"] = scoring.process_batch(batch_size=scoring_batch)
     except Exception as e:
         logger.error("Scoring failed: %s", e)
@@ -593,7 +593,7 @@ def run_legal_endpoint() -> Any:
     data = request.get_json(silent=True) or {}
     batch_size = data.get("batch_size", 200)
     try:
-        import legal
+        from pipeline import legal
         count = legal.process_batch(batch_size=batch_size)
     except Exception as e:
         logger.error("Legal failed: %s", e)
@@ -607,7 +607,7 @@ def run_ai_endpoint() -> Any:
     data = request.get_json(silent=True) or {}
     batch_size = data.get("batch_size", 100)
     try:
-        import ai_inference
+        from pipeline import ai_inference
         count = ai_inference.process_batch(batch_size=batch_size)
     except Exception as e:
         logger.error("AI failed: %s", e)
@@ -621,7 +621,7 @@ def run_context_endpoint() -> Any:
     data = request.get_json(silent=True) or {}
     batch_size = data.get("batch_size", 100)
     try:
-        import context_scoring
+        from pipeline import context_scoring
         count = context_scoring.process_batch(batch_size=batch_size)
     except Exception as e:
         logger.error("Context scoring failed: %s", e)
@@ -635,7 +635,7 @@ def run_amenities_endpoint() -> Any:
     data = request.get_json(silent=True) or {}
     batch_size = data.get("batch_size", 500)
     try:
-        import amenities_scoring
+        from pipeline import amenities_scoring
         count = amenities_scoring.process_batch(batch_size=batch_size)
     except Exception as e:
         logger.error("Amenities scoring failed: %s", e)
@@ -649,7 +649,7 @@ def run_scoring_endpoint() -> Any:
     data = request.get_json(silent=True) or {}
     batch_size = data.get("batch_size", 500)
     try:
-        import scoring
+        from pipeline import scoring
         count = scoring.process_batch(batch_size=batch_size)
     except Exception as e:
         logger.error("Scoring failed: %s", e)
@@ -907,6 +907,571 @@ def reset_stage_endpoint() -> Any:
         "message": f"Reset {count} spots from {affected} back to {target_status}",
         "status": get_status(),
     })
+
+
+@app.route("/legal/dashboard", methods=["GET"])
+def legal_dashboard_endpoint() -> Any:
+    """Serve the legal pipeline dashboard."""
+    import pathlib
+    html_path = pathlib.Path(__file__).parent / "static" / "legal-dashboard.html"
+    if not html_path.exists():
+        return "Dashboard file not found", 404
+    return html_path.read_text(encoding="utf-8"), 200, {"Content-Type": "text/html"}
+
+
+@app.route("/legal/sources", methods=["GET"])
+def legal_sources_endpoint() -> Any:
+    """List all monitored legal sources with health status."""
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT id, name, source_type, region, url, poll_interval_hours,
+                       last_checked_at, last_changed_at, consecutive_failures,
+                       health, last_error
+                FROM legal_source_state
+                ORDER BY region, name
+            """)
+            sources = []
+            for row in cur.fetchall():
+                sources.append({
+                    "id": row[0], "name": row[1], "source_type": row[2],
+                    "region": row[3], "url": row[4], "poll_interval_hours": row[5],
+                    "last_checked_at": row[6].isoformat() if row[6] else None,
+                    "last_changed_at": row[7].isoformat() if row[7] else None,
+                    "consecutive_failures": row[8], "health": row[9],
+                    "last_error": row[10],
+                })
+        return jsonify({"sources": sources, "count": len(sources)})
+    finally:
+        conn.close()
+
+
+@app.route("/legal/documents", methods=["GET"])
+def legal_documents_endpoint() -> Any:
+    """List recent legal documents. Supports ?ccaa=, ?type=, ?limit= filters."""
+    ccaa = request.args.get("ccaa")
+    restriction_type = request.args.get("type")
+    limit = min(int(request.args.get("limit", 50)), 200)
+
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            conditions = ["status = 'active'"]
+            params: list = []
+
+            if ccaa:
+                conditions.append("affected_ccaa = %s")
+                params.append(ccaa)
+            if restriction_type:
+                conditions.append("restriction_type = %s")
+                params.append(restriction_type)
+
+            where = " AND ".join(conditions)
+            params.append(limit)
+
+            cur.execute(f"""
+                SELECT id, source_id, title, restriction_type, affected_ccaa,
+                       affected_province, affected_municipality, confidence_tier,
+                       effective_from, effective_until, seasonal, decree_ref,
+                       source_url, created_at, needs_review, llm_confidence,
+                       decree_articles
+                FROM legal_documents
+                WHERE {where}
+                ORDER BY created_at DESC
+                LIMIT %s
+            """, params)
+
+            docs = []
+            for row in cur.fetchall():
+                decree_articles = row[16]
+                if isinstance(decree_articles, str):
+                    decree_articles = json.loads(decree_articles)
+                docs.append({
+                    "id": str(row[0]), "source_id": row[1], "title": row[2],
+                    "restriction_type": row[3], "affected_ccaa": row[4],
+                    "affected_province": row[5], "affected_municipality": row[6],
+                    "confidence_tier": row[7],
+                    "effective_from": row[8].isoformat() if row[8] else None,
+                    "effective_until": row[9].isoformat() if row[9] else None,
+                    "seasonal": row[10], "decree_ref": row[11],
+                    "source_url": row[12],
+                    "created_at": row[13].isoformat() if row[13] else None,
+                    "needs_review": row[14],
+                    "llm_confidence": row[15],
+                    "decree_articles": decree_articles,
+                })
+        return jsonify({"documents": docs, "count": len(docs)})
+    finally:
+        conn.close()
+
+
+@app.route("/legal/health", methods=["GET"])
+def legal_health_endpoint() -> Any:
+    """Dashboard with GREEN/YELLOW/RED per source."""
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT health, COUNT(*) FROM legal_source_state GROUP BY health
+            """)
+            health_counts = {row[0]: row[1] for row in cur.fetchall()}
+
+            cur.execute("""
+                SELECT COUNT(*) FROM legal_documents WHERE status = 'active'
+            """)
+            active_docs = cur.fetchone()[0]
+
+            cur.execute("""
+                SELECT COUNT(*) FROM legal_documents
+                WHERE created_at > NOW() - INTERVAL '24 hours'
+            """)
+            recent_docs = cur.fetchone()[0]
+
+            cur.execute("""
+                SELECT id, name, health, last_error, consecutive_failures
+                FROM legal_source_state
+                WHERE health != 'GREEN'
+                ORDER BY consecutive_failures DESC
+            """)
+            unhealthy = [
+                {"id": r[0], "name": r[1], "health": r[2],
+                 "last_error": r[3], "failures": r[4]}
+                for r in cur.fetchall()
+            ]
+
+        return jsonify({
+            "overall": "RED" if health_counts.get("RED", 0) > 0
+                       else "YELLOW" if health_counts.get("YELLOW", 0) > 0
+                       else "GREEN",
+            "sources": health_counts,
+            "active_documents": active_docs,
+            "documents_last_24h": recent_docs,
+            "unhealthy_sources": unhealthy,
+        })
+    finally:
+        conn.close()
+
+
+@app.route("/legal/ingest-email", methods=["POST"])
+def legal_ingest_email_endpoint() -> Any:
+    """Ingest a legal bulletin email from n8n IMAP workflow."""
+    import re
+
+    data = request.get_json(silent=True) or {}
+    sender = data.get("from", "")
+    subject = data.get("subject", "")
+    text = data.get("text", "")
+    email_date = data.get("date", "")
+
+    sender_map = {
+        "gencat.cat": ("decree_cataluna", "cataluna"),
+        "xunta.gal": ("decree_galicia", "galicia"),
+        "jccm.es": ("decree_castilla_la_mancha", "castilla_la_mancha"),
+        "navarra.es": ("bon_navarra_html", "navarra"),
+        "juntaex.es": ("doe_extremadura", "extremadura"),
+        "larioja.org": ("bor_la_rioja_html", "la_rioja"),
+    }
+
+    source_id = None
+    ccaa = None
+    for domain, (sid, region) in sender_map.items():
+        if domain in sender.lower():
+            source_id = sid
+            ccaa = region
+            break
+
+    if not source_id:
+        return jsonify({"error": "Unknown sender domain", "sender": sender}), 400
+
+    keyword_pattern = re.compile(
+        r"autocaravana|pernocta|acampada|estacionamiento|camping|caravana|"
+        r"prohibi.*aparcar|incendios?\s*forestales|medio\s*ambiente|"
+        r"turismo|parque\s*natural",
+        re.IGNORECASE,
+    )
+
+    if not keyword_pattern.search(f"{subject} {text}"):
+        return jsonify({"status": "filtered", "reason": "no_keyword_match"})
+
+    import hashlib
+    content_hash = hashlib.sha256(
+        f"{source_id}:{subject}:{email_date}".encode()
+    ).hexdigest()
+
+    from legal.source_monitor import store_legal_document
+    conn = get_db_connection()
+    try:
+        doc_id = store_legal_document(
+            conn,
+            source_id=source_id,
+            title=subject,
+            restriction_type="other",
+            content_hash=content_hash,
+            body=text[:5000],
+            raw_text=text[:10000],
+            confidence_tier="unverified",
+            affected_ccaa=ccaa,
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    if doc_id:
+        logger.info("Ingested email from %s: %s", source_id, subject[:80])
+        return jsonify({"status": "stored", "document_id": doc_id})
+    return jsonify({"status": "duplicate"})
+
+
+def _decode_mime_header(raw: str) -> str:
+    """Decode MIME-encoded email headers (e.g. =?iso-8859-1?Q?...?=)."""
+    import email.header
+    parts = email.header.decode_header(raw)
+    decoded = []
+    for content, charset in parts:
+        if isinstance(content, bytes):
+            decoded.append(content.decode(charset or "utf-8", errors="replace"))
+        else:
+            decoded.append(content)
+    return " ".join(decoded)
+
+
+def _extract_email_body(msg) -> str:
+    """Extract plain text body from email, falling back to stripped HTML."""
+    from html.parser import HTMLParser
+    import io
+
+    def _decode_part(part) -> str:
+        payload = part.get_payload(decode=True)
+        if not payload:
+            return ""
+        charset = part.get_content_charset() or "utf-8"
+        return payload.decode(charset, errors="replace")
+
+    text_body = ""
+    html_body = ""
+
+    if msg.is_multipart():
+        for part in msg.walk():
+            ct = part.get_content_type()
+            if ct == "text/plain" and not text_body:
+                text_body = _decode_part(part)
+            elif ct == "text/html" and not html_body:
+                html_body = _decode_part(part)
+    else:
+        ct = msg.get_content_type()
+        if ct == "text/html":
+            html_body = _decode_part(msg)
+        else:
+            text_body = _decode_part(msg)
+
+    if text_body:
+        return text_body
+
+    if html_body:
+        class _HTMLStripper(HTMLParser):
+            SKIP_TAGS = {"style", "script", "head"}
+            def __init__(self):
+                super().__init__()
+                self.result = io.StringIO()
+                self._skip_depth = 0
+            def handle_starttag(self, tag, attrs):
+                if tag.lower() in self.SKIP_TAGS:
+                    self._skip_depth += 1
+            def handle_endtag(self, tag):
+                if tag.lower() in self.SKIP_TAGS and self._skip_depth > 0:
+                    self._skip_depth -= 1
+            def handle_data(self, d):
+                if self._skip_depth == 0:
+                    self.result.write(d)
+        s = _HTMLStripper()
+        s.feed(html_body)
+        return s.result.getvalue()
+
+    return ""
+
+
+@app.route("/legal/poll-email", methods=["POST"])
+def legal_poll_email_endpoint() -> Any:
+    """Poll Gmail IMAP for legal bulletin emails and ingest them."""
+    import email
+    import imaplib
+
+    imap_user = os.environ.get("IMAP_USER", "")
+    imap_pass = os.environ.get("IMAP_PASSWORD", "")
+    imap_host = os.environ.get("IMAP_HOST", "imap.gmail.com")
+    imap_port = int(os.environ.get("IMAP_PORT", "993"))
+
+    if not imap_user or not imap_pass:
+        return jsonify({"error": "IMAP_USER and IMAP_PASSWORD not configured"}), 500
+
+    sender_domains = [
+        "gencat.cat", "xunta.gal", "jccm.es",
+        "navarra.es", "juntaex.es", "larioja.org",
+    ]
+
+    results = {"processed": 0, "filtered": 0, "stored": 0, "duplicate": 0, "errors": []}
+
+    try:
+        mail = imaplib.IMAP4_SSL(imap_host, imap_port)
+        mail.login(imap_user, imap_pass)
+        mail.select("INBOX")
+
+        _, msg_ids = mail.search(None, "UNSEEN")
+        if not msg_ids[0]:
+            mail.logout()
+            return jsonify({"status": "ok", "message": "no new emails", **results})
+
+        for msg_id in msg_ids[0].split():
+            try:
+                _, msg_data = mail.fetch(msg_id, "(RFC822)")
+                raw_email = msg_data[0][1]
+                msg = email.message_from_bytes(raw_email)
+
+                sender = _decode_mime_header(msg.get("From", ""))
+                subject = _decode_mime_header(msg.get("Subject", ""))
+                date_str = str(msg.get("Date", ""))
+
+                if not any(d in sender.lower() for d in sender_domains):
+                    continue
+
+                results["processed"] += 1
+
+                body = _extract_email_body(msg)
+
+                resp = _ingest_email_internal(sender, subject, body, date_str)
+                results[resp] = results.get(resp, 0) + 1
+
+            except Exception as e:
+                results["errors"].append(str(e)[:200])
+                logger.error("Error processing email %s: %s", msg_id, e)
+
+        mail.logout()
+    except imaplib.IMAP4.error as e:
+        return jsonify({"error": f"IMAP error: {e}"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Connection error: {e}"}), 500
+
+    return jsonify({"status": "ok", **results})
+
+
+def _ingest_email_internal(sender: str, subject: str, text: str, email_date: str) -> str:
+    """Shared email ingestion logic. Returns status string."""
+    import hashlib
+    import re
+
+    sender_map = {
+        "gencat.cat": ("decree_cataluna", "cataluna"),
+        "xunta.gal": ("decree_galicia", "galicia"),
+        "jccm.es": ("decree_castilla_la_mancha", "castilla_la_mancha"),
+        "navarra.es": ("bon_navarra_html", "navarra"),
+        "juntaex.es": ("doe_extremadura", "extremadura"),
+        "larioja.org": ("bor_la_rioja_html", "la_rioja"),
+    }
+
+    source_id = None
+    ccaa = None
+    for domain, (sid, region) in sender_map.items():
+        if domain in sender.lower():
+            source_id = sid
+            ccaa = region
+            break
+
+    if not source_id:
+        return "filtered"
+
+    skip_pattern = re.compile(
+        r"solicitud\s+de\s+(una\s+)?suscripci[oó]n|"
+        r"confirme?\s+su\s+cuenta|"
+        r"confirmar\s+suscripci[oó]n|"
+        r"activar\s+suscripci[oó]n|"
+        r"baja\s+de\s+suscripci[oó]n|"
+        r"env[ií]o\s+de\s+suscripciones|"
+        r"servicio\s+de\s+suscripci[oó]n|"
+        r"verificar?\s+correo|"
+        r"welcome|bienvenid[oa]",
+        re.IGNORECASE,
+    )
+    if skip_pattern.search(subject):
+        return "filtered"
+
+    keyword_pattern = re.compile(
+        r"autocaravana|pernocta|acampada|estacionamiento|camping|caravana|"
+        r"prohibi.*aparcar|incendios?\s*forestales|medio\s*ambiente|"
+        r"turismo|parque\s*natural",
+        re.IGNORECASE,
+    )
+
+    combined = f"{subject} {text}"
+    if not keyword_pattern.search(combined):
+        return "filtered"
+
+    combined_lower = combined.lower()
+    if re.search(r"incendio|fuego|quema", combined_lower):
+        restriction_type = "fire_ban"
+    elif re.search(r"acampada|camping|campamento", combined_lower):
+        restriction_type = "camping_ban"
+    elif re.search(r"pernocta|nocturno", combined_lower):
+        restriction_type = "overnight_ban"
+    elif re.search(r"aparcar|estacionamiento|aparcamiento", combined_lower):
+        restriction_type = "parking_ban"
+    elif re.search(r"acceso|circulaci[oó]n|restricci[oó]n.*paso", combined_lower):
+        restriction_type = "access_restriction"
+    elif re.search(r"temporada|estacional|verano|periodo", combined_lower):
+        restriction_type = "seasonal_closure"
+    else:
+        restriction_type = "other"
+
+    content_hash = hashlib.sha256(
+        f"{source_id}:{subject}:{email_date}".encode()
+    ).hexdigest()
+
+    from legal.source_monitor import store_legal_document
+    conn = get_db_connection()
+    try:
+        doc_id = store_legal_document(
+            conn,
+            source_id=source_id,
+            title=subject,
+            restriction_type=restriction_type,
+            content_hash=content_hash,
+            body=text[:5000],
+            raw_text=text[:10000],
+            confidence_tier="unverified",
+            affected_ccaa=ccaa,
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    if doc_id:
+        logger.info("Ingested email [%s] from %s: %s", restriction_type, source_id, subject[:80])
+        return "stored"
+    return "duplicate"
+
+
+@app.route("/run/legal-poll", methods=["POST"])
+def run_legal_poll_endpoint() -> Any:
+    """Manually trigger a legal source poll."""
+    data = request.get_json(silent=True) or {}
+    source_ids = data.get("source_ids")
+
+    try:
+        from legal.scheduler import LegalScheduler
+        scheduler = LegalScheduler()
+        scheduler.run(once=True)
+        return jsonify({"message": "Legal poll completed"})
+    except Exception as e:
+        logger.error("Legal poll failed: %s", e)
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/legal/documents/review", methods=["GET"])
+def legal_documents_review_endpoint() -> Any:
+    """List documents that need review: needs_review=true OR confidence_tier='unverified'."""
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT id, source_id, title, restriction_type, affected_ccaa,
+                       affected_province, affected_municipality, confidence_tier,
+                       effective_from, effective_until, seasonal, decree_ref,
+                       source_url, created_at, needs_review, llm_confidence,
+                       decree_articles, body, raw_text
+                FROM legal_documents
+                WHERE status = 'active'
+                  AND (needs_review = TRUE OR confidence_tier = 'unverified')
+                ORDER BY
+                    needs_review DESC,
+                    llm_confidence ASC NULLS FIRST,
+                    created_at DESC
+            """)
+
+            docs = []
+            for row in cur.fetchall():
+                decree_articles = row[16]
+                if isinstance(decree_articles, str):
+                    decree_articles = json.loads(decree_articles)
+                raw_text = row[18] or ""
+                docs.append({
+                    "id": str(row[0]), "source_id": row[1], "title": row[2],
+                    "restriction_type": row[3], "affected_ccaa": row[4],
+                    "affected_province": row[5], "affected_municipality": row[6],
+                    "confidence_tier": row[7],
+                    "effective_from": row[8].isoformat() if row[8] else None,
+                    "effective_until": row[9].isoformat() if row[9] else None,
+                    "seasonal": row[10], "decree_ref": row[11],
+                    "source_url": row[12],
+                    "created_at": row[13].isoformat() if row[13] else None,
+                    "needs_review": row[14],
+                    "llm_confidence": row[15],
+                    "decree_articles": decree_articles,
+                    "body": (row[17] or "")[:2000],
+                    "raw_text_preview": raw_text[:500],
+                })
+        return jsonify({"documents": docs, "count": len(docs)})
+    finally:
+        conn.close()
+
+
+@app.route("/legal/documents/<doc_id>/review", methods=["POST"])
+def legal_document_review_action(doc_id: str) -> Any:
+    """Review action on a document: verify, dismiss, or update type."""
+    data = request.get_json(silent=True) or {}
+    action = data.get("action")
+
+    if action not in ("verify", "dismiss", "update_type", "hide"):
+        return jsonify({"error": "action must be: verify, dismiss, update_type, hide"}), 400
+
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            if action == "verify":
+                new_type = data.get("restriction_type")
+                updates = [
+                    "confidence_tier = 'verified'",
+                    "needs_review = FALSE",
+                    "updated_at = NOW()",
+                ]
+                params: list = []
+                if new_type:
+                    updates.append("restriction_type = %s")
+                    params.append(new_type)
+                params.append(doc_id)
+                cur.execute(
+                    f"UPDATE legal_documents SET {', '.join(updates)} WHERE id = %s",
+                    params,
+                )
+
+            elif action == "dismiss":
+                cur.execute(
+                    "UPDATE legal_documents SET status = 'superseded', needs_review = FALSE, updated_at = NOW() WHERE id = %s",
+                    (doc_id,),
+                )
+
+            elif action == "hide":
+                cur.execute(
+                    "UPDATE legal_documents SET needs_review = TRUE, updated_at = NOW() WHERE id = %s",
+                    (doc_id,),
+                )
+
+            elif action == "update_type":
+                new_type = data.get("restriction_type")
+                if not new_type:
+                    return jsonify({"error": "restriction_type required"}), 400
+                cur.execute(
+                    "UPDATE legal_documents SET restriction_type = %s, needs_review = FALSE, updated_at = NOW() WHERE id = %s",
+                    (new_type, doc_id),
+                )
+
+            if cur.rowcount == 0:
+                return jsonify({"error": "document not found"}), 404
+
+        conn.commit()
+        logger.info("Review action '%s' on document %s", action, doc_id)
+        return jsonify({"status": "ok", "action": action, "document_id": doc_id})
+    finally:
+        conn.close()
 
 
 def main() -> None:

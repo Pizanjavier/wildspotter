@@ -14,13 +14,14 @@ import {
 //
 // Pure debate/engagement format. No download CTA — just opinion + hook.
 //
-// Timeline (12s / 360 frames):
+// Timeline (18.4s / 552 frames):
 //
-// S1 (Hook):     0   → 130   (4.3s) — provocative question / opening statement
-// S2 (Body):     130 → 270   (4.7s) — argument / counter + pivot line
-// S3 (Question): 270 → 360   (3.0s) — engagement CTA / invitation to comment
+// Timings are proportional to text density per scene.
+// S1 (Hook):     0   → 120   (4.0s) — provocative question / opening statement
+// S2 (Body):     120 → 400   (9.3s) — argument / counter (staggered lines, wide gaps)
+// S3 (Question): 400 → 552   (5.1s / 4.0s full opacity) — engagement CTA
 //
-// Only 1 video clip — no crossfade needed for 12s. Keep it still and steady.
+// Only 1 video clip — no crossfade needed. Keep it still and steady.
 // ──────────────────────────────────────────────────────────────────────────────
 
 const { fontFamily: interFont } = loadInter("normal", {
@@ -35,12 +36,12 @@ export type DebateProps = {
 	musicTrack?: string;
 };
 
-// ── Timing constants ──
+// ── Timing constants (proportional to text density) ──
 const S1_START = 0;
-const S1_END = 160;
-const S2_START = 160;
-const S2_END = 340;
-const S3_START = 340;
+const S1_END = 120;
+const S2_START = 120;
+const S2_END = 400;
+const S3_START = 400;
 
 // ── Variant data ──
 type DebateData = {
@@ -50,7 +51,6 @@ type DebateData = {
 	hookSub: string;
 	// S2 — up to 3 lines with individual timing
 	argLines: { text: string; delay: number; highlight?: boolean }[];
-	pivotLine: string;
 	// S3
 	questionLine: string;
 	// Dim levels per scene [S1, S2, S3]
@@ -60,52 +60,56 @@ type DebateData = {
 const VARIANT_DATA: Record<DebateVariant, DebateData> = {
 	D1: {
 		footage: "videos/couple_sitting_in_van_9354235_1080x1920_9354235.mp4",
-		hookLine: "¿Das la ubicación\nde tu spot favorito?",
+		hookLine: "¿Publicas la ubicación\nde tu spot favorito?",
 		hookSub: "",
 		argLines: [
 			{
-				text: "Si lo compartes: das un regalo a alguien.",
+				text: "Compartirlo es generoso.\nAlguien va a flipar.",
 				delay: 0,
 				highlight: false,
 			},
 			{
-				text: "Si lo guardas: proteges el sitio\npara la próxima vez.",
-				delay: 30,
+				text: "Pero en las apps de reviews los mejores spots se extienden como la pólvora.",
+				delay: 70,
 				highlight: false,
 			},
 			{
-				text: "El problema: la próxima vez\nllegan 300 personas pensando lo mismo.",
-				delay: 70,
+				text: "Vuelves en junio.\nHay 15 furgos, basura\nen el suelo y alguien\ncon un altavoz.",
+				delay: 150,
 				highlight: true,
 			},
 		],
-		pivotLine: "Los mejores spots no se comparten.\nSe descubren con datos.",
-		questionLine: "¿Dar ubicación o\nguardar el secreto?\nComenta 👇",
-		dimLevels: [0.50, 0.58, 0.50],
+		questionLine: "¿Publicar o guardar\nel secreto?\nComenta 👇",
+		dimLevels: [0.5, 0.58, 0.5],
 	},
 	D2: {
-		footage: "videos/couple_in_the_morning_in_a_campervan_9354237_1080x1920_9354237.mp4",
-		hookLine: "Una reseña de 5 estrellas en un spot\nsignifica que 200 personas más\nllegan el próximo finde.",
-		hookSub: "¿Merece la pena?",
+		footage:
+			"videos/couple_in_the_morning_in_a_campervan_9354237_1080x1920_9354237.mp4",
+		hookLine: "5 estrellas en un spot.\n¿Qué pasa después?",
+		hookSub: "",
 		argLines: [
 			{
-				text: "Las reviews funcionan\ncuando eres el primero en leerlas.",
+				text: "Primero llegan 20 personas.\nDespués 200.",
 				delay: 0,
 				highlight: false,
 			},
 			{
-				text: "Cuando eres el número 300,\nya no.",
-				delay: 40,
+				text: "El parking se llena.\nEl ayuntamiento pone una barrera.\nEl spot desaparece.",
+				delay: 70,
+				highlight: false,
+			},
+			{
+				text: "Una review de 5 estrellas\nes la sentencia de muerte\nde un buen spot.",
+				delay: 150,
 				highlight: true,
 			},
 		],
-		pivotLine: "WildSpotter no tiene reseñas.\nTiene datos.",
-		questionLine: "¿Has dejado de usar reviews\npara buscar spots?\nComenta 👇",
-		dimLevels: [0.50, 0.58, 0.50],
+		questionLine: "¿Las reviews ayudan\no destruyen los spots?\nComenta 👇",
+		dimLevels: [0.5, 0.58, 0.5],
 	},
 };
 
-export const DEBATE_FRAMES = 450;
+export const DEBATE_FRAMES = 552;
 
 export const Debate: React.FC<DebateProps> = ({
 	variant,
@@ -160,17 +164,6 @@ export const Debate: React.FC<DebateProps> = ({
 	const s1Op = textFade(8, S1_END - 4);
 	const s2Op = textFade(S2_START + 10, S2_END - 4);
 	const s3Op = textFade(S3_START + 12, durationInFrames - 6);
-
-	// ── Pivot line within S2 (appears after arg lines) ──
-	const pivotDelay =
-		S2_START +
-		10 +
-		(data.argLines[data.argLines.length - 1]?.delay ?? 0) +
-		52;
-	const pivotOp = interpolate(frame, [pivotDelay, pivotDelay + 20], [0, 1], {
-		extrapolateLeft: "clamp",
-		extrapolateRight: "clamp",
-	});
 
 	// ── Music fade out 3s before end ──
 	const musicVol = (f: number) => {
@@ -358,35 +351,6 @@ export const Debate: React.FC<DebateProps> = ({
 						</div>
 					);
 				})}
-
-				{/* Pivot line — amber, appears last */}
-				<div
-					style={{
-						marginTop: 28,
-						opacity: pivotOp,
-					}}
-				>
-					<div
-						style={{
-							width: 36,
-							height: 3,
-							backgroundColor: "rgba(217,119,6,0.6)",
-							borderRadius: 2,
-							margin: "0 auto 20px",
-						}}
-					/>
-					<div
-						style={{
-							...bodyText,
-							fontSize: 56,
-							fontWeight: 800,
-							color: "#D97706",
-							lineHeight: 1.25,
-						}}
-					>
-						{data.pivotLine}
-					</div>
-				</div>
 			</div>
 
 			{/* ══════════ SCENE 3 — ENGAGEMENT QUESTION ══════════ */}

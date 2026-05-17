@@ -1,14 +1,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { API_BASE_URL } from '@/constants/config';
 import { useMapStore } from '@/stores/map-store';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { t } from '@/i18n';
 import { getMapStyle, TERRAIN_DEM_SOURCE_ID } from '@/components/map/map-style';
 import type { SpotSummary } from '@/services/api/types';
+import { getOvernightLevel } from '@/utils/legal-verdict';
+import { LegalLegend } from '@/components/map/LegalLegend';
 
 const isWebGLAvailable = (): boolean => {
   if (typeof document === 'undefined') return false;
@@ -41,36 +45,39 @@ type MapViewProps = {
   spots?: SpotSummary[];
 };
 
-const isRestricted = (spot: SpotSummary): boolean => {
-  const ls = spot.legal_status;
-  if (!ls) return false;
-  return Boolean(
-    ls.natura2000?.inside ||
-      ls.national_park?.inside ||
-      ls.coastal_law?.inside,
-  );
+/** Numeric encoding: 0=unknown, 1=allowed, 3=restricted, 4=prohibited */
+const OVERNIGHT_LEVEL_NUM: Record<string, number> = {
+  unknown: 0,
+  allowed: 1,
+  restricted: 3,
+  prohibited: 4,
 };
 
 const spotsToGeoJSON = (
   spots: SpotSummary[],
 ): GeoJSON.FeatureCollection => ({
   type: 'FeatureCollection',
-  features: spots.map((spot) => ({
-    type: 'Feature' as const,
-    geometry: {
-      type: 'Point' as const,
-      coordinates: [spot.coordinates.lon, spot.coordinates.lat],
-    },
-    properties: {
-      id: spot.id,
-      name: spot.name,
-      spot_type: spot.spot_type,
-      surface_type: spot.surface_type,
-      composite_score: spot.composite_score ?? 0,
-      score_label: String(Math.round(spot.composite_score ?? 0)),
-      restricted: isRestricted(spot) ? 1 : 0,
-    },
-  })),
+  features: spots.map((spot) => {
+    const level = getOvernightLevel(spot.legal_status);
+    const levelNum = OVERNIGHT_LEVEL_NUM[level] ?? 0;
+    return {
+      type: 'Feature' as const,
+      geometry: {
+        type: 'Point' as const,
+        coordinates: [spot.coordinates.lon, spot.coordinates.lat],
+      },
+      properties: {
+        id: spot.id,
+        name: spot.name,
+        spot_type: spot.spot_type,
+        surface_type: spot.surface_type,
+        composite_score: spot.composite_score ?? 0,
+        score_label: String(Math.round(spot.composite_score ?? 0)),
+        restricted: levelNum,
+        overnight_level: levelNum,
+      },
+    };
+  }),
 });
 
 /**
@@ -300,7 +307,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             },
           });
 
-          // Main dot layer — red stroke on legally-restricted spots
+          // Main dot layer — stroke color reflects overnight verdict
           map.addLayer({
             id: SPOTS_LAYER_ID,
             type: 'circle',
@@ -311,17 +318,18 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
               'circle-opacity': 0.9,
               'circle-stroke-width': [
                 'case',
-                ['==', ['get', 'restricted'], 1], 3,
+                ['>=', ['get', 'restricted'], 3], 3,
                 2,
               ],
               'circle-stroke-color': [
                 'case',
-                ['==', ['get', 'restricted'], 1], '#EF4444',
+                ['==', ['get', 'restricted'], 4], '#EF4444',
+                ['>=', ['get', 'restricted'], 3], '#FBBF24',
                 '#FFFFFF',
               ],
               'circle-stroke-opacity': [
                 'case',
-                ['==', ['get', 'restricted'], 1], 0.95,
+                ['>=', ['get', 'restricted'], 3], 0.95,
                 0.3,
               ],
             },
@@ -347,6 +355,35 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             },
           });
 
+          // Overnight status badge (top-right of each dot)
+          map.addLayer({
+            id: 'spots-badge',
+            type: 'symbol',
+            source: SPOTS_SOURCE_ID,
+            layout: {
+              'text-field': [
+                'case',
+                ['==', ['get', 'overnight_level'], 3], '⚠',
+                ['==', ['get', 'overnight_level'], 4], '✕',
+                '',
+              ],
+              'text-size': 10,
+              'text-font': ['Open Sans Bold'],
+              'text-allow-overlap': true,
+              'text-offset': [0.9, -0.9],
+            },
+            paint: {
+              'text-color': [
+                'case',
+                ['==', ['get', 'overnight_level'], 3], '#FBBF24',
+                ['==', ['get', 'overnight_level'], 4], '#EF4444',
+                'rgba(0,0,0,0)',
+              ],
+              'text-halo-color': '#1A1614',
+              'text-halo-width': 2,
+            },
+          });
+
           // Navigate to spot detail on click
           const handleSpotClick = (e: import('maplibre-gl').MapMouseEvent & { features?: import('maplibre-gl').MapGeoJSONFeature[] }) => {
             const feature = e.features?.[0];
@@ -357,6 +394,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           };
           map.on('click', SPOTS_LAYER_ID, handleSpotClick);
           map.on('click', 'spots-labels', handleSpotClick);
+          map.on('click', 'spots-badge', handleSpotClick);
 
           // Pointer cursor on hover
           map.on('mouseenter', SPOTS_LAYER_ID, () => {
@@ -478,6 +516,15 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           left: 0,
         }}
       />
+      {showLegalZones && (
+        <View style={[styles.legalBanner, { backgroundColor: themeColors.CARD_SURFACE }]}>
+          <Ionicons name="shield-outline" size={14} color={themeColors.SCORE_LOW} />
+          <Text style={[styles.legalBannerText, { color: themeColors.SCORE_LOW }]}>
+            {t('legal.legalOverlayBanner')}
+          </Text>
+        </View>
+      )}
+      <LegalLegend />
     </View>
   );
 };
@@ -517,5 +564,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: COLORS.TEXT_SECONDARY,
     textAlign: 'center',
+  },
+  legalBanner: {
+    position: 'absolute',
+    bottom: 16,
+    left: 16,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    opacity: 0.9,
+  },
+  legalBannerText: {
+    fontFamily: FONT_FAMILIES.DATA,
+    fontSize: 11,
+    flex: 1,
   },
 });

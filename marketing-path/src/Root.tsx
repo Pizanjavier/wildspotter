@@ -48,7 +48,7 @@ const PARKING_LLENO_FRAMES = 805;
 const NATURA2000_FRAMES = 482;
 const LA_MULTA_FRAMES = 766;
 const OCHENTA_Y_SIETE_FRAMES = 900;
-const EL_PIPELINE_FRAMES = 836;
+const EL_PIPELINE_FRAMES = 926;
 
 const FPS = 30;
 const W = 1080;
@@ -309,7 +309,7 @@ const CAROUSEL_T1: SlideData[] = [
 		number: 2,
 		total: 6,
 		title: "Final de camino sin salida",
-		body: "Sin tráfico de paso. El radar busca muertos de fondo, pistas sin salida, accesos privados.",
+		body: "Sin tráfico de paso. El radar busca finales de camino y pistas sin salida.",
 		accentColor: "#4ADE80",
 		icon: "01",
 	},

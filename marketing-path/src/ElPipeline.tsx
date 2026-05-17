@@ -26,8 +26,8 @@ const { fontFamily: jetbrainsFont } = loadJetBrains("normal", {
   subsets: ["latin"],
 });
 
-// Base: 836 frames ≈ 27.9s @ 30fps
-// With intro: 836 + 105 = 941 frames ≈ 31.4s
+// Base: 926 frames ≈ 30.9s @ 30fps
+// With intro: 926 + 105 = 1031 frames ≈ 34.4s
 
 export type ElPipelineProps = {
   hookVariant: "D1" | "D2" | "D3";
@@ -1348,14 +1348,14 @@ export const ElPipeline: React.FC<ElPipelineProps> = ({
         timing={linearTiming({ durationInFrames: 14 })}
       />
 
-      <TransitionSeries.Sequence durationInFrames={110}>
+      <TransitionSeries.Sequence durationInFrames={140}>
         <StageScene index={1} label="RADAR" bgSrc="videos/ai_Spanish_Countryside_Van_Video.mp4" dim={0.7}>
           <RadarViz />
         </StageScene>
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 14 })} />
 
-      <TransitionSeries.Sequence durationInFrames={110}>
+      <TransitionSeries.Sequence durationInFrames={140}>
         <StageScene index={2} label="TERRENO" bgSrc="videos/Aerial_Spanish_Mediterranean_coast.mp4" dim={0.7}>
           <TerrenoViz />
         </StageScene>
@@ -1369,14 +1369,14 @@ export const ElPipeline: React.FC<ElPipelineProps> = ({
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 14 })} />
 
-      <TransitionSeries.Sequence durationInFrames={110}>
+      <TransitionSeries.Sequence durationInFrames={140}>
         <StageScene index={4} label="LEGAL" bgSrc="videos/police_writing_ticket.mp4" dim={0.78}>
           <LegalViz />
         </StageScene>
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition presentation={fade()} timing={linearTiming({ durationInFrames: 14 })} />
 
-      <TransitionSeries.Sequence durationInFrames={110}>
+      <TransitionSeries.Sequence durationInFrames={140}>
         <StageScene index={5} label="CONTEXTO" bgSrc="videos/ai_Campervan_Sunset_Time_Lapse_Video.mp4" dim={0.72}>
           <ContextoViz />
         </StageScene>

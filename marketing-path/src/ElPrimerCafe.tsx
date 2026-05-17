@@ -15,7 +15,7 @@ const { fontFamily: interFont } = loadInter("normal", {
 	subsets: ["latin"],
 });
 
-export const EL_PRIMER_CAFE_FRAMES = 450;
+export const EL_PRIMER_CAFE_FRAMES = 510;
 
 export type ElPrimerCafeProps = {
 	hookVariant: "PC1" | "PC2" | "PC3";

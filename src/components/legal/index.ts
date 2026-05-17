@@ -1,2 +1,10 @@
+export { LegalSituation } from '@/components/legal/LegalSituation';
 export { LegalChecklist } from '@/components/legal/LegalChecklist';
 export type { LegalCheckItem, LegalCheckStatus } from '@/components/legal/LegalChecklist';
+export { LegalDisclaimer } from '@/components/legal/LegalDisclaimer';
+export { ConfidenceTierBadge } from '@/components/legal/ConfidenceTierBadge';
+export { LegalDocumentsList } from '@/components/legal/LegalDocumentsList';
+export { DecreeArticleCard } from '@/components/legal/DecreeArticleCard';
+export { CcaaStrip } from '@/components/legal/CcaaStrip';
+export { CcaaDetailCard } from '@/components/legal/CcaaDetailCard';
+export { CcaaStatusGrid } from '@/components/legal/CcaaStatusGrid';

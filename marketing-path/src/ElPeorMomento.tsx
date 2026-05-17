@@ -626,7 +626,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 640,
+					bottom: 790,
 					left: "50%",
 					transform: `translate(-50%, 0) scale(${interpolate(logoIn, [0, 1], [0.5, 1])})`,
 					opacity: logoIn,
@@ -647,7 +647,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 560,
+					bottom: 710,
 					left: 0,
 					right: 0,
 					textAlign: "center",
@@ -673,7 +673,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 530,
+					bottom: 680,
 					left: "50%",
 					transform: "translateX(-50%)",
 					width: lineWidth,
@@ -688,7 +688,7 @@ const Scene4CTA: React.FC = () => {
 			<div
 				style={{
 					position: "absolute",
-					bottom: 450,
+					bottom: 600,
 					left: "50%",
 					transform: `translate(-50%, ${ctaY}px)`,
 					opacity: ctaIn,

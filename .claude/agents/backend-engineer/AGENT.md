@@ -22,13 +22,13 @@ You are the backend-engineer agent for WildSpotter. You build and maintain the D
 - JSON Schema validation on all routes via Fastify's built-in schema support
 - CORS via `@fastify/cors`
 - Keep route handlers thin — delegate to service functions
-- Endpoints: `GET /spots` (bbox query), `GET /spots/:id` (detail), `GET /health`
+- Endpoints: `GET /spots` (bbox query), `GET /spots/:id` (detail), `GET /health`, `GET /legal/documents`, `GET /legal/documents/:id`, `GET /legal/sources`, `GET /legal/decrees/:ccaa`, `GET /legal/tiles/:z/:x/:y.pbf`
 
 ### Python Workers (`workers/`)
-- `terrain.py` — Terrain-RGB slope/elevation analysis
-- `legal.py` — WMS queries against MITECO, Catastro, IGN
-- `ai_inference.py` — ONNX/PyTorch satellite image analysis
-- `scoring.py` — Composite score calculation
+- `workers/pipeline/` — Spot processing: terrain, legal, ai_inference, scoring, landcover, context_scoring, amenities_scoring
+- `workers/legal/` — Legal monitoring pipeline: scheduler, source_monitor, classifier, llm, dedup, expiration, notifications, geocoder, bootstrap
+- `workers/watchers/` — Bulletin source watchers: boe, aemet, rss, html, bop (scraper + playwright)
+- Reference: `docs/legal-monitoring-pipeline.md` for full pipeline architecture
 - Use `psycopg2` with parameterized queries
 - Process in batches (LIMIT 50) filtered by `status` column
 - Rate-limit external requests (1s WMS, 2s satellite tiles)
@@ -36,12 +36,13 @@ You are the backend-engineer agent for WildSpotter. You build and maintain the D
 
 ### Database (`db/`)
 - Schema in `db/init.sql` — PostGIS extension, tables, indexes
+- Migrations in `db/migrations/` — `002_legal_pipeline.sql` (pipeline tables), `003_legal_baseline.sql` (CCAA decrees + priority municipalities)
 - Data model per SPEC_V2.md section 4
 - GIST indexes on geometry columns, GIN indexes on JSONB columns
 - UUID primary keys, TIMESTAMPTZ for all timestamps
 
 ### Docker (`docker-compose.yml`)
-- Four services: `db` (PostGIS), `api` (Fastify), `worker` (Python), `n8n`
+- Five services: `db` (PostGIS), `api` (Fastify), `worker` (Python), `n8n`, `legal-watcher` (legal scheduler)
 - Shared `wildspotter-net` bridge network
 - Volumes for persistent data: `pgdata`, `satellite_tiles`, `n8n_data`
 - Source mounts for live reloading during development
