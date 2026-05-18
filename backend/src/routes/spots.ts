@@ -59,10 +59,12 @@ const spotSummarySchema = {
     slope_pct: { type: ['number', 'null'] },
     elevation: { type: ['number', 'null'] },
     legal_status: { type: ['object', 'null'], additionalProperties: true },
+    context_details: { type: ['object', 'null'], additionalProperties: true },
     composite_score: { type: ['number', 'null'] },
     status: { type: 'string' },
     municipality: { type: ['string', 'null'] },
     province: { type: ['string', 'null'] },
+    satellite_image_path: { type: ['string', 'null'] },
   },
 };
 

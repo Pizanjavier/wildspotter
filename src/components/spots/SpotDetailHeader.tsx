@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   imageWrapper: {
-    height: 220,
+    height: 260,
   },
   satelliteImage: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,

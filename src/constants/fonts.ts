@@ -5,3 +5,14 @@ export const FONT_FAMILIES = {
   BODY_MEDIUM: 'Inter_500Medium',
   BODY_BOLD: 'Inter_700Bold',
 } as const;
+
+export const TYPE_SCALE = {
+  xs: 10,
+  sm: 12,
+  md: 14,
+  body: 15,
+  lg: 16,
+  xl: 20,
+  xxl: 24,
+  hero: 28,
+} as const;

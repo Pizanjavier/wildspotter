@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SPACING } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useSettingsStore } from '@/stores/settings-store';
 import { geocode } from '@/services/geocoding';
 import type { GeocodingResult } from '@/services/geocoding';
 import { SearchSuggestions } from '@/components/map/SearchSuggestions';
@@ -27,6 +28,7 @@ type SearchBarProps = {
 
 export const SearchBar = ({ onSelect }: SearchBarProps) => {
   const colors = useThemeColors();
+  const theme = useSettingsStore((s) => s.theme);
   const insets = useSafeAreaInsets();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeocodingResult[]>([]);
@@ -102,7 +104,13 @@ export const SearchBar = ({ onSelect }: SearchBarProps) => {
 
   return (
     <View style={[styles.container, { top: topOffset }]}>
-      <View style={[styles.bar, { backgroundColor: colors.CARD }]}>
+      <View style={[
+        styles.bar,
+        { backgroundColor: colors.CARD },
+        theme === 'dark'
+          ? { borderWidth: 1, borderColor: colors.BORDER }
+          : styles.barShadow,
+      ]}>
         <Ionicons
           name="search"
           size={20}
@@ -155,15 +163,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 24,
-    paddingHorizontal: SPACING.MD + 4,
+    paddingHorizontal: SPACING.MDL,
     height: 50,
+  },
+  barShadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 12,
   },
   searchIcon: {
-    marginRight: SPACING.SM + 4,
+    marginRight: SPACING.MDS,
   },
   input: {
     flex: 1,

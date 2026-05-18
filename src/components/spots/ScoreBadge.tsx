@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   pill: {
     borderRadius: 16,
     paddingVertical: 6,
-    paddingHorizontal: SPACING.SM + 4,
+    paddingHorizontal: SPACING.MDS,
     alignItems: 'center',
   },
   pillText: {

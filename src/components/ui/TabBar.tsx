@@ -99,7 +99,7 @@ export const TabBar = ({
             >
               <Ionicons
                 name={isFocused ? icons.active : icons.inactive}
-                size={22}
+                size={24}
                 color={isFocused ? colors.ACCENT : colors.TEXT_MUTED}
               />
               <Text
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   label: {
-    fontSize: 9,
-    letterSpacing: 1.5,
+    fontSize: 11,
+    letterSpacing: 1,
   },
 });

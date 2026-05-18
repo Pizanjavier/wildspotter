@@ -11,14 +11,18 @@ import {
   CACHE_TTL_MS,
 } from '@/services/cache';
 
+export type SortKey = 'score' | 'slope' | 'elevation';
+
 type ScanStore = {
   state: ScanState;
   spots: SpotSummary[];
   regionName: string;
   error: string | null;
   fromCache: boolean;
+  sortKey: SortKey;
   startScan: (bounds: BoundingBox) => Promise<void>;
   refreshScan: (bounds: BoundingBox) => Promise<void>;
+  setSortKey: (key: SortKey) => void;
   reset: () => void;
 };
 
@@ -119,6 +123,7 @@ export const useScanStore = create<ScanStore>((set, get) => ({
   regionName: '',
   error: null,
   fromCache: false,
+  sortKey: 'score',
 
   startScan: async (bounds: BoundingBox) => {
     if (get().state === 'scanning') return;
@@ -152,6 +157,8 @@ export const useScanStore = create<ScanStore>((set, get) => ({
     }
   },
 
+  setSortKey: (key: SortKey) => set({ sortKey: key }),
+
   reset: () =>
     set({
       state: 'idle',
@@ -159,6 +166,7 @@ export const useScanStore = create<ScanStore>((set, get) => ({
       regionName: '',
       error: null,
       fromCache: false,
+      sortKey: 'score',
     }),
 }));
 

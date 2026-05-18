@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSettingsStore } from '@/stores/settings-store';
+import { useMapStore } from '@/stores/map-store';
+import { useScanStore } from '@/stores/scan-store';
 import { SPACING } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useSpotsStore } from '@/stores/spots-store';
@@ -37,16 +39,38 @@ const EmptyState = () => {
   );
 };
 
-const renderItem = ({ item }: { item: SpotSummary }) => (
-  <SpotCard spot={item} />
-);
-
 const keyExtractor = (item: SpotSummary) => item.id;
 
 export const SpotsScreen = () => {
   const colors = useThemeColors();
+  const router = useRouter();
   const _lang = useSettingsStore((s) => s.language);
   const savedSpots = useSpotsStore((s) => s.savedSpots);
+
+  const handleShowOnMap = useCallback((spot: SpotSummary) => {
+    const { lon, lat } = spot.coordinates;
+    useMapStore.getState().flyTo({ center: [lon, lat], zoom: 14 });
+    useMapStore.getState().setSelectedSpot({
+      id: spot.id,
+      name: spot.name,
+      score: spot.composite_score,
+      surface: spot.surface_type,
+      province: spot.province,
+      slopePct: spot.slope_pct,
+      satelliteImagePath: spot.satellite_image_path,
+      legalStatus: spot.legal_status,
+      spotType: spot.spot_type,
+      contextDetails: spot.context_details,
+      coordinates: spot.coordinates,
+    });
+    const bbox = { north: lat + 0.03, south: lat - 0.03, east: lon + 0.04, west: lon - 0.04 };
+    useScanStore.getState().startScan(bbox);
+    router.push('/(tabs)/map');
+  }, [router]);
+
+  const renderItem = useCallback(({ item }: { item: SpotSummary }) => (
+    <SpotCard spot={item} onShowOnMap={handleShowOnMap} />
+  ), [handleShowOnMap]);
 
   const sortedSpots = useMemo(
     () => [...savedSpots].sort((a, b) => (b.composite_score ?? 0) - (a.composite_score ?? 0)),

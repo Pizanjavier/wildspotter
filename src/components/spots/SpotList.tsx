@@ -5,13 +5,19 @@ import type { SpotSummary } from '@/services/api/types';
 
 type SpotListProps = {
   spots: SpotSummary[];
+  onFocusSpot?: (spot: SpotSummary) => void;
+  focusedSpotId?: string | null;
 };
 
 const keyExtractor = (item: SpotSummary): string => item.id;
 
-export const SpotList = ({ spots }: SpotListProps) => {
+export const SpotList = ({ spots, onFocusSpot, focusedSpotId }: SpotListProps) => {
   const renderItem = ({ item }: { item: SpotSummary }) => (
-    <SpotCard spot={item} />
+    <SpotCard
+      spot={item}
+      onFocus={onFocusSpot}
+      isFocused={focusedSpotId === item.id}
+    />
   );
 
   return (

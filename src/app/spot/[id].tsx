@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   Pressable,
-  ActivityIndicator,
   StyleSheet,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -24,10 +23,11 @@ import { ScoreBreakdown } from '@/components/spots/ScoreBreakdown';
 import { SpotHighlights } from '@/components/spots/SpotHighlights';
 import { ExpandableSection } from '@/components/spots/ExpandableSection';
 import { ReportModal } from '@/components/spots/ReportModal';
+import { SpotDetailSkeleton } from '@/components/spots/SpotDetailSkeleton';
 import { getSpotDetail, ApiError, buildSatelliteUrl } from '@/services/api';
 import { getLegalDocuments } from '@/services/api/spots';
-import { openNavigate, openInspect } from '@/services/navigation';
 import type { SpotDetail, LegalDocument } from '@/services/api/types';
+import { GoogleMapsModal } from '@/components/spots/GoogleMapsModal';
 import { t } from '@/i18n';
 import { getSpotDisplayName, getTranslatedSurface } from '@/utils/spot-display-name';
 import { trackEvent } from '@/services/analytics';
@@ -45,6 +45,7 @@ export const SpotDetailScreen = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [reportVisible, setReportVisible] = useState(false);
+  const [mapsModalVisible, setMapsModalVisible] = useState(false);
   const isSaved = useSpotsStore((s) => s.isSaved(id ?? ''));
   const addSpot = useSpotsStore((s) => s.addSpot);
   const removeSpot = useSpotsStore((s) => s.removeSpot);
@@ -120,32 +121,8 @@ export const SpotDetailScreen = () => {
     else addSpot(spot);
   };
 
-  const handleInspect = () => {
-    if (!spot) return;
-    trackEvent('spot_inspected', { lat: spot.coordinates.lat, lon: spot.coordinates.lon });
-    openInspect(spot.coordinates.lat, spot.coordinates.lon);
-  };
-
-  const handleNavigate = () => {
-    if (!spot) return;
-    trackEvent('spot_navigated', { lat: spot.coordinates.lat, lon: spot.coordinates.lon });
-    openNavigate(spot.coordinates.lat, spot.coordinates.lon);
-  };
-
   if (loading) {
-    return (
-      <View style={[styles.container, { backgroundColor: colors.BACKGROUND }]}>
-        <Pressable style={styles.backButton} onPress={handleBack}>
-          <Ionicons name="arrow-back" size={24} color={colors.ACCENT} />
-        </Pressable>
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={colors.ACCENT} />
-          <Text style={[styles.loadingText, { color: colors.TEXT_SECONDARY }]}>
-            {t('spotDetail.loading')}
-          </Text>
-        </View>
-      </View>
-    );
+    return <SpotDetailSkeleton />;
   }
 
   if (error || !spot) {
@@ -264,7 +241,7 @@ export const SpotDetailScreen = () => {
         <Pressable
           onPress={handleToggleSave}
           style={[
-            styles.iconBtn,
+            styles.saveBtn,
             isSaved
               ? { backgroundColor: `${colors.ACCENT}15`, borderColor: colors.ACCENT, borderWidth: 1 }
               : { backgroundColor: 'transparent', borderColor: colors.BORDER, borderWidth: 1 },
@@ -274,39 +251,35 @@ export const SpotDetailScreen = () => {
         >
           <Ionicons
             name={isSaved ? 'bookmark' : 'bookmark-outline'}
-            size={20}
+            size={18}
             color={isSaved ? colors.ACCENT : colors.TEXT_PRIMARY}
           />
-        </Pressable>
-
-        <Pressable
-          onPress={handleInspect}
-          style={[
-            styles.actionBtn,
-            { backgroundColor: 'transparent', borderColor: colors.BORDER, borderWidth: 1 },
-          ]}
-          accessibilityRole="button"
-        >
-          <Ionicons name="grid-outline" size={18} color={colors.TEXT_PRIMARY} />
-          <Text style={[styles.actionBtnText, { color: colors.TEXT_PRIMARY }]} numberOfLines={1}>
-            {t('spotDetail.inspect')}
+          <Text style={[styles.saveBtnText, { color: isSaved ? colors.ACCENT : colors.TEXT_PRIMARY }]} numberOfLines={1}>
+            {isSaved ? t('spotDetail.saved') : t('spotDetail.save')}
           </Text>
         </Pressable>
 
         <Pressable
-          onPress={handleNavigate}
+          onPress={() => setMapsModalVisible(true)}
           style={[
             styles.actionBtn,
             { backgroundColor: colors.ACCENT, borderWidth: 0 },
           ]}
           accessibilityRole="button"
         >
-          <Ionicons name="navigate" size={18} color={colors.BACKGROUND} />
+          <Ionicons name="location" size={18} color={colors.BACKGROUND} />
           <Text style={[styles.actionBtnText, { color: colors.BACKGROUND }]} numberOfLines={1}>
-            {t('spotDetail.navigate')}
+            {t('spotDetail.googleMaps')}
           </Text>
         </Pressable>
       </View>
+
+      <GoogleMapsModal
+        visible={mapsModalVisible}
+        lat={spot.coordinates.lat}
+        lon={spot.coordinates.lon}
+        onClose={() => setMapsModalVisible(false)}
+      />
 
       <ReportModal
         visible={reportVisible}
@@ -325,7 +298,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: SPACING.LG,
     gap: SPACING.LG,
-    paddingBottom: SPACING.XL * 3,
+    paddingBottom: 120,
   },
   bottomBar: {
     position: 'absolute',
@@ -333,17 +306,23 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     flexDirection: 'row',
-    gap: 8,
+    gap: 12,
     paddingHorizontal: SPACING.LG,
     paddingTop: SPACING.MD,
     borderTopWidth: 1,
   },
-  iconBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+  saveBtn: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    height: 44,
+    borderRadius: 12,
+    gap: 6,
+    paddingHorizontal: 16,
+  },
+  saveBtnText: {
+    fontFamily: FONT_FAMILIES.BODY_BOLD,
+    fontSize: 13,
   },
   actionBtn: {
     flex: 1,
@@ -353,6 +332,7 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 12,
     gap: 6,
+    paddingHorizontal: 12,
   },
   actionBtnText: {
     fontFamily: FONT_FAMILIES.BODY_BOLD,

@@ -56,10 +56,12 @@ export interface SpotSummary {
   slope_pct: number | null;
   elevation: number | null;
   legal_status: LegalStatus | null;
+  context_details: Record<string, unknown> | null;
   composite_score: number | null;
   status: SpotStatus;
   municipality: string | null;
   province: string | null;
+  satellite_image_path: string | null;
 }
 
 /** Full spot detail including all processing results */

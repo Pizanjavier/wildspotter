@@ -24,6 +24,7 @@ export type TranslationKeys = {
     filtersChip: string;
     scanDisabledZoom: string;
     slopeChip: string;
+    idlePrompt: string;
   };
   spots: {
     savedTitle: string;
@@ -36,6 +37,7 @@ export type TranslationKeys = {
     publicLand: string;
     slope: string;
     slopeUnknown: string;
+    tapAgainForDetail: string;
   };
   spotDetail: {
     notFound: string;
@@ -45,6 +47,9 @@ export type TranslationKeys = {
     elevation: string;
     inspect: string;
     navigate: string;
+    inspectDesc: string;
+    navigateDesc: string;
+    googleMaps: string;
     actionHelp: string;
     openInMaps: string;
     save: string;
@@ -436,6 +441,11 @@ export type TranslationKeys = {
     noTraceDetail: string;
     respectTitle: string;
     respectDetail: string;
+  };
+  sort: {
+    score: string;
+    slope: string;
+    elevation: string;
   };
   legalDetail: {
     title: string;

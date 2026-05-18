@@ -1,4 +1,4 @@
-"""Pre-generate legal zone vector tiles (MVT .pbf) for Spain at z4-z10.
+"""Pre-generate legal zone vector tiles (MVT .pbf) for Spain at z4-z12.
 
 Creates a materialized view of all legal zone geometries in Web Mercator
 (EPSG:3857) with subdivided polygons, then iterates over every tile in
@@ -7,7 +7,7 @@ Spain's bounding box and writes non-empty tiles to disk.
 Usage:
     python generate_legal_tiles.py
     python generate_legal_tiles.py --output-dir /data/legal-tiles
-    python generate_legal_tiles.py --min-zoom 4 --max-zoom 10
+    python generate_legal_tiles.py --min-zoom 4 --max-zoom 12
 """
 
 import argparse
@@ -170,7 +170,7 @@ def main() -> None:
         "--min-zoom", type=int, default=4, help="Minimum zoom level (default: 4)"
     )
     parser.add_argument(
-        "--max-zoom", type=int, default=10, help="Maximum zoom level (default: 10)"
+        "--max-zoom", type=int, default=12, help="Maximum zoom level (default: 12)"
     )
     args = parser.parse_args()
 

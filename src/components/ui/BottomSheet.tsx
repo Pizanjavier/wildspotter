@@ -9,12 +9,16 @@ import {
   useBottomSheetGesture,
   DRAG_ZONE_HEIGHT,
 } from '@/hooks/useBottomSheetGesture';
+import { SortControls } from '@/components/spots/SortControls';
+import type { SortKey } from '@/stores/scan-store';
 import { t } from '@/i18n';
 
 type BottomSheetProps = {
   spotsCount: number;
   regionName?: string;
   fromCache?: boolean;
+  sortKey?: SortKey;
+  onSortChange?: (key: SortKey) => void;
   children?: ReactNode;
 };
 
@@ -22,6 +26,8 @@ export const BottomSheet = ({
   spotsCount,
   regionName,
   fromCache = false,
+  sortKey,
+  onSortChange,
   children,
 }: BottomSheetProps) => {
   const colors = useThemeColors();
@@ -90,6 +96,11 @@ export const BottomSheet = ({
           </View>
         </Animated.View>
       </GestureDetector>
+      {spotsCount > 0 && sortKey && onSortChange ? (
+        <View style={styles.sortRow}>
+          <SortControls activeKey={sortKey} onSelect={onSortChange} />
+        </View>
+      ) : null}
       <Animated.View style={[styles.content, contentAnimatedStyle]}>
         <View style={styles.scrollContent}>
           {children}
@@ -163,6 +174,9 @@ const styles = StyleSheet.create({
     fontFamily: FONT_FAMILIES.DATA_BOLD,
     fontSize: 10,
     letterSpacing: 1,
+  },
+  sortRow: {
+    paddingHorizontal: SPACING.LG,
   },
   content: {
     overflow: 'hidden',

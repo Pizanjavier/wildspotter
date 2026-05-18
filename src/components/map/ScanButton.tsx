@@ -7,6 +7,7 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { useBottomSheetTop } from '@/hooks/useBottomSheetTop';
 import { t } from '@/i18n';
 import { trackEvent } from '@/services/analytics';
+import { hapticImpact } from '@/utils/haptics';
 
 type ScanButtonProps = {
   onPress?: () => void;
@@ -50,6 +51,7 @@ export const ScanButton = ({
 
   const handlePress = () => {
     if (isScanning || disabled) return;
+    hapticImpact('medium');
     trackEvent('area_scanned');
     onPress?.();
   };

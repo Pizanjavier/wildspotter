@@ -27,6 +27,7 @@ export const es: TranslationDictionary = {
     filtersChip: 'Filtros',
     scanDisabledZoom: 'Acerca el zoom para escanear',
     slopeChip: '≤{{value}}% pendiente',
+    idlePrompt: 'Haz zoom y escanea',
   },
   spots: {
     savedTitle: 'SPOTS GUARDADOS',
@@ -40,6 +41,7 @@ export const es: TranslationDictionary = {
     publicLand: 'Terreno público',
     slope: '{{value}}% pendiente',
     slopeUnknown: '-- pendiente',
+    tapAgainForDetail: 'Pulsa para ver detalle',
   },
   spotDetail: {
     notFound: 'Spot no encontrado',
@@ -49,6 +51,9 @@ export const es: TranslationDictionary = {
     elevation: 'ALTITUD',
     inspect: 'INSPECCIONAR',
     navigate: 'NAVEGAR',
+    inspectDesc: 'Vista satélite para validar el terreno',
+    navigateDesc: 'Navegación paso a paso hasta el spot',
+    googleMaps: 'Google Maps',
     actionHelp:
       'Abre en Google Maps para vista satélite o navegación paso a paso',
     openInMaps: 'Abrir en Mapas',
@@ -468,6 +473,11 @@ export const es: TranslationDictionary = {
     scoringGreen: '30+ — Alta confianza, probablemente un gran spot',
     scoringTeal: '10-29 — Confianza media, merece la pena comprobarlo',
     scoringAmber: 'Menos de 10 — Baja confianza, proceder con precaución',
+  },
+  sort: {
+    score: 'Puntuación',
+    slope: 'Pendiente',
+    elevation: 'Altitud',
   },
   legalDetail: {
     title: 'FUENTES LEGALES',

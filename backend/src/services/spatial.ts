@@ -12,10 +12,12 @@ const SUMMARY_COLUMNS = `
   slope_pct,
   elevation,
   legal_status,
+  context_details,
   composite_score,
   status,
   municipality,
-  province
+  province,
+  satellite_image_path
 `;
 
 const DETAIL_COLUMNS = `
@@ -59,10 +61,12 @@ interface SummaryRow {
   slope_pct: number | null;
   elevation: number | null;
   legal_status: Record<string, unknown> | null;
+  context_details: Record<string, unknown> | null;
   composite_score: number | null;
   status: string;
   municipality: string | null;
   province: string | null;
+  satellite_image_path: string | null;
 }
 
 interface DetailRow extends SummaryRow {
@@ -94,10 +98,12 @@ const mapSummaryRow = (row: SummaryRow): SpotSummary => ({
   slope_pct: row.slope_pct,
   elevation: row.elevation,
   legal_status: row.legal_status as SpotSummary['legal_status'],
+  context_details: row.context_details,
   composite_score: row.composite_score,
   status: row.status as SpotSummary['status'],
   municipality: row.municipality,
   province: row.province,
+  satellite_image_path: row.satellite_image_path,
 });
 
 const mapDetailRow = (row: DetailRow): SpotDetail => ({

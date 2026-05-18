@@ -28,10 +28,12 @@ export type SpotSummary = {
   slope_pct: number | null;
   elevation: number | null;
   legal_status: LegalStatus | null;
+  context_details: ContextDetails | null;
   composite_score: number;
   status: string;
   municipality: string | null;
   province: string | null;
+  satellite_image_path: string | null;
 };
 
 export type ContextSubScore = {

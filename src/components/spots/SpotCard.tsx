@@ -1,4 +1,4 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, Image, Platform, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
@@ -7,13 +7,18 @@ import { useSpotsStore } from '@/stores/spots-store';
 import { getScoreColor } from '@/components/spots/ScoreBadge';
 import { getOvernightLevel } from '@/utils/legal-verdict';
 import { getSpotDisplayName, getTranslatedSurface } from '@/utils/spot-display-name';
+import { buildSatelliteUrl } from '@/services/api';
 import type { SpotSummary } from '@/services/api/types';
 import type { ThemeColors } from '@/constants/theme';
 import { useSpotNavigation } from '@/hooks/useSpotNavigation';
+import { hapticSelection } from '@/utils/haptics';
 import { t } from '@/i18n';
 
 type SpotCardProps = {
   spot: SpotSummary;
+  onFocus?: (spot: SpotSummary) => void;
+  onShowOnMap?: (spot: SpotSummary) => void;
+  isFocused?: boolean;
 };
 
 type LegalIndicator = { color: string; icon: string } | null;
@@ -25,55 +30,86 @@ const getLegalIndicator = (spot: SpotSummary, colors: ThemeColors): LegalIndicat
   return null;
 };
 
-const formatSubtitle = (spot: SpotSummary): string => {
+const formatDetailsLine = (spot: SpotSummary): string => {
   const parts: string[] = [];
-  if (spot.province) parts.push(spot.province);
   const surfaceLabel = getTranslatedSurface(spot.surface_type);
   if (surfaceLabel) parts.push(surfaceLabel);
   if (spot.slope_pct !== null) parts.push(t('spots.slope', { value: spot.slope_pct.toFixed(1) }));
-  return parts.join(' \u00B7 ');
+  return parts.join(' · ');
 };
 
-export const SpotCard = ({ spot }: SpotCardProps) => {
+export const SpotCard = ({ spot, onFocus, onShowOnMap, isFocused }: SpotCardProps) => {
   const colors = useThemeColors();
   const score = spot.composite_score ?? null;
   const { navigateToSpot } = useSpotNavigation();
   const isSaved = useSpotsStore((s) => s.isSaved(spot.id));
 
   const handlePress = () => {
+    hapticSelection();
+    if (onFocus) {
+      if (isFocused) {
+        navigateToSpot(spot.id);
+      } else {
+        onFocus(spot);
+      }
+    } else {
+      navigateToSpot(spot.id);
+    }
+  };
+
+  const handleDetailPress = () => {
+    hapticSelection();
     navigateToSpot(spot.id);
   };
 
   const scoreColor = getScoreColor(score, colors);
-  const subtitle = formatSubtitle(spot);
   const legal = getLegalIndicator(spot, colors);
+  const detailsLine = formatDetailsLine(spot);
+  const imageUrl = spot.satellite_image_path
+    ? buildSatelliteUrl(spot.satellite_image_path)
+    : null;
 
   return (
     <Pressable
       onPress={handlePress}
       style={({ pressed }) => [
         styles.container,
-        { backgroundColor: colors.CARD },
-        legal !== null && {
-          borderWidth: 1.5,
-          borderColor: legal.color,
-        },
+        { borderBottomColor: colors.BORDER },
+        legal !== null && { borderLeftWidth: 3, borderLeftColor: legal.color },
         pressed && styles.pressed,
       ]}
     >
-      <View
-        style={[
-          styles.scoreBadge,
-          { backgroundColor: scoreColor },
-          legal !== null && {
-            borderWidth: 2,
-            borderColor: legal.color,
-          },
-        ]}
-      >
-        <Text style={styles.scoreValue}>
-          {score !== null ? String(Math.round(score)) : '--'}
-        </Text>
+      <View style={styles.thumbnailWrapper}>
+        {imageUrl ? (
+          Platform.OS === 'web' ? (
+            <View style={[styles.thumbnail, { backgroundColor: colors.CARD }]}>
+              <Image
+                source={{ uri: imageUrl }}
+                style={styles.thumbnailImage}
+                resizeMode="cover"
+              />
+            </View>
+          ) : (
+            <Image
+              source={{ uri: imageUrl }}
+              style={[styles.thumbnail, { backgroundColor: colors.CARD }]}
+              resizeMode="cover"
+            />
+          )
+        ) : (
+          <View style={[styles.thumbnail, { backgroundColor: scoreColor }]}>
+            <Text style={styles.placeholderScore}>
+              {score !== null ? String(Math.round(score)) : '--'}
+            </Text>
+          </View>
+        )}
+        {imageUrl && (
+          <View style={[styles.miniBadge, { backgroundColor: scoreColor }]}>
+            <Text style={styles.miniBadgeText}>
+              {score !== null ? String(Math.round(score)) : '--'}
+            </Text>
+          </View>
+        )}
       </View>
       <View style={styles.textArea}>
         <View style={styles.nameRow}>
@@ -89,16 +125,47 @@ export const SpotCard = ({ spot }: SpotCardProps) => {
             </Text>
           )}
         </View>
-        {subtitle ? (
+        {spot.province ? (
           <Text
             style={[styles.subtitle, { color: colors.TEXT_SECONDARY }]}
             numberOfLines={1}
           >
-            {subtitle}
+            {spot.province}
+          </Text>
+        ) : null}
+        {detailsLine ? (
+          <Text
+            style={[styles.details, { color: colors.TEXT_MUTED }]}
+            numberOfLines={1}
+          >
+            {detailsLine}
           </Text>
         ) : null}
       </View>
-      <Ionicons name="chevron-forward" size={18} color={colors.TEXT_MUTED} />
+      {onShowOnMap && (
+        <Pressable
+          onPress={() => { hapticSelection(); onShowOnMap(spot); }}
+          hitSlop={8}
+          style={styles.mapBtn}
+        >
+          <Ionicons name="map-outline" size={16} color={colors.ACCENT} />
+        </Pressable>
+      )}
+      {onFocus ? (
+        <Pressable onPress={handleDetailPress} hitSlop={8} style={styles.detailBtn}>
+          <Ionicons name="chevron-forward" size={18} color={colors.TEXT_MUTED} />
+        </Pressable>
+      ) : (
+        <Ionicons name="chevron-forward" size={18} color={colors.TEXT_MUTED} />
+      )}
+      {isFocused && (
+        <View style={[styles.focusedOverlay, { backgroundColor: colors.ACCENT }]}>
+          <Text style={styles.focusedText}>
+            {t('spots.tapAgainForDetail')}
+          </Text>
+          <Ionicons name="chevron-forward" size={14} color="#FFFFFF" />
+        </View>
+      )}
     </Pressable>
   );
 };
@@ -107,30 +174,54 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: RADIUS.MD,
     paddingHorizontal: SPACING.MD,
-    paddingVertical: SPACING.SM + 4,
-    marginBottom: 10,
+    paddingVertical: SPACING.MD,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     gap: SPACING.MD,
   },
   pressed: {
     opacity: 0.7,
   },
-  scoreBadge: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+  thumbnailWrapper: {
+    width: 48,
+    height: 48,
+    position: 'relative',
+  },
+  thumbnail: {
+    width: 48,
+    height: 48,
+    borderRadius: RADIUS.SM,
+    overflow: 'hidden',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  scoreValue: {
+  thumbnailImage: {
+    width: 48,
+    height: 48,
+  },
+  placeholderScore: {
     fontFamily: FONT_FAMILIES.DATA_BOLD,
-    fontSize: 13,
+    fontSize: 14,
+    color: '#FFFFFF',
+  },
+  miniBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  miniBadgeText: {
+    fontFamily: FONT_FAMILIES.DATA_BOLD,
+    fontSize: 9,
     color: '#FFFFFF',
   },
   textArea: {
     flex: 1,
-    gap: 3,
+    gap: 2,
   },
   nameRow: {
     flexDirection: 'row',
@@ -149,5 +240,33 @@ const styles = StyleSheet.create({
   subtitle: {
     fontFamily: FONT_FAMILIES.BODY,
     fontSize: 13,
+  },
+  details: {
+    fontFamily: FONT_FAMILIES.DATA,
+    fontSize: 12,
+  },
+  mapBtn: {
+    padding: SPACING.XS,
+  },
+  detailBtn: {
+    padding: SPACING.XS,
+  },
+  focusedOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    opacity: 0.92,
+    borderRadius: RADIUS.SM,
+  },
+  focusedText: {
+    fontFamily: FONT_FAMILIES.BODY,
+    fontSize: 13,
+    color: '#FFFFFF',
   },
 });

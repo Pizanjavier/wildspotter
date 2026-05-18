@@ -1,4 +1,5 @@
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { View, Text, Pressable, Animated, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
@@ -98,7 +99,48 @@ export const ZoomWarning = () => {
   );
 };
 
+export const IdlePrompt = () => {
+  const colors = useThemeColors();
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }).start();
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [opacity]);
+
+  return (
+    <Animated.View style={[styles.idleContainer, { opacity }]}>
+      <Ionicons
+        name="radio-outline"
+        size={48}
+        color={colors.TEXT_MUTED}
+        style={{ opacity: 0.4 }}
+      />
+      <Text style={[styles.idleText, { color: colors.TEXT_MUTED }]}>
+        {t('map.idlePrompt')}
+      </Text>
+    </Animated.View>
+  );
+};
+
 const styles = StyleSheet.create({
+  idleContainer: {
+    alignItems: 'center',
+    paddingVertical: SPACING.XL,
+    paddingHorizontal: SPACING.MD,
+    gap: SPACING.SM,
+  },
+  idleText: {
+    fontFamily: FONT_FAMILIES.BODY,
+    fontSize: 14,
+    textAlign: 'center',
+  },
   stateContainer: {
     alignItems: 'center',
     paddingVertical: SPACING.XL,

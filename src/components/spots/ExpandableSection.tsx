@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.SM + 2,
+    gap: 10,
     paddingHorizontal: SPACING.MD,
-    paddingVertical: SPACING.MD - 2,
+    paddingVertical: 14,
   },
   title: {
     flex: 1,

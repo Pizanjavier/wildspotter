@@ -27,6 +27,7 @@ export const en: TranslationDictionary = {
     filtersChip: 'Filters',
     scanDisabledZoom: 'Zoom in to scan',
     slopeChip: '≤{{value}}% slope',
+    idlePrompt: 'Zoom in and scan',
   },
   spots: {
     savedTitle: 'SAVED SPOTS',
@@ -40,6 +41,7 @@ export const en: TranslationDictionary = {
     publicLand: 'Public land',
     slope: '{{value}}% slope',
     slopeUnknown: '-- slope',
+    tapAgainForDetail: 'Tap to view detail',
   },
   spotDetail: {
     notFound: 'Spot not found',
@@ -49,6 +51,9 @@ export const en: TranslationDictionary = {
     elevation: 'ELEVATION',
     inspect: 'INSPECT',
     navigate: 'NAVIGATE',
+    inspectDesc: 'Satellite view to validate the terrain',
+    navigateDesc: 'Turn-by-turn navigation to the spot',
+    googleMaps: 'Google Maps',
     actionHelp:
       'Opens in Google Maps for satellite view or turn-by-turn navigation',
     openInMaps: 'Open in Maps',
@@ -465,6 +470,11 @@ export const en: TranslationDictionary = {
     scoringGreen: '30+ — High confidence, likely a great spot',
     scoringTeal: '10-29 — Medium confidence, worth checking',
     scoringAmber: 'Below 10 — Low confidence, proceed with caution',
+  },
+  sort: {
+    score: 'Score',
+    slope: 'Slope',
+    elevation: 'Elevation',
   },
   legalDetail: {
     title: 'LEGAL SOURCES',

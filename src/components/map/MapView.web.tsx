@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,9 +7,12 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { API_BASE_URL } from '@/constants/config';
 import { useMapStore } from '@/stores/map-store';
 import { useSettingsStore } from '@/stores/settings-store';
+import { useSpotsStore } from '@/stores/spots-store';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { t } from '@/i18n';
 import { getMapStyle, TERRAIN_DEM_SOURCE_ID } from '@/components/map/map-style';
+import { SpotPopup } from '@/components/map/SpotPopup';
+import { hapticSelection } from '@/utils/haptics';
 import type { SpotSummary } from '@/services/api/types';
 import { getOvernightLevel } from '@/utils/legal-verdict';
 import { LegalLegend } from '@/components/map/LegalLegend';
@@ -55,6 +58,7 @@ const OVERNIGHT_LEVEL_NUM: Record<string, number> = {
 
 const spotsToGeoJSON = (
   spots: SpotSummary[],
+  savedIds: Set<string>,
 ): GeoJSON.FeatureCollection => ({
   type: 'FeatureCollection',
   features: spots.map((spot) => {
@@ -75,6 +79,7 @@ const spotsToGeoJSON = (
         score_label: String(Math.round(spot.composite_score ?? 0)),
         restricted: levelNum,
         overnight_level: levelNum,
+        saved: savedIds.has(spot.id) ? 1 : 0,
       },
     };
   }),
@@ -84,16 +89,39 @@ const spotsToGeoJSON = (
  * MapLibre GL JS map for web platform.
  * Renders a full-screen dark-themed interactive map with spot markers.
  */
-export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
+export type MapViewHandle = {
+  getVisibleBounds: () => Promise<{ north: number; south: number; east: number; west: number } | null>;
+};
+
+export const MapView = forwardRef<MapViewHandle, MapViewProps>(({ onMapReady, spots = [] }, ref) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<unknown>(null);
+
+  useImperativeHandle(ref, () => ({
+    getVisibleBounds: async () => {
+      const map = mapRef.current as { getBounds?: () => { getNorth: () => number; getSouth: () => number; getEast: () => number; getWest: () => number } } | null;
+      if (!map?.getBounds) return null;
+      const b = map.getBounds();
+      return { north: b.getNorth(), south: b.getSouth(), east: b.getEast(), west: b.getWest() };
+    },
+  }));
   const mapLoadedRef = useRef(false);
+  const isFlyingRef = useRef(false);
+  const lastAppliedFlyRef = useRef<string | null>(null);
   const [webGLFailed, setWebGLFailed] = useState(false);
-  const { center, zoom, updateBounds, setCenter, setZoom, flyToTarget, clearFlyTo } = useMapStore();
+  const { center, zoom, updateBounds, setCenter, setZoom, flyToTarget, clearFlyTo, selectedSpot, setSelectedSpot, clearSelectedSpot } = useMapStore();
   const userLocation = useMapStore((s) => s.userLocation);
   const theme = useSettingsStore((s) => s.theme);
   const showLegalZones = useSettingsStore((s) => s.showLegalZones);
   const themeColors = useThemeColors();
+  const [popupPosition, setPopupPosition] = useState<{ x: number; y: number } | null>(null);
+  const spotsRef = useRef(spots);
+  spotsRef.current = spots;
+
+  const savedSpots = useSpotsStore((s) => s.savedSpots);
+  const savedIds = useMemo(() => new Set(savedSpots.map((sp) => sp.id)), [savedSpots]);
+  const savedIdsRef = useRef(savedIds);
+  savedIdsRef.current = savedIds;
 
   const syncBounds = useCallback(
     (map: import('maplibre-gl').Map) => {
@@ -125,8 +153,8 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const expr: any = [
       'case',
-      ['>=', ['coalesce', ['get', 'composite_score'], 0], 30], themeColors.SCORE_HIGH,
-      ['>=', ['coalesce', ['get', 'composite_score'], 0], 10], themeColors.SCORE_MEDIUM,
+      ['>=', ['coalesce', ['get', 'composite_score'], 0], 80], themeColors.SCORE_HIGH,
+      ['>=', ['coalesce', ['get', 'composite_score'], 0], 60], themeColors.SCORE_MEDIUM,
       themeColors.SCORE_LOW,
     ];
     try {
@@ -157,10 +185,10 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
     const source = map.getSource(SPOTS_SOURCE_ID);
     if (source && 'setData' in source) {
       (source as import('maplibre-gl').GeoJSONSource).setData(
-        spotsToGeoJSON(spots),
+        spotsToGeoJSON(spots, savedIds),
       );
     }
-  }, [spots]);
+  }, [spots, savedIds]);
 
   // Update user location dot on web map
   useEffect(() => {
@@ -182,16 +210,38 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
     (source as import('maplibre-gl').GeoJSONSource).setData(data);
   }, [userLocation]);
 
-  // Fly to target when set externally (e.g., from search)
+  // Update popup position when selectedSpot changes
+  useEffect(() => {
+    if (!selectedSpot || !mapRef.current || !mapLoadedRef.current) {
+      if (!selectedSpot) setPopupPosition(null);
+      return;
+    }
+    const map = mapRef.current as import('maplibre-gl').Map;
+    const pt = map.project([selectedSpot.coordinates.lon, selectedSpot.coordinates.lat]);
+    setPopupPosition({ x: pt.x, y: pt.y });
+  }, [selectedSpot]);
+
   useEffect(() => {
     if (!flyToTarget || !mapRef.current) return;
+
+    const key = `${flyToTarget.center[0]}_${flyToTarget.center[1]}_${flyToTarget.zoom}`;
+    if (lastAppliedFlyRef.current === key) {
+      clearFlyTo();
+      return;
+    }
+    lastAppliedFlyRef.current = key;
+
+    const target = flyToTarget;
+    clearFlyTo();
+
+    isFlyingRef.current = true;
+    setPopupPosition(null);
     const map = mapRef.current as import('maplibre-gl').Map;
     map.flyTo({
-      center: flyToTarget.center,
-      zoom: flyToTarget.zoom,
+      center: target.center,
+      zoom: target.zoom,
       duration: 1500,
     });
-    clearFlyTo();
   }, [flyToTarget, clearFlyTo]);
 
   useEffect(() => {
@@ -244,7 +294,7 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           // Add spots GeoJSON source
           map.addSource(SPOTS_SOURCE_ID, {
             type: 'geojson',
-            data: spotsToGeoJSON(spots),
+            data: spotsToGeoJSON(spots, savedIdsRef.current),
           });
 
           // Legal restriction zones overlay (vector tiles)
@@ -284,8 +334,6 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             },
           });
 
-          // Data-driven color: green (30+), cyan (10-29), amber (<10).
-          // Built from theme colors so dots match ScoreBadge in both light & dark.
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const scoreColorExpr: any = [
             'case',
@@ -384,17 +432,80 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
             },
           });
 
-          // Navigate to spot detail on click
+          // Saved spot indicator (top-left white dot)
+          map.addLayer({
+            id: 'spots-saved-bg',
+            type: 'circle',
+            source: SPOTS_SOURCE_ID,
+            filter: ['==', ['get', 'saved'], 1],
+            paint: {
+              'circle-radius': 6,
+              'circle-color': '#FFFFFF',
+              'circle-stroke-width': 1.5,
+              'circle-stroke-color': themeColors.ACCENT,
+              'circle-translate': [-10, -10],
+            },
+          });
+          map.addLayer({
+            id: 'spots-saved-icon',
+            type: 'symbol',
+            source: SPOTS_SOURCE_ID,
+            filter: ['==', ['get', 'saved'], 1],
+            layout: {
+              'text-field': 'S',
+              'text-size': 7,
+              'text-font': ['Open Sans Bold'],
+              'text-allow-overlap': true,
+              'text-offset': [-0.7, -0.7],
+            },
+            paint: {
+              'text-color': themeColors.ACCENT,
+            },
+          });
+
+          // Show popup on spot click instead of navigating directly
           const handleSpotClick = (e: import('maplibre-gl').MapMouseEvent & { features?: import('maplibre-gl').MapGeoJSONFeature[] }) => {
             const feature = e.features?.[0];
             const spotId = feature?.properties?.id as string | undefined;
-            if (spotId) {
+            if (!spotId) return;
+            const spot = spotsRef.current.find((s) => s.id === spotId);
+            if (!spot) {
               router.push(`/spot/${spotId}`);
+              return;
             }
+            hapticSelection();
+            setSelectedSpot({
+              id: spot.id,
+              name: spot.name,
+              score: spot.composite_score,
+              surface: spot.surface_type,
+              province: spot.province,
+              slopePct: spot.slope_pct,
+              satelliteImagePath: spot.satellite_image_path,
+              legalStatus: spot.legal_status,
+              spotType: spot.spot_type,
+              contextDetails: spot.context_details,
+              coordinates: spot.coordinates,
+            });
+            const point = map.project([spot.coordinates.lon, spot.coordinates.lat]);
+            setPopupPosition({ x: point.x, y: point.y });
           };
           map.on('click', SPOTS_LAYER_ID, handleSpotClick);
           map.on('click', 'spots-labels', handleSpotClick);
           map.on('click', 'spots-badge', handleSpotClick);
+          map.on('click', 'spots-saved-bg', handleSpotClick);
+          map.on('click', 'spots-saved-icon', handleSpotClick);
+
+          // Dismiss popup on map background click
+          map.on('click', (e) => {
+            const features = map.queryRenderedFeatures(e.point, {
+              layers: [SPOTS_LAYER_ID, 'spots-labels', 'spots-badge', 'spots-saved-bg', 'spots-saved-icon'],
+            });
+            if (features.length === 0) {
+              clearSelectedSpot();
+              setPopupPosition(null);
+            }
+          });
 
           // Pointer cursor on hover
           map.on('mouseenter', SPOTS_LAYER_ID, () => {
@@ -450,9 +561,26 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           onMapReady?.();
         });
 
+        map.on('movestart', () => {
+          const state = useMapStore.getState();
+          if (state.selectedSpot && !isFlyingRef.current) {
+            state.clearSelectedSpot();
+            setPopupPosition(null);
+          }
+        });
+
         map.on('moveend', () => {
           if (!mounted) return;
           syncBounds(map);
+          isFlyingRef.current = false;
+          const state = useMapStore.getState();
+          if (state.selectedSpot) {
+            const pt = map.project([
+              state.selectedSpot.coordinates.lon,
+              state.selectedSpot.coordinates.lat,
+            ]);
+            setPopupPosition({ x: pt.x, y: pt.y });
+          }
         });
 
         const AttrControl =
@@ -516,6 +644,43 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
           left: 0,
         }}
       />
+      {selectedSpot && popupPosition && (
+        <div
+          style={{
+            position: 'absolute',
+            left: popupPosition.x,
+            top: popupPosition.y,
+            transform: 'translate(-50%, -100%)',
+            marginTop: -40,
+            zIndex: 100,
+            pointerEvents: 'auto',
+            cursor: 'pointer',
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/spot/${selectedSpot.id}`);
+            clearSelectedSpot();
+            setPopupPosition(null);
+          }}
+        >
+          <SpotPopup
+            name={selectedSpot.name}
+            score={selectedSpot.score}
+            surface={selectedSpot.surface}
+            province={selectedSpot.province}
+            slopePct={selectedSpot.slopePct}
+            satelliteImagePath={selectedSpot.satelliteImagePath}
+            legalStatus={selectedSpot.legalStatus}
+            spotType={selectedSpot.spotType}
+            contextDetails={selectedSpot.contextDetails}
+            onPress={() => {
+              router.push(`/spot/${selectedSpot.id}`);
+              clearSelectedSpot();
+              setPopupPosition(null);
+            }}
+          />
+        </div>
+      )}
       {showLegalZones && (
         <View style={[styles.legalBanner, { backgroundColor: themeColors.CARD_SURFACE }]}>
           <Ionicons name="shield-outline" size={14} color={themeColors.SCORE_LOW} />
@@ -527,7 +692,9 @@ export const MapView = ({ onMapReady, spots = [] }: MapViewProps) => {
       <LegalLegend />
     </View>
   );
-};
+});
+
+MapView.displayName = "MapView";
 
 const styles = StyleSheet.create({
   container: {

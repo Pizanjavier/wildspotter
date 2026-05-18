@@ -74,8 +74,11 @@ export const COLORS = LIGHT_THEME;
 
 export const SPACING = {
   XS: 4,
+  XSS: 6,
   SM: 8,
+  MDS: 12,
   MD: 16,
+  MDL: 20,
   LG: 24,
   XL: 32,
 } as const;

@@ -278,7 +278,7 @@ Vuelves en junio. Hay 15 furgos, basura en el suelo y alguien con un altavoz.
 
 ---
 
-### Dom 17 — V1 "Mayo es el Mejor Mes" — Reel — IG + TikTok
+### Dom 17 — V1 "Mayo es el Mejor Mes" — Reel — IG + TikTok (MOVED TO LUN 18 - SAME DAY AS RD6. Posting 2 Reels on the same day. User decision)
 
 > Contenido estacional. La costa norte de España en mayo está vacía antes del turismo masivo.
 > Producción: Stock footage de costa verde. Texto simple. Música ambient.
