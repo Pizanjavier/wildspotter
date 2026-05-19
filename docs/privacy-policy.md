@@ -1,6 +1,6 @@
 # WildSpotter — Privacy Policy
 
-**Last updated:** April 2, 2026
+**Last updated:** May 19, 2026
 
 WildSpotter ("the App") is developed by Javier Pizan ("we", "us"). This policy explains what data we collect, why, and how we handle it.
 
@@ -13,7 +13,16 @@ When you use the "My Location" feature, the App accesses your device's GPS coord
 If you submit a report about a spot (e.g., "incorrect legal data", "not accessible"), we store the report category, your optional comment, and the spot identifier. Reports are anonymous — we do not collect your name, email, or device identifier with reports.
 
 ### 1.3 Analytics
-We use PostHog to collect anonymous usage events (e.g., "area scanned", "spot viewed") to understand how the App is used and improve it. These events do not contain personally identifiable information. You can opt out of analytics by disabling data sharing in your device settings.
+We use PostHog to collect anonymous usage data to understand how the App is used and improve it. This includes:
+
+- **Usage events:** anonymous interaction data such as screens visited, buttons pressed, features used (e.g., "area scanned", "spot viewed", "filter applied"). Events do not contain personally identifiable information.
+- **Session replay:** anonymous screen recordings of your app sessions to help us identify usability issues. Text inputs and images can be masked. Recordings are tied to an anonymous device identifier, not to your identity.
+- **Touch autocapture:** anonymous tap/interaction data with UI element context to understand navigation patterns.
+- **Error tracking:** unhandled exceptions are captured alongside session context to help us diagnose and fix bugs.
+
+All analytics data is tied to an anonymous, randomly generated device identifier stored locally on your device. We do not use advertising identifiers (IDFA/GAID) and do not track you across other apps or websites.
+
+You can opt out of all analytics (events, session replay, and error tracking) via the toggle in the App's Config screen or during onboarding.
 
 ### 1.4 Crash Reports
 We use Sentry to collect crash reports when the App encounters an error. Crash reports include technical information about your device (OS version, device model, app version) and the error stack trace. They do not include personal data.
@@ -39,7 +48,7 @@ Cached data on your device (previously viewed spots and areas) is stored locally
 
 | Service | Purpose | Data Sent | Privacy Policy |
 |---------|---------|-----------|----------------|
-| PostHog | Anonymous analytics | Event names, timestamps, device type | [posthog.com/privacy](https://posthog.com/privacy) |
+| PostHog | Anonymous analytics, session replay, error tracking | Event names, timestamps, device type, anonymous session recordings, unhandled exceptions | [posthog.com/privacy](https://posthog.com/privacy) |
 | Sentry | Crash reporting | Error traces, device model, OS version | [sentry.io/privacy](https://sentry.io/privacy/) |
 | Google Maps | Navigation & satellite view (via deep links) | Coordinates of the spot you choose to inspect/navigate to | [google.com/privacy](https://policies.google.com/privacy) |
 

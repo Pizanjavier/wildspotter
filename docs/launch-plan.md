@@ -119,11 +119,17 @@ At €23/mo, with no paying users, the project can run indefinitely at minimal c
   - `src/services/sentry/index.ts` — DSN via `EXPO_PUBLIC_SENTRY_DSN` env var, environment tagging (dev/prod via `__DEV__`)
   - Wraps root layout with `Sentry.wrap()` for error boundary + performance monitoring
   - Disabled by default when DSN is placeholder — set env var to activate
-- [x] **Basic analytics — PostHog (free tier)** ✅
-  - Installed `posthog-react-native`, configured via `EXPO_PUBLIC_POSTHOG_API_KEY` env var
-  - `src/services/analytics/index.ts` — thin wrapper with `initAnalytics()` + `trackEvent()`
-  - Events tracked: `app_opened`, `area_scanned`, `spot_viewed`, `spot_navigated`, `spot_inspected`, `config_changed`
-  - Note: `offline_area_saved` not yet tracked (offline cache feature not implemented)
+- [x] **Full analytics — PostHog (free tier)** ✅
+  - Installed `posthog-react-native` + `posthog-react-native-session-replay`, configured via `EXPO_PUBLIC_POSTHOG_API_KEY` env var
+  - `src/services/analytics/index.ts` — full wrapper with `initAnalytics()`, `trackEvent()`, `trackScreen()`, `registerDeviceContext()`, `identifyUser()`, `setSuperProperties()`
+  - `src/constants/analytics.ts` — typed `ANALYTICS_EVENTS` constant map (30+ events)
+  - `src/hooks/useTrackScreen.ts` — hook for screen-level tracking on all 7 screens
+  - **Autocapture:** touch events on all Pressable/TouchableOpacity elements
+  - **Session replay:** anonymous screen recordings (iOS/Android) — requires "Record user sessions" enabled in PostHog project settings
+  - **Error tracking:** unhandled JS exceptions captured alongside session context
+  - **Super properties:** `app_version`, `platform`, `locale`, `theme` attached to every event
+  - **Events tracked:** `app_opened`, `area_scanned`, `spot_viewed`, `spot_saved`, `spot_unsaved`, `spot_inspected`, `spot_navigated`, `spot_reported`, `spot_report_opened`, `spot_popup_opened`, `search_performed`, `search_suggestion_selected`, `filter_chip_pressed`, `sort_changed`, `tab_switched`, `my_location_pressed`, `map_layers_toggled`, `config_changed`, `language_changed`, `theme_changed`, `cache_cleared`, `feedback_link_pressed`, `data_source_link_pressed`, `legal_detail_opened`, `guide_section_expanded`, `section_expanded`, `empty_state_cta_pressed`, `onboarding_step_viewed`, `onboarding_completed`, `onboarding_skipped`
+  - **User identification:** anonymous device ID only (no IDFA/GAID) — store-policy compliant, no ATT prompt needed
 - [x] **In-app feedback button** ✅
   - "Send Feedback" card in Config → About section (`src/components/config/AboutSection.tsx`)
   - Opens `mailto:feedback@wildspotter.app?subject=WildSpotter Feedback`
