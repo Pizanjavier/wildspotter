@@ -4,6 +4,8 @@ import { SPACING, RADIUS } from '@/constants/theme';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { useBottomSheetTop } from '@/hooks/useBottomSheetTop';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 const BUTTON_GAP = 8;
 
@@ -17,6 +19,7 @@ export const MyLocationButton = () => {
 
   const handlePress = () => {
     if (isLocating) return;
+    trackEvent(ANALYTICS_EVENTS.MY_LOCATION_PRESSED, { status });
     if (isDenied) {
       openSettings();
       return;

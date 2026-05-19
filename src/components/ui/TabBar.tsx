@@ -5,6 +5,8 @@ import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 
 type TabIconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -71,6 +73,7 @@ export const TabBar = ({
             });
 
             if (!isFocused && !event.defaultPrevented) {
+              trackEvent(ANALYTICS_EVENTS.TAB_SWITCHED, { tab_name: route.name });
               navigation.navigate(route.name, route.params);
             }
           };

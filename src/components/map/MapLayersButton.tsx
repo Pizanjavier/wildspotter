@@ -5,6 +5,8 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSettingsStore } from '@/stores/settings-store';
 import { useBottomSheetTop } from '@/hooks/useBottomSheetTop';
 import { LOCATION_BUTTON_SIZE } from '@/components/map/MyLocationButton';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 const BUTTON_SIZE = 48;
 const BUTTON_GAP = 8;
@@ -41,7 +43,11 @@ export const MapLayersButton = () => {
         },
         webShadow,
       ]}
-      onPress={() => setShowLegalZones(!showLegalZones)}
+      onPress={() => {
+        const next = !showLegalZones;
+        trackEvent(ANALYTICS_EVENTS.MAP_LAYERS_TOGGLED, { legal_zones: next });
+        setShowLegalZones(next);
+      }}
       accessibilityRole="switch"
       accessibilityState={{ checked: showLegalZones }}
     >

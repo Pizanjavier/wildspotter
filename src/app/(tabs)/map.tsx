@@ -23,11 +23,13 @@ import { useScanStore } from "@/stores/scan-store";
 import { useSettingsStore } from "@/stores/settings-store";
 import type { GeocodingResult } from "@/services/geocoding";
 import type { SpotSummary } from "@/services/api/types";
+import { useTrackScreen } from "@/hooks/useTrackScreen";
 
 const MIN_SCAN_ZOOM = 9;
 
 export const MapScreen = () => {
 	const colors = useThemeColors();
+	useTrackScreen('Map');
 	const mapViewRef = useRef<MapViewHandle>(null);
 	const zoom = useMapStore((s) => s.zoom);
 	const {

@@ -31,6 +31,8 @@ import { GoogleMapsModal } from '@/components/spots/GoogleMapsModal';
 import { t } from '@/i18n';
 import { getSpotDisplayName, getTranslatedSurface } from '@/utils/spot-display-name';
 import { trackEvent } from '@/services/analytics';
+import { useTrackScreen } from '@/hooks/useTrackScreen';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 
 export const SpotDetailScreen = () => {
@@ -44,12 +46,16 @@ export const SpotDetailScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  useTrackScreen('SpotDetail', { spot_id: id ?? '' });
   const [reportVisible, setReportVisible] = useState(false);
   const [mapsModalVisible, setMapsModalVisible] = useState(false);
   const isSaved = useSpotsStore((s) => s.isSaved(id ?? ''));
   const addSpot = useSpotsStore((s) => s.addSpot);
   const removeSpot = useSpotsStore((s) => s.removeSpot);
-  const openReport = useCallback(() => setReportVisible(true), []);
+  const openReport = useCallback(() => {
+    trackEvent(ANALYTICS_EVENTS.SPOT_REPORT_OPENED, { spot_id: id ?? '' });
+    setReportVisible(true);
+  }, [id]);
   const closeReport = useCallback(() => setReportVisible(false), []);
 
   const inFlightIdRef = useRef<string | null>(null);
@@ -69,7 +75,7 @@ export const SpotDetailScreen = () => {
     if (!id) return;
     activeIdRef.current = id;
     if (inFlightIdRef.current === id) return;
-    trackEvent('spot_viewed', { spot_id: id });
+    trackEvent(ANALYTICS_EVENTS.SPOT_VIEWED, { spot_id: id });
     inFlightIdRef.current = id;
     const fetchDetail = async () => {
       setLoading(true);
@@ -117,8 +123,13 @@ export const SpotDetailScreen = () => {
 
   const handleToggleSave = () => {
     if (!spot || !id) return;
-    if (isSaved) removeSpot(id);
-    else addSpot(spot);
+    if (isSaved) {
+      trackEvent(ANALYTICS_EVENTS.SPOT_UNSAVED, { spot_id: id, score: spot.composite_score });
+      removeSpot(id);
+    } else {
+      trackEvent(ANALYTICS_EVENTS.SPOT_SAVED, { spot_id: id, score: spot.composite_score });
+      addSpot(spot);
+    }
   };
 
   if (loading) {

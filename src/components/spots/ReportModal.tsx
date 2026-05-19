@@ -15,6 +15,8 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { reportSpot, ApiError } from '@/services/api';
 import type { ReportCategory } from '@/services/api';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 type ReportModalProps = {
   visible: boolean;
@@ -45,6 +47,7 @@ export const ReportModal = ({ visible, spotId, onClose }: ReportModalProps) => {
     setError(null);
     try {
       await reportSpot(spotId, selected, comment || undefined);
+      trackEvent(ANALYTICS_EVENTS.SPOT_REPORTED, { spot_id: spotId, reason: selected });
       setSubmitted(true);
       setTimeout(() => {
         handleClose();

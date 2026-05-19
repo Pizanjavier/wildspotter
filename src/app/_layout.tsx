@@ -16,7 +16,8 @@ import { useSettingsStore, hydrateSettings } from '@/stores/settings-store';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { setLocale } from '@/i18n';
 import { initSentry } from '@/services/sentry';
-import { initAnalytics, trackEvent } from '@/services/analytics';
+import { initAnalytics, trackEvent, registerDeviceContext } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 import type { Locale } from '@/i18n/types';
 
 export const RootLayout = () => {
@@ -53,7 +54,8 @@ export const RootLayout = () => {
     analyticsInitedRef.current = true;
     initSentry();
     initAnalytics();
-    trackEvent('app_opened');
+    registerDeviceContext(language, theme);
+    trackEvent(ANALYTICS_EVENTS.APP_OPENED);
   }, [hydrated, analyticsEnabled]);
 
   useEffect(() => {

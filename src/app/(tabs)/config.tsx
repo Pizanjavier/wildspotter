@@ -19,6 +19,7 @@ import { CacheSection } from "@/components/config/CacheSection";
 import { PreferencesSection } from "@/components/config/PreferencesSection";
 import { AboutSection } from "@/components/config/AboutSection";
 import type { ThemeMode } from "@/constants/theme";
+import { useTrackScreen } from "@/hooks/useTrackScreen";
 
 const LANGUAGES = [
 	{ code: "en", label: "English" },
@@ -27,6 +28,7 @@ const LANGUAGES = [
 
 export const ConfigScreen = () => {
 	const colors = useThemeColors();
+	useTrackScreen('Config');
 	const language = useSettingsStore((s) => s.language);
 	const setLanguage = useSettingsStore((s) => s.setLanguage);
 	const theme = useSettingsStore((s) => s.theme);

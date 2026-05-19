@@ -16,9 +16,13 @@ import {
   ScoringSection,
 } from '@/components/guide';
 import { OvernightTips } from '@/components/guide/OvernightTips';
+import { useTrackScreen } from '@/hooks/useTrackScreen';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 export const GuideScreen = () => {
   const colors = useThemeColors();
+  useTrackScreen('Guide');
   const router = useRouter();
 
   return (
@@ -65,7 +69,10 @@ export const GuideScreen = () => {
         </CollapsibleSection>
 
         <Pressable
-          onPress={() => router.push('/legal-detail')}
+          onPress={() => {
+            trackEvent(ANALYTICS_EVENTS.LEGAL_DETAIL_OPENED);
+            router.push('/legal-detail');
+          }}
           style={[styles.legalCard, { backgroundColor: colors.CARD, borderColor: colors.BORDER }]}
         >
           <Ionicons name="shield-checkmark-outline" size={22} color={colors.ACCENT} />

@@ -6,6 +6,7 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { openNavigate, openInspect } from '@/services/navigation';
 import { t } from '@/i18n';
 import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 type ActionButtonsProps = {
   lat: number;
@@ -18,7 +19,7 @@ export const ActionButtons = ({ lat, lon }: ActionButtonsProps) => {
   const roundCoord = (value: number) => Math.round(value * 100) / 100;
 
   const handleInspect = () => {
-    trackEvent('spot_inspected', {
+    trackEvent(ANALYTICS_EVENTS.SPOT_INSPECTED, {
       lat: roundCoord(lat),
       lon: roundCoord(lon),
     });
@@ -26,7 +27,7 @@ export const ActionButtons = ({ lat, lon }: ActionButtonsProps) => {
   };
 
   const handleNavigate = () => {
-    trackEvent('spot_navigated', {
+    trackEvent(ANALYTICS_EVENTS.SPOT_NAVIGATED, {
       lat: roundCoord(lat),
       lon: roundCoord(lon),
     });

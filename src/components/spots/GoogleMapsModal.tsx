@@ -5,6 +5,7 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { openNavigate, openInspect } from '@/services/navigation';
 import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 import { t } from '@/i18n';
 
 type GoogleMapsModalProps = {
@@ -19,13 +20,13 @@ export const GoogleMapsModal = ({ visible, lat, lon, onClose }: GoogleMapsModalP
 
   const handleInspect = () => {
     onClose();
-    trackEvent('spot_inspected', { lat, lon });
+    trackEvent(ANALYTICS_EVENTS.SPOT_INSPECTED, { lat, lon });
     openInspect(lat, lon);
   };
 
   const handleNavigate = () => {
     onClose();
-    trackEvent('spot_navigated', { lat, lon });
+    trackEvent(ANALYTICS_EVENTS.SPOT_NAVIGATED, { lat, lon });
     openNavigate(lat, lon);
   };
 

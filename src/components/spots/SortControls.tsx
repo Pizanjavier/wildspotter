@@ -3,6 +3,8 @@ import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 export type SortKey = 'score' | 'slope' | 'elevation';
 
@@ -26,7 +28,10 @@ export const SortControls = ({ activeKey, onSelect }: SortControlsProps) => {
         return (
           <Pressable
             key={key}
-            onPress={() => onSelect(key)}
+            onPress={() => {
+              trackEvent(ANALYTICS_EVENTS.SORT_CHANGED, { sort_by: key });
+              onSelect(key);
+            }}
             style={[
               styles.pill,
               {

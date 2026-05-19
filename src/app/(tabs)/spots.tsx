@@ -12,6 +12,9 @@ import { useSpotsStore } from '@/stores/spots-store';
 import { SpotCard } from '@/components/spots/SpotCard';
 import type { SpotSummary } from '@/services/api/types';
 import { t } from '@/i18n';
+import { useTrackScreen } from '@/hooks/useTrackScreen';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 const EmptyState = () => {
   const colors = useThemeColors();
@@ -26,7 +29,10 @@ const EmptyState = () => {
         {t('emptySpots.body')}
       </Text>
       <Pressable
-        onPress={() => router.push('/(tabs)/map')}
+        onPress={() => {
+          trackEvent(ANALYTICS_EVENTS.EMPTY_STATE_CTA_PRESSED);
+          router.push('/(tabs)/map');
+        }}
         style={({ pressed }) => [
           styles.ctaButton,
           { backgroundColor: colors.ACCENT },
@@ -43,6 +49,7 @@ const keyExtractor = (item: SpotSummary) => item.id;
 
 export const SpotsScreen = () => {
   const colors = useThemeColors();
+  useTrackScreen('Spots');
   const router = useRouter();
   const _lang = useSettingsStore((s) => s.language);
   const savedSpots = useSpotsStore((s) => s.savedSpots);

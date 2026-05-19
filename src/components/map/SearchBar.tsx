@@ -17,6 +17,8 @@ import { geocode } from '@/services/geocoding';
 import type { GeocodingResult } from '@/services/geocoding';
 import { SearchSuggestions } from '@/components/map/SearchSuggestions';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 const DEBOUNCE_MS = 500;
 export const SEARCH_BAR_HEIGHT = 50;
@@ -45,6 +47,7 @@ export const SearchBar = ({ onSelect }: SearchBarProps) => {
     }
 
     setIsLoading(true);
+    trackEvent(ANALYTICS_EVENTS.SEARCH_PERFORMED, { query: text.trim() });
     try {
       const geocodeResults = await geocode(text);
       setResults(geocodeResults);
@@ -81,6 +84,7 @@ export const SearchBar = ({ onSelect }: SearchBarProps) => {
 
   const handleSelect = useCallback(
     (result: GeocodingResult) => {
+      trackEvent(ANALYTICS_EVENTS.SEARCH_SUGGESTION_SELECTED, { suggestion: result.displayName.split(',')[0] });
       setQuery(result.displayName.split(',')[0]);
       setShowSuggestions(false);
       setResults([]);

@@ -8,6 +8,8 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSettingsStore } from '@/stores/settings-store';
 import { SEARCH_BAR_HEIGHT } from '@/components/map/SearchBar';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 const CHIPS_GAP = 8;
 
@@ -31,7 +33,10 @@ export const FilterChips = () => {
       >
         <Pressable
           style={[styles.chipAccent, { backgroundColor: colors.ACCENT }]}
-          onPress={() => router.push('/(tabs)/config')}
+          onPress={() => {
+            trackEvent(ANALYTICS_EVENTS.FILTER_CHIP_PRESSED);
+            router.push('/(tabs)/config');
+          }}
         >
           <Ionicons name="options-outline" size={14} color="#FFFFFF" />
           <Text style={styles.chipAccentText}>{t('map.filtersChip')}</Text>

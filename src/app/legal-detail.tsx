@@ -8,6 +8,7 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { t } from '@/i18n';
 import { LegalSourcesSection } from '@/components/guide/LegalSourcesSection';
 import { LegalDisclaimer } from '@/components/legal/LegalDisclaimer';
+import { useTrackScreen } from '@/hooks/useTrackScreen';
 
 type FlowStep = {
   icon: React.ComponentProps<typeof Ionicons>['name'];
@@ -45,6 +46,7 @@ const FLOW_STEPS: FlowStep[] = [
 
 export const LegalDetailScreen = () => {
   const colors = useThemeColors();
+  useTrackScreen('LegalDetail');
   const router = useRouter();
 
   return (

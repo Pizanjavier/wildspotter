@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -27,8 +29,11 @@ export const ExpandableSection = ({
 
   const toggle = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setOpen((prev) => !prev);
-  }, []);
+    setOpen((prev) => {
+      if (!prev) trackEvent(ANALYTICS_EVENTS.SECTION_EXPANDED, { section: title });
+      return !prev;
+    });
+  }, [title]);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.CARD, borderColor: colors.BORDER }]}>

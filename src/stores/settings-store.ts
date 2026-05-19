@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Localization from 'expo-localization';
 import { SLOPE_THRESHOLD } from '@/constants/config';
 import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 import type { ThemeMode } from '@/constants/theme';
 
 const detectDefaultLanguage = (): string => {
@@ -55,7 +56,7 @@ const saveToStorage = (state: SettingsStore) => {
 };
 
 const trackConfigChange = (setting: string, value: string | number | boolean) => {
-  trackEvent('config_changed', { setting, value });
+  trackEvent(ANALYTICS_EVENTS.CONFIG_CHANGED, { setting, value });
 };
 
 export const useSettingsStore = create<SettingsStore>((set, get) => ({

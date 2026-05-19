@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 type CollapsibleSectionProps = {
   icon: React.ComponentProps<typeof Ionicons>['name'];
@@ -25,7 +27,12 @@ export const CollapsibleSection = ({
     <View style={[styles.container, { backgroundColor: colors.CARD }]}>
       <Pressable
         style={styles.header}
-        onPress={() => setExpanded((prev) => !prev)}
+        onPress={() => {
+          setExpanded((prev) => {
+            if (!prev) trackEvent(ANALYTICS_EVENTS.GUIDE_SECTION_EXPANDED, { section_name: title });
+            return !prev;
+          });
+        }}
       >
         <View style={[styles.iconBox, { backgroundColor: colors.ACCENT + '20' }]}>
           <Ionicons name={icon} size={18} color={colors.ACCENT} />

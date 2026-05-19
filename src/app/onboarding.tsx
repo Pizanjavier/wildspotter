@@ -19,6 +19,9 @@ import { useSettingsStore } from "@/stores/settings-store";
 import { FONT_FAMILIES } from "@/constants/fonts";
 import { SPACING, RADIUS } from "@/constants/theme";
 import { t } from "@/i18n";
+import { trackEvent } from "@/services/analytics";
+import { ANALYTICS_EVENTS } from "@/constants/analytics";
+import { useTrackScreen } from "@/hooks/useTrackScreen";
 
 const ONBOARDING_KEY = "wildspotter_onboarding_complete";
 
@@ -66,15 +69,18 @@ const OnboardingScreen = () => {
 	const { width, height } = useWindowDimensions();
 	const [currentPage, setCurrentPage] = useState(0);
 	const flatListRef = useRef<FlatList>(null);
+	useTrackScreen('Onboarding');
 
 	const handleFinish = useCallback(async () => {
+		trackEvent(ANALYTICS_EVENTS.ONBOARDING_COMPLETED, { at_step: currentPage });
 		await markOnboardingComplete();
 		router.replace("/(tabs)/map");
-	}, [router]);
+	}, [router, currentPage]);
 
 	const handleNext = useCallback(() => {
 		if (currentPage < TOTAL_PAGES - 1) {
 			const nextPage = currentPage + 1;
+			trackEvent(ANALYTICS_EVENTS.ONBOARDING_STEP_VIEWED, { step: nextPage });
 			flatListRef.current?.scrollToIndex({ index: nextPage });
 			setCurrentPage(nextPage);
 		} else {
@@ -88,7 +94,10 @@ const OnboardingScreen = () => {
 			colors={colors}
 			width={width}
 			currentPage={0}
-			onFinish={handleFinish}
+			onFinish={() => {
+				trackEvent(ANALYTICS_EVENTS.ONBOARDING_SKIPPED, { at_step: 0 });
+				void handleFinish();
+			}}
 			onNext={handleNext}
 		/>,
 		<DiscoverPage

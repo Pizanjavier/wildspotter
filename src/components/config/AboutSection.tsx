@@ -5,6 +5,8 @@ import { SPACING, RADIUS } from '@/constants/theme';
 import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 const APP_VERSION = Constants.expoConfig?.version ?? '0.0.0';
 
@@ -21,6 +23,7 @@ const DATA_SOURCES: ReadonlyArray<{ label: string; url: string }> = [
 const FEEDBACK_EMAIL = 'feedback@wildspotter.app';
 
 const handleFeedback = () => {
+  trackEvent(ANALYTICS_EVENTS.FEEDBACK_LINK_PRESSED);
   Linking.openURL(`mailto:${FEEDBACK_EMAIL}?subject=WildSpotter Feedback`);
 };
 
@@ -56,6 +59,7 @@ export const AboutSection = () => {
             <Pressable
               key={label}
               onPress={() => {
+                trackEvent(ANALYTICS_EVENTS.DATA_SOURCE_LINK_PRESSED, { source: label });
                 void Linking.openURL(url);
               }}
               hitSlop={8}

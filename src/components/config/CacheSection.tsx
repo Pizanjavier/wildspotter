@@ -6,6 +6,8 @@ import { FONT_FAMILIES } from '@/constants/fonts';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { getAllCachedScans, clearCache, getCacheSize } from '@/services/cache';
 import { t } from '@/i18n';
+import { trackEvent } from '@/services/analytics';
+import { ANALYTICS_EVENTS } from '@/constants/analytics';
 
 const formatBytes = (bytes: number): string => {
   if (bytes === 0) return '0 B';
@@ -35,6 +37,7 @@ export const CacheSection = () => {
     const doClear = async () => {
       setClearing(true);
       await clearCache();
+      trackEvent(ANALYTICS_EVENTS.CACHE_CLEARED);
       setScanCount(0);
       setCacheBytes(0);
       setClearing(false);
