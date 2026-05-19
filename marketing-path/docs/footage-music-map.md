@@ -100,6 +100,22 @@ Which clips and tracks are used in each produced video. Check this before select
 | D2 (Debate2) | S2 Arguments | same footage | 58% | Darker — text focus |
 | D2 (Debate2) | S3 Question | same footage | 50% | Back to moderate — engagement question |
 
+### AlgoHaCambiado (Teaser v2.0)
+| Scene | Footage | Dim | Role |
+|-------|---------|-----|------|
+| S1 Stats | None — near-solid dark bg | N/A | Data stats counter — no competing video |
+| S2 Feature | `ai_Van_Arriving_Empty_Coastal_Spot.mp4` | 28% | "El radar ya no solo..." + spot-detail screenshot |
+| S3 Reveal | `ai_Van_Arriving_Empty_Coastal_Spot.mp4` (continued) | 22% | "WildSpotter 2.0 llega esta semana" |
+
+### DosPointCero (Launch v2.0)
+| Scene | Footage | Dim | Role |
+|-------|---------|-----|------|
+| S1 Hook | `ai_Spanish_Countryside_Van_Video.mp4` | 25% | Big "WildSpotter 2.0 Ya disponible" reveal |
+| S2 Popup demo | same footage | 28% | map-popup screenshot — new feature |
+| S3 Legal demo | same footage | 28% | spot-detail screenshot + Monitor Legal stats |
+| S4 Details | same footage | 22% | "Gratis. Sin registro." + municipio/provincia |
+| S5 CTA | `lonely_beach_with_lifeguard_chair_and_waves_36723550.mp4` | 35% | Warm beach payoff — "Actualiza ahora" |
+
 ### MayoMejorMes (V1 + V2 — seasonal / costa norte)
 | Scene | Footage | Dim | Role |
 |-------|---------|-----|------|
@@ -133,8 +149,9 @@ Which clips and tracks are used in each produced video. Check this before select
 | Warm dark | `data-truth.mp3` | Mixkit 603 | Debate2 (D2) |
 
 | Tonal dark | `night-drive.mp3` | Mixkit 583 | ElPeorMomento S2/S2b |
-| Calm C-major | `data-reveal.mp3` | Mixkit 590 | OchoTresMil W1/W1b |
-| Unused | `cyber-decrypt.mp3` | — | ElProblema S1/S1b |
+| Calm C-major | `data-reveal.mp3` | Mixkit 590 | OchoTresMil W1/W1b, AlgoHaCambiado |
+| Energetic | `pulse-reveal.mp3` | — | PuenteDeMayo, DosPointCero |
+| Tech ambient | `cyber-decrypt.mp3` | — | ElRadarDetecto |
 
 ### SFX available
 `radar-ping.mp3`, `score-reveal.mp3`, `whoosh.mp3`

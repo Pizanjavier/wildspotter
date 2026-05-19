@@ -43,6 +43,8 @@ import { OchoTresMil, OCHO_TRES_MIL_FRAMES } from "./OchoTresMil";
 import { ElPeorMomento, EL_PEOR_MOMENTO_FRAMES } from "./ElPeorMomento";
 import { Debate, DEBATE_FRAMES } from "./Debate";
 import { MayoMejorMes, MAYO_MEJOR_MES_FRAMES } from "./MayoMejorMes";
+import { AlgoHaCambiado, ALGO_HA_CAMBIADO_FRAMES } from "./AlgoHaCambiado";
+import { DosPointCero, DOS_POINT_CERO_FRAMES } from "./DosPointCero";
 // --- Base durations (without intro) ---
 const PARKING_LLENO_FRAMES = 805;
 const NATURA2000_FRAMES = 482;
@@ -1871,6 +1873,30 @@ export const RemotionRoot: React.FC = () => {
 						hookVariant: "V2" as const,
 						musicTrack: "atlantic-swell",
 					}}
+				/>
+			</Folder>
+
+			{/* ============ AlgoHaCambiado (Teaser v2.0) ============ */}
+			<Folder name="AlgoHaCambiado">
+				<Composition
+					id="AlgoHaCambiado"
+					component={AlgoHaCambiado}
+					durationInFrames={ALGO_HA_CAMBIADO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
+				/>
+			</Folder>
+
+			{/* ============ DosPointCero (Launch v2.0) ============ */}
+			<Folder name="DosPointCero">
+				<Composition
+					id="DosPointCero"
+					component={DosPointCero}
+					durationInFrames={DOS_POINT_CERO_FRAMES}
+					fps={FPS}
+					width={W}
+					height={H}
 				/>
 			</Folder>
 		</>
