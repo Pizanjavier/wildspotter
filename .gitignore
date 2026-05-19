@@ -67,3 +67,4 @@ miteco_data/*
 
 .env.local
 spots_pre_v3.sql
+geodata.dump
