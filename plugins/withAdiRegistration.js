@@ -17,7 +17,7 @@ function withAdiRegistration(config) {
     "android",
     async (config) => {
       const projectRoot = config.modRequest.projectRoot;
-      const sourcePath = path.join(projectRoot, "adi-registration.properties");
+      const sourcePath = path.join(projectRoot, "assets", "store", "adi-registration.properties");
       const destDir = path.join(
         projectRoot,
         "android",
@@ -31,8 +31,8 @@ function withAdiRegistration(config) {
       // Verify the source file exists
       if (!fs.existsSync(sourcePath)) {
         throw new Error(
-          `[withAdiRegistration] adi-registration.properties not found at project root: ${sourcePath}\n` +
-            `Download it from Google Play Console and place it in your project root.`
+          `[withAdiRegistration] adi-registration.properties not found at: ${sourcePath}\n` +
+            `Download it from Google Play Console and place it in assets/store/.`
         );
       }
 
