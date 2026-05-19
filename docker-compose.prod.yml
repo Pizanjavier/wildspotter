@@ -61,6 +61,30 @@ services:
     restart: unless-stopped
     command: ["python", "api.py"]
 
+  legal-watcher:
+    build:
+      context: ./workers
+      dockerfile: Dockerfile
+    image: ${WORKER_IMAGE:-wildspotter-worker}:${WORKER_IMAGE_TAG:-latest}
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      AEMET_API_KEY: ${AEMET_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - ./data:/data:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - wildspotter-net
+    restart: unless-stopped
+    command: ["python", "-m", "legal.scheduler"]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+
   n8n:
     image: n8nio/n8n
     environment:
