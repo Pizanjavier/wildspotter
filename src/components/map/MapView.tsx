@@ -399,13 +399,6 @@ export const MapView = forwardRef<MapViewHandle, MapViewProps>(({ onMapReady, sp
 	);
 
 	const handleDidFinishLoadingMap = useCallback(() => {
-		if (cameraRef.current) {
-			cameraRef.current.setCamera({
-				centerCoordinate: initialCenter.current,
-				zoomLevel: initialZoom.current,
-				animationDuration: 0,
-			});
-		}
 		onMapReady?.();
 	}, [onMapReady]);
 
@@ -513,7 +506,13 @@ export const MapView = forwardRef<MapViewHandle, MapViewProps>(({ onMapReady, sp
 				onDidFinishLoadingMap={handleDidFinishLoadingMap}
 				onPress={handleMapPress}
 			>
-				<Camera ref={cameraRef} />
+				<Camera
+					ref={cameraRef}
+					defaultSettings={{
+						centerCoordinate: initialCenter.current,
+						zoomLevel: initialZoom.current,
+					}}
+				/>
 
 				<VectorSource
 					id={LEGAL_ZONES_SOURCE_ID}
